@@ -26,11 +26,10 @@
   --drop:0 16px 40px -18px rgba(40,30,20,.45);
   --title-glow:0 1px 14px rgba(255,255,255,.5);
   --blur:16px;--sat:1.9;
-  --wp-a:#f3ebdf;--wp-b:#d8c5aa;--wp-c:#aa9db0;--wp-d:#7f90bd;
-  --rb1a:#fdf9f2;--rb1b:#e1cdb2;--rb1c:#b1906e;
-  --rb2a:#9e8977;--rb2b:#d2bda2;
-  --rb3a:#6474a4;--rb3b:#b6c1e0;
-  --rb4a:#c9ab8c;--rb4b:#f5ede1;
+  --sky-a:#0f7fd6;--sky-b:#8fd0f3;--sky-c:#e9f7ff;
+  --hill-a:#2f7d1e;--hill-b:#7fc93e;--hill-c:#bdf06a;
+  --hill2-a:#1f5e33;--hill2-b:#4a9a4a;
+  --sun-c:#fff8d8;--bub-c:#ffffff;--bub-op:.5;--bub-op2:.22;
   --wp-dim:0;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -50,12 +49,11 @@
     --sheen:.1;--edge-dark:rgba(0,0,0,.35);
     --drop:0 18px 44px -16px rgba(0,0,0,.7);
     --title-glow:0 1px 14px rgba(0,0,0,.45);
-    --wp-a:#7a6450;--wp-b:#3b3129;--wp-c:#23222b;--wp-d:#121729;
-    --rb1a:#e2d2bb;--rb1b:#977a5c;--rb1c:#3f3125;
-    --rb2a:#1b1b22;--rb2b:#44424f;
-    --rb3a:#10162b;--rb3b:#465a93;
-    --rb4a:#5a4533;--rb4b:#c9b497;
-    --wp-dim:.12;
+    --sky-a:#050b1a;--sky-b:#0d1c33;--sky-c:#1b2c46;
+    --hill-a:#0c2b14;--hill-b:#173a1c;--hill-c:#25501f;
+    --hill2-a:#08170d;--hill2-b:#132a17;
+    --sun-c:#cfe0ff;--bub-c:#bcd6ff;--bub-op:.16;--bub-op2:.08;
+    --wp-dim:.1;
   }
 }
 :root[data-theme="dark"]{
@@ -71,12 +69,11 @@
   --sheen:.1;--edge-dark:rgba(0,0,0,.35);
   --drop:0 18px 44px -16px rgba(0,0,0,.7);
   --title-glow:0 1px 14px rgba(0,0,0,.45);
-  --wp-a:#7a6450;--wp-b:#3b3129;--wp-c:#23222b;--wp-d:#121729;
-  --rb1a:#e2d2bb;--rb1b:#977a5c;--rb1c:#3f3125;
-  --rb2a:#1b1b22;--rb2b:#44424f;
-  --rb3a:#10162b;--rb3b:#465a93;
-  --rb4a:#5a4533;--rb4b:#c9b497;
-  --wp-dim:.12;
+  --sky-a:#050b1a;--sky-b:#0d1c33;--sky-c:#1b2c46;
+  --hill-a:#0c2b14;--hill-b:#173a1c;--hill-c:#25501f;
+  --hill2-a:#08170d;--hill2-b:#132a17;
+  --sun-c:#cfe0ff;--bub-c:#bcd6ff;--bub-op:.16;--bub-op2:.08;
+  --wp-dim:.1;
 }
 
 *,*::before,*::after{box-sizing:inherit}
@@ -155,7 +152,9 @@ h1,h2,h3,p{margin:0}
 
 /* header */
 .hdr{margin-bottom:16px}
-.navrow{display:flex;justify-content:flex-end;gap:10px;min-height:46px;margin-bottom:8px}
+.navrow{display:flex;align-items:center;gap:10px;min-height:46px;margin-bottom:8px}
+.navrow-spacer{flex:1}
+@media (min-width:1024px){.hamburger-btn{display:none!important}}
 .titles{min-width:0}
 .titles h1{font-size:34px;line-height:1.1;font-weight:700;letter-spacing:-.022em;text-shadow:var(--title-glow)}
 .titles p{font-size:15px;color:var(--label2);margin-top:4px;text-shadow:var(--title-glow)}
@@ -192,7 +191,11 @@ h1,h2,h3,p{margin:0}
 
 /* widgets */
 .widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin-bottom:12px}
-.widget{--r:26px;min-height:158px;padding:14px 14px 12px;display:flex;flex-direction:column}
+.widget{--r:26px;min-height:158px;padding:14px 14px 12px;display:flex;flex-direction:column;position:relative;transition:transform .18s ease}
+.widget.dragging-w{transition:none;box-shadow:0 20px 40px -14px rgba(0,0,0,.4)}
+.widget .grip{position:absolute;top:6px;right:6px;width:26px;height:26px;border:0;background:transparent;color:var(--label3);display:grid;place-items:center;cursor:grab;touch-action:none;z-index:2;border-radius:8px}
+.widget .grip:active{cursor:grabbing;background:var(--fill)}
+.widget-body{display:flex;flex-direction:column;flex:1;min-height:0}
 .w-label{font-size:13px;font-weight:600;color:var(--label2)}
 .ring{position:relative;width:88px;height:88px;margin:4px auto 0}
 .ring svg{display:block;width:100%;height:100%;overflow:visible}
@@ -292,6 +295,12 @@ h1,h2,h3,p{margin:0}
 .tag{font-size:12px;font-weight:500;padding:4px 10px;border-radius:999px;background:var(--fill)}
 .rec-actions{display:flex;flex-wrap:wrap;gap:8px;margin-left:20px}
 .rec-actions.flush{margin-left:0}
+.contact-row{margin:2px 0 12px 20px;padding:10px 12px;border-radius:16px;background:var(--fill)}
+.contact-who{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
+.contact-note{font-size:11.5px;color:var(--label2);margin-top:8px;line-height:1.3}
+a.pill{text-decoration:none}
+.bench-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--label2);white-space:nowrap}
+.bench-chip b{color:var(--label);font-weight:600}
 .pill{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:0;border-radius:999px;background:var(--fill2);color:var(--label);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .3s cubic-bezier(.3,1.4,.5,1)}
 .pill:active{transform:scale(.96)}
 .pill.on,.pill.prominent{background:var(--blue);color:#fff}
@@ -348,6 +357,12 @@ h1,h2,h3,p{margin:0}
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.28);animation:fadein .25s ease}
 .sheet{--r:34px;--tint:var(--tint-sheet);width:100%;max-width:540px;max-height:min(86vh,720px);display:flex;flex-direction:column;padding:8px 16px 16px;animation:rise .42s cubic-bezier(.2,1.15,.3,1)}
 @media (min-width:1024px){.sheet-layer{align-items:center}}
+.drawer-layer{position:fixed;inset:0;z-index:55;display:flex}
+.drawer-layer[hidden]{display:none}
+.drawer{--r:0 28px 28px 0;--tint:var(--tint-clear);width:min(84vw,320px);height:100%;padding:calc(env(safe-area-inset-top,0px) + 10px) 0 calc(env(safe-area-inset-bottom,0px) + 10px);animation:slidein .38s cubic-bezier(.2,1.1,.3,1)}
+.drawer .side{padding:0 10px}
+@keyframes slidein{from{transform:translateX(-100%)}}
+@media (min-width:1024px){.drawer-layer{display:none}}
 @keyframes rise{from{transform:translateY(40px) scale(.96)}}
 @keyframes fadein{from{opacity:0}}
 .grabber{width:36px;height:5px;border-radius:3px;background:var(--label3);margin:2px auto 10px}
@@ -389,23 +404,31 @@ h1,h2,h3,p{margin:0}
 <div class="wallpaper" aria-hidden="true">
 <svg viewBox="0 0 1440 1024" preserveAspectRatio="xMidYMid slice">
   <defs>
-    <linearGradient id="wg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" style="stop-color:var(--wp-a)"/><stop offset=".42" style="stop-color:var(--wp-b)"/><stop offset=".72" style="stop-color:var(--wp-c)"/><stop offset="1" style="stop-color:var(--wp-d)"/>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" style="stop-color:var(--sky-a)"/><stop offset=".55" style="stop-color:var(--sky-b)"/><stop offset="1" style="stop-color:var(--sky-c)"/>
     </linearGradient>
-    <linearGradient id="r1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--rb1a)"/><stop offset=".5" style="stop-color:var(--rb1b)"/><stop offset="1" style="stop-color:var(--rb1c)"/></linearGradient>
-    <linearGradient id="r2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--rb2a)"/><stop offset="1" style="stop-color:var(--rb2b)"/></linearGradient>
-    <linearGradient id="r3" x1="0" y1="1" x2="1" y2="0"><stop offset="0" style="stop-color:var(--rb3a)"/><stop offset="1" style="stop-color:var(--rb3b)"/></linearGradient>
-    <linearGradient id="r4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--rb4b)"/><stop offset="1" style="stop-color:var(--rb4a)"/></linearGradient>
-    <filter id="sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="28"/><feOffset dy="22"/><feComponentTransfer><feFuncA type="linear" slope=".38"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    <filter id="gl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%"><stop offset="0" style="stop-color:var(--sun-c);stop-opacity:.9"/><stop offset="1" style="stop-color:var(--sun-c);stop-opacity:0"/></radialGradient>
+    <linearGradient id="hillBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--hill2-b)"/><stop offset="1" style="stop-color:var(--hill2-a)"/></linearGradient>
+    <linearGradient id="hillFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--hill-c)"/><stop offset=".45" style="stop-color:var(--hill-b)"/><stop offset="1" style="stop-color:var(--hill-a)"/></linearGradient>
+    <linearGradient id="bub1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:#fff;stop-opacity:.9"/><stop offset=".4" style="stop-color:var(--bub-c);stop-opacity:var(--bub-op)"/><stop offset="1" style="stop-color:var(--bub-c);stop-opacity:.03"/></linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.4"/></filter>
   </defs>
-  <rect width="1440" height="1024" fill="url(#wg)"/>
-  <path d="M1560 -60C1300 120 1180 360 1230 720S1080 1100 900 1180" stroke="url(#r4)" stroke-width="210" fill="none" stroke-linecap="round" filter="url(#sh)"/>
-  <path d="M-160 220C260 80 560 300 600 560S420 960 170 1120" stroke="url(#r1)" stroke-width="300" fill="none" stroke-linecap="round" filter="url(#sh)"/>
-  <path d="M380 -180C640 120 760 430 1010 560S1420 640 1640 480" stroke="url(#r2)" stroke-width="190" fill="none" stroke-linecap="round" filter="url(#sh)"/>
-  <path d="M640 1240C780 940 1060 820 1300 840S1620 760 1720 600" stroke="url(#r3)" stroke-width="360" fill="none" stroke-linecap="round" filter="url(#sh)"/>
-  <path d="M-100 160C300 40 590 250 640 520" stroke="#fff" stroke-opacity=".35" stroke-width="16" fill="none" stroke-linecap="round" filter="url(#gl)"/>
-  <path d="M420 -150C660 140 780 420 1020 540" stroke="#fff" stroke-opacity=".22" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#gl)"/>
+  <rect width="1440" height="1024" fill="url(#sky)"/>
+  <circle cx="1180" cy="150" r="260" fill="url(#sun)"/>
+  <path d="M0 620 C 220 520 380 690 620 600 S 1060 520 1440 630 L1440 1024 L0 1024 Z" fill="url(#hillBack)" opacity=".85"/>
+  <path d="M0 760 C 260 660 460 840 760 740 S 1180 660 1440 780 L1440 1024 L0 1024 Z" fill="url(#hillFront)"/>
+  <path d="M0 760 C 260 660 460 840 760 740 S 1180 660 1440 780" stroke="#fff" stroke-opacity=".28" stroke-width="6" fill="none" filter="url(#soft)"/>
+  <g opacity="1">
+    <circle cx="180" cy="260" r="90" fill="url(#bub1)"/>
+    <circle cx="150" cy="230" r="16" fill="#fff" opacity=".7"/>
+    <circle cx="1300" cy="420" r="130" fill="url(#bub1)"/>
+    <circle cx="1255" cy="375" r="22" fill="#fff" opacity=".65"/>
+    <circle cx="980" cy="200" r="60" fill="url(#bub1)" opacity=".8"/>
+    <circle cx="360" cy="520" r="70" fill="url(#bub1)" opacity=".7"/>
+    <circle cx="70" cy="560" r="40" fill="url(#bub1)" style="opacity:var(--bub-op2)"/>
+    <circle cx="700" cy="120" r="34" fill="url(#bub1)" style="opacity:var(--bub-op2)"/>
+    <circle cx="1400" cy="120" r="46" fill="url(#bub1)" style="opacity:var(--bub-op2)"/>
+  </g>
 </svg>
 </div>
 <svg class="lg-defs" aria-hidden="true" focusable="false"><defs id="lgDefs"></defs></svg>
@@ -434,6 +457,8 @@ h1,h2,h3,p{margin:0}
 <main class="main">
   <header class="hdr" id="sec-pulse" data-sec="pulse">
     <div class="navrow">
+      <button class="circle glass clear lg-r hamburger-btn" id="hamburger" aria-label="Open zones menu"><span data-i="menu" data-s="20"></span></button>
+      <span class="navrow-spacer"></span>
       <button class="circle glass clear lg-r" id="briefBtn" aria-label="Open Board brief"><span data-i="doc" data-s="21"></span><span class="badge" id="briefBadge" hidden>0</span></button>
       <button class="circle glass clear lg-r" id="themeBtn" aria-label="Switch appearance"></button>
     </div>
@@ -457,10 +482,10 @@ h1,h2,h3,p{margin:0}
   </section>
 
   <section class="widgets" aria-label="At a glance" data-sec="pulse">
-    <div class="widget glass lg-r" id="wAtt"></div>
-    <div class="widget glass lg-r" id="wEl"></div>
-    <div class="widget glass lg-r" id="wFlags"></div>
-    <div class="widget glass lg-r" id="wT3"></div>
+    <div class="widget glass lg-r" id="wAtt" data-widget="wAtt"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wAttBody"></div></div>
+    <div class="widget glass lg-r" id="wEl" data-widget="wEl"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wElBody"></div></div>
+    <div class="widget glass lg-r" id="wFlags" data-widget="wFlags"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wFlagsBody"></div></div>
+    <div class="widget glass lg-r" id="wT3" data-widget="wT3"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wT3Body"></div></div>
   </section>
 
   <div class="duo">
@@ -472,6 +497,10 @@ h1,h2,h3,p{margin:0}
       <div class="card-sub">
         <p id="metricDesc"></p>
         <div class="seg" id="rangeSeg" role="group" aria-label="Time range"><span class="seg-thumb" aria-hidden="true"></span><button data-v="7">7D</button><button data-v="30">30D</button><button data-v="ytd">YTD</button></div>
+      </div>
+      <div class="card-sub">
+        <span class="bench-chip" id="benchChip"></span>
+        <button class="pill" id="yoyBtn" aria-pressed="false"><span data-i="bars" data-s="15"></span>Compare to last year</button>
       </div>
       <div class="chart-box"><canvas id="chart" role="img" aria-label="Trend chart"></canvas><p class="chart-msg" id="chartMsg" hidden></p></div>
     </section>
@@ -552,6 +581,26 @@ h1,h2,h3,p{margin:0}
   </div>
 </div>
 
+<div class="drawer-layer" id="drawerLayer" hidden>
+  <div class="scrim" data-drawer-close></div>
+  <div class="drawer glass" id="drawer" role="dialog" aria-modal="true" aria-label="Zones menu">
+    <div class="side">
+      <div class="side-top">
+        <label class="field"><span data-i="search" data-s="18"></span><input id="drawerQ" type="search" placeholder="Search" aria-label="Search the district" aria-controls="drawerResults" autocomplete="off"></label>
+        <div class="popover glass" id="drawerResults" role="listbox" hidden></div>
+      </div>
+      <nav class="side-list">
+        <button class="side-row" data-dzone=""><span class="sico" data-i="grid" data-s="20"></span>Whole district<span class="det">64</span></button>
+        <h3 class="side-head">Zones <span>Tier 3 open</span></h3>
+        <div id="drawerZones"></div>
+        <h3 class="side-head">Board</h3>
+        <button class="side-row" id="drawerBrief"><span class="sico" data-i="doc" data-s="20"></span>Board brief<span class="det" id="drawerBriefCount">0</span></button>
+      </nav>
+      <p class="side-foot">Simulated data. No student names or IDs appear anywhere in District Pulse.</p>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 (function(){
@@ -587,7 +636,11 @@ const P={
   person:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20.5c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>',
   scope:'<circle cx="12" cy="12" r="6.5"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>',
   copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/>',
-  pin:'<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/>'
+  pin:'<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/>',
+  phone:'<path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.2 1z"/>',
+  mail:'<rect x="3.5" y="5.5" width="17" height="13" rx="2.2"/><path d="m4.5 7 7.5 6 7.5-6"/>',
+  grip:'<circle cx="9" cy="7" r="1.3"/><circle cx="15" cy="7" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="17" r="1.3"/><circle cx="15" cy="17" r="1.3"/>',
+  menu:'<path d="M4 6.5h16M4 12h16M4 17.5h16"/>'
 };
 const ico=(k,s=20,w=1.9)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
 
@@ -599,6 +652,16 @@ const ZONES=[
  {id:'encina',name:'Encina',area:'Arden-Arcade',sites:9,status:'crit',tiers:19.7,elpac:36,att:90.4,t3:44,rev:9,checkins:655,lcap:'Critical',tags:['language access','math vocabulary','newcomer supports'],pts:'56,146 176,126 192,222 70,244',lx:124,ly:186,act:'Deploy bilingual instructional aides with an ELD coaching cycle',why:'Newcomer English learners drive most flags, and Dari and Pashto support is the thinnest here.'},
  {id:'delcampo',name:'Del Campo',area:'Fair Oaks',sites:10,status:'ok',tiers:10.8,elpac:53,att:94.3,t3:12,rev:4,checkins:744,lcap:'Moderate',tags:['attendance','math vocabulary'],pts:'176,126 292,110 372,156 330,224 192,222',lx:270,ly:172,act:'Keep Tier 1 steady and share the family text outreach routine',why:'Attendance gains here are the cheapest win to repeat district-wide.'}
 ];
+/* Real, publicly listed school contacts (San Juan Unified staff directories, Sept 2026).
+   Site leadership changes year to year, confirm before sending anything to Harvey. */
+const CONTACTS={
+ sanjuan:{school:'San Juan High',role:"Principal's Office",name:null,phone:'19169715112',phoneDisp:'(916) 971-5112',email:null,verified:'phone only, principal listing was unsettled as of last check'},
+ mesaverde:{school:'Mesa Verde High',role:'Principal',name:'Jennifer Petersen',phone:'19169715288',phoneDisp:'(916) 971-5288',email:null,verified:'name and phone confirmed, no public email listed'},
+ bellavista:{school:'Bella Vista High',role:'Principal',name:'Cletus Purinton',phone:'19169715052',phoneDisp:'(916) 971-5052',email:null,verified:'name and phone from public school directory'},
+ encina:{school:'Encina High',role:'Principal',name:'Greta Scholtes',phone:'19169715839',phoneDisp:'(916) 971-5839',email:'greta.scholtes@sanjuan.edu',verified:'name, phone and email confirmed on the school site'},
+ delcampo:{school:'Del Campo High',role:'Principal',name:'Michael Magliola',phone:'19169715650',phoneDisp:'(916) 971-5650',email:null,verified:"name and phone from the school's own site"}
+};
+const BENCH={tiers:{target:12,dir:'Lower is better',good:v=>v<=12},elpac:{target:55,dir:'Higher is better',good:v=>v>=55},att:{target:95,dir:'Higher is better',good:v=>v>=95}};
 const ST={
  ok:{v:'--green',w:'On track',phrase:'is on track',i:'check',g:'#fff'},
  watch:{v:'--yellow',w:'Watch',phrase:'is on the watch list',i:'eye',g:'rgba(0,0,0,.78)'},
@@ -633,15 +696,15 @@ const CONTENT={
   {s:'watch',t:'Tier 2 flags are rising in two zones',m:'San Juan High and Bella Vista, mostly reading stamina and chronic absence in grades 9 and 10.'},
   {s:'ok',t:'Del Campo and Mesa Verde are steady',m:'Their attendance gains line up with the mentoring pilot funded in the LCAP.'}],
   recs:[
-  {t:'Send an ELD coaching cycle to Encina feeder sites',b:'Two sites account for most new vocabulary flags. A six-week cycle targets academic language in math.',s:'crit',scope:'9 sites',imp:'High impact'},
-  {t:'Staff Tier 2 reading groups at San Juan High',b:'Flags cluster in grade 9 English. One intervention teacher block covers the projected need.',s:'watch',scope:'12 sites',imp:'Medium impact'},
-  {t:'Share Del Campo’s attendance playbook',b:'Their family text outreach routine is the cheapest win to repeat district-wide.',s:'ok',scope:'64 sites',imp:'Low cost'}]},
+  {t:'Send an ELD coaching cycle to Encina feeder sites',b:'Two sites account for most new vocabulary flags. A six-week cycle targets academic language in math.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
+  {t:'Staff Tier 2 reading groups at San Juan High',b:'Flags cluster in grade 9 English. One intervention teacher block covers the projected need.',s:'watch',scope:'12 sites',imp:'Medium impact',zone:'sanjuan'},
+  {t:'Share Del Campo’s attendance playbook',b:'Their family text outreach routine is the cheapest win to repeat district-wide.',s:'ok',scope:'64 sites',imp:'Low cost',zone:'delcampo'}]},
  lang:{notes:[
   {s:'crit',t:'Encina ELs are about 10 points behind',m:'First-year newcomers make up most of the gap.'},
   {s:'watch',t:'Math vocabulary is the top EL flag',m:'It now leads reading comprehension in grades 6 through 10.'},
   {s:'ok',t:'Family liaisons are paying off',m:'Sites with Dari and Pashto liaisons show faster reclassification pacing.'}],
   recs:[
-  {t:'Add Dari and Pashto liaison hours at Encina feeders',b:'Over a quarter of the district’s English learners speak Dari or Pashto, and liaison coverage there is thinnest.',s:'crit',scope:'9 sites',imp:'High impact'},
+  {t:'Add Dari and Pashto liaison hours at Encina feeders',b:'Over a quarter of the district’s English learners speak Dari or Pashto, and liaison coverage there is thinnest.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
   {t:'Build math language routines into ELD PLCs',b:'Pair designated ELD with math teams on sentence frames for the most-flagged terms.',s:'watch',scope:'Secondary',imp:'Medium impact'},
   {t:'Start a spring reclassification readiness list',b:'Surface students close to criteria so sites can plan before the Summative ELPAC window.',s:'ok',scope:'64 sites',imp:'Planning'}]},
  tier3:{notes:[
@@ -649,7 +712,7 @@ const CONTENT={
   {s:'watch',t:'Reviews take 6 school days',m:'The target from flag to site team review is 3.'},
   {s:'ok',t:'Mesa Verde closes reviews fastest',m:'Counselors there meet on a fixed weekly cadence.'}],
   recs:[
-  {t:'Surge a district MTSS coordinator to Encina for 30 days',b:'Clears the review backlog and models the weekly cadence Mesa Verde already uses.',s:'crit',scope:'9 sites',imp:'High impact'},
+  {t:'Surge a district MTSS coordinator to Encina for 30 days',b:'Clears the review backlog and models the weekly cadence Mesa Verde already uses.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
   {t:'Set a 3-day review standard in the MTSS handbook',b:'Makes response time a shared expectation that shows up on this dashboard.',s:'watch',scope:'64 sites',imp:'Policy'},
   {t:'Route Tier 3 behavior flags to Student Support Services',b:'Connects intensive needs to counseling and mental health partners without a second referral form.',s:'ok',scope:'District',imp:'Workflow'}]},
  lcap:{notes:[
@@ -657,7 +720,7 @@ const CONTENT={
   {s:'watch',t:'Smaller gains for ELs and foster youth',m:'These are the groups the LCAP targets most directly.'},
   {s:'crit',t:'Coverage is thin where need is highest',m:'San Juan High and Encina have the least intervention coverage relative to need.'}],
   recs:[
-  {t:'Shift mentoring slots toward coverage gaps',b:'Move supplemental dollars from zones with surplus coverage to San Juan High and Encina.',s:'crit',scope:'2 zones',imp:'High impact'},
+  {t:'Shift mentoring slots toward coverage gaps',b:'Move supplemental dollars from zones with surplus coverage to San Juan High and Encina.',s:'crit',scope:'2 zones',imp:'High impact',zone:'encina'},
   {t:'Report attendance gains by student group',b:'Shows the Board the LCAP is closing gaps, not just raising averages.',s:'watch',scope:'Board packet',imp:'Accountability'},
   {t:'Keep the waitlist comparison running',b:'It is the district’s strongest evidence that the intervention caused the gain.',s:'ok',scope:'District',imp:'Evaluation'}]}
 };
@@ -668,7 +731,7 @@ const DIALS={
 };
 
 /* ---------- state ---------- */
-const state={metric:'tiers',range:30,zone:null,filter:'all',dial:null,open:null,brief:[],assigned:new Set()};
+const state={metric:'tiers',range:30,zone:null,filter:'all',dial:null,open:null,brief:[],assigned:new Set(),yoy:false,widgetOrder:loadWidgetOrder()};
 const cur=()=>state.zone?Z(state.zone):null;
 const scopeLabel=()=>state.zone?`${cur().name} zone`:'Whole district';
 
@@ -708,6 +771,35 @@ function buildSidebar(){
 }
 function renderSideSel(){$$('.side-row[data-zone]').forEach(r=>r.setAttribute('aria-current',String((r.dataset.zone||null)===state.zone)))}
 
+/* ---------- mobile drawer (hamburger) ---------- */
+function buildDrawer(){
+  $('#drawerZones').innerHTML=ZONES.map(z=>`<button class="side-row" data-dzone="${z.id}"><span class="sdot" style="background:var(${ST[z.status].v})"></span>${z.name}<span class="det">${z.t3}</span></button>`).join('');
+  $('#drawer .side-list').addEventListener('click',e=>{const b=e.target.closest('[data-dzone]');if(b){isolate(b.dataset.dzone||null);closeDrawer()}});
+  $('#drawerBrief').addEventListener('click',()=>{closeDrawer();openBrief()});
+  const q=$('#drawerQ'),box=$('#drawerResults');let hits=[],sel=-1;
+  const pick=i=>{const h=hits[i];if(!h)return;q.value='';box.hidden=true;closeDrawer();h.go()};
+  q.addEventListener('input',()=>{const v=q.value;hits=find(v);sel=-1;box.innerHTML=hits.length?hits.map(resRow).join(''):noMatch(v);box.hidden=!v.trim()});
+  q.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){q.value='';box.hidden=true;return}
+    if(!hits.length)return;
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();sel=(sel+(e.key==='ArrowDown'?1:-1)+hits.length)%hits.length;box.querySelectorAll('.res').forEach((b,i)=>b.classList.toggle('active',i===sel))}
+    else if(e.key==='Enter'){e.preventDefault();pick(sel<0?0:sel)}
+  });
+  box.addEventListener('click',e=>{const b=e.target.closest('.res');if(b)pick(+b.dataset.k)});
+}
+function renderDrawerSel(){$$('#drawer .side-row[data-dzone]').forEach(r=>r.setAttribute('aria-current',String((r.dataset.dzone||null)===state.zone)))}
+let drawerLastFocus=null;
+function openDrawer(){
+  drawerLastFocus=document.activeElement;
+  renderDrawerSel();$('#drawerBriefCount').textContent=state.brief.length;
+  $('#drawerLayer').hidden=false;document.body.classList.add('sheet-open');
+  requestAnimationFrame(()=>{const f=$('#drawerQ');if(f)f.focus({preventScroll:true})});
+}
+function closeDrawer(){
+  $('#drawerLayer').hidden=true;document.body.classList.remove('sheet-open');
+  if(drawerLastFocus&&drawerLastFocus.focus)drawerLastFocus.focus({preventScroll:true});
+}
+
 /* ---------- header bits ---------- */
 function renderScope(){const c=$('#scopeChip');if(state.zone){c.hidden=false;$('#scopeText').textContent=`${cur().name} zone`;c.setAttribute('aria-label',`Clear ${cur().name} zone and show the whole district`)}else c.hidden=true}
 function renderBadge(){const n=state.brief.length,b=$('#briefBadge');b.hidden=!n;b.textContent=n;$('#sideBriefCount').textContent=n;$('#briefBtn').setAttribute('aria-label',n?`Open Board brief, ${n} item${n>1?'s':''}`:'Open Board brief')}
@@ -731,12 +823,59 @@ function spark(s){
 function renderWidgets(){
   const z=cur(),g=m=>z?z[m]:avg(m);
   const dl=m=>{const s=series(z&&z.id,m,42);return +(s[41]-s[36]).toFixed(1)};
-  $('#wAtt').innerHTML=ring('Attendance',g('att'),85,100,'--green',dl('att'));
-  $('#wEl').innerHTML=ring('EL progress',g('elpac'),25,65,'--cyan',dl('elpac'));
-  $('#wFlags').innerHTML=`<div class="w-label">Tier 2/3 flags</div><div class="w-big">${g('tiers')}<small>%</small></div>${spark(series(z&&z.id,'tiers',42).slice(-20))}<div class="w-foot">${delta(dl('tiers'),true)} vs last week</div>`;
+  $('#wAttBody').innerHTML=ring('Attendance',g('att'),85,100,'--green',dl('att'));
+  $('#wElBody').innerHTML=ring('EL progress',g('elpac'),25,65,'--cyan',dl('elpac'));
+  $('#wFlagsBody').innerHTML=`<div class="w-label">Tier 2/3 flags</div><div class="w-big">${g('tiers')}<small>%</small></div>${spark(series(z&&z.id,'tiers',42).slice(-20))}<div class="w-foot">${delta(dl('tiers'),true)} vs last week</div>`;
   const t3=z?z.t3:T3,rev=z?z.rev:6,mx=Math.max(...ZONES.map(x=>x.t3));
   const bars=ZONES.map(x=>`<span style="height:${Math.max(14,x.t3/mx*100)}%;background:var(${ST[x.status].v});opacity:${!z||z.id===x.id?1:.28}"></span>`).join('');
-  $('#wT3').innerHTML=`<div class="w-label">Tier 3 open</div><div class="w-big">${t3}</div><div class="minibars" aria-hidden="true">${bars}</div><div class="w-foot"><span class="${rev>3?'bad':'good'}">${rev} days</span> median review, target 3</div>`;
+  $('#wT3Body').innerHTML=`<div class="w-label">Tier 3 open</div><div class="w-big">${t3}</div><div class="minibars" aria-hidden="true">${bars}</div><div class="w-foot"><span class="${rev>3?'bad':'good'}">${rev} days</span> median review, target 3</div>`;
+  applyWidgetOrder();
+}
+function loadWidgetOrder(){
+  try{const s=JSON.parse(localStorage.getItem('dp-widget-order'));if(Array.isArray(s)&&s.length===4)return s}catch(e){}
+  return ['wAtt','wEl','wFlags','wT3'];
+}
+function saveWidgetOrder(){try{localStorage.setItem('dp-widget-order',JSON.stringify(state.widgetOrder))}catch(e){}}
+function applyWidgetOrder(){state.widgetOrder.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.order=i})}
+function setupWidgetDrag(){
+  const grid=$('.widgets');let active=null,startX=0,startY=0,dragging=false;
+  const cards=()=>[...grid.querySelectorAll('.widget')];
+  function onDown(e){
+    const grip=e.target.closest('.grip');if(!grip)return;
+    active=grip.closest('.widget');if(!active)return;
+    e.preventDefault();
+    startX=e.clientX;startY=e.clientY;dragging=false;
+    active.setPointerCapture(e.pointerId);
+    active.addEventListener('pointermove',onMove);
+    active.addEventListener('pointerup',onUp,{once:true});
+  }
+  function onMove(e){
+    if(!active)return;
+    const dx=e.clientX-startX,dy=e.clientY-startY;
+    if(!dragging&&Math.hypot(dx,dy)<6)return;
+    if(!dragging){dragging=true;active.classList.add('dragging-w');active.style.zIndex=5}
+    active.style.transform=`translate(${dx}px,${dy}px) scale(1.04)`;
+    const r=active.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    let best=null,bd=1e9;
+    cards().forEach(c=>{if(c===active)return;const cr=c.getBoundingClientRect();const d=Math.hypot(cx-(cr.left+cr.width/2),cy-(cr.top+cr.height/2));if(d<bd){bd=d;best=c}});
+    if(best){
+      const ai=state.widgetOrder.indexOf(active.dataset.widget),bi=state.widgetOrder.indexOf(best.dataset.widget);
+      if(ai>-1&&bi>-1&&bd<r.width*.6){
+        state.widgetOrder.splice(ai,1);state.widgetOrder.splice(bi,0,active.dataset.widget);
+        cards().forEach(c=>{if(c!==active)c.style.order=state.widgetOrder.indexOf(c.dataset.widget)});
+      }
+    }
+  }
+  function onUp(){
+    if(active){
+      active.classList.remove('dragging-w');active.style.transform='';active.style.zIndex='';
+      active.removeEventListener('pointermove',onMove);
+      applyWidgetOrder();saveWidgetOrder();
+      if(dragging)island('Layout saved','Your card order is remembered next time','--blue','grip');
+    }
+    active=null;dragging=false;
+  }
+  grid.addEventListener('pointerdown',onDown);
 }
 
 /* ---------- chart ---------- */
@@ -755,18 +894,32 @@ function ensureChart(){
   }
   return false;
 }
+function updateBenchChip(){
+  const b=BENCH[state.metric],z=cur(),val=z?z[state.metric]:avg(state.metric);
+  const good=b.good(val);
+  $('#benchChip').innerHTML=`Target <b>${b.target}%</b> &middot; ${b.dir} &middot; <span class="${good?'good':'bad'}">${good?'meeting target':'off target'}</span>`;
+}
 function drawChart(){
   $('#metricDesc').textContent=METRICS[state.metric].desc;
+  updateBenchChip();
   if(!ensureChart())return;
-  const z=cur(),blue=css('--blue'),lab2=css('--label2'),sep=css('--sep');
+  const z=cur(),blue=css('--blue'),lab2=css('--label2'),sep=css('--sep'),orange=css('--orange');
   Chart.defaults.font.family=getComputedStyle(document.body).fontFamily;
   const days=state.range==='ytd'?42:state.range;
   const line=(label,data,color,extra)=>Object.assign({label,data,borderColor:color,backgroundColor:c=>grad(c,color),fill:true,tension:.4,borderWidth:2.5,pointRadius:0,pointHoverRadius:5,pointHoverBorderWidth:2,pointHoverBackgroundColor:'#fff',pointHoverBorderColor:color},extra||{});
   const ds=[line('District',series(null,state.metric,days),blue)];
   if(z){ds[0].fill=false;ds[0].borderDash=[5,5];ds[0].borderWidth=2;ds.unshift(line(z.name,series(z.id,state.metric,days),css(ST[z.status].v)))}
+  if(state.yoy){
+    const base=z?z[state.metric]:avg(state.metric);
+    const r=rng(hash((z?z.id:'dist')+state.metric+'yoy'));
+    const lastYear=series(z&&z.id,state.metric,days).map(v=>+(v+(base*.06)*(r()-.35)).toFixed(1));
+    ds.push(line('Last year',lastYear,orange,{fill:false,borderDash:[2,3],borderWidth:1.75,pointRadius:0}));
+  }
+  const bench=BENCH[state.metric].target;
+  ds.push({label:'Target',data:Array(days).fill(bench),borderColor:lab2,borderWidth:1.25,borderDash:[6,5],pointRadius:0,fill:false});
   const data={labels:dates(days),datasets:ds};
   const options={responsive:true,maintainAspectRatio:false,animation:{duration:reduceMotion?0:600,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:!!z,position:'top',align:'end',labels:{color:lab2,usePointStyle:true,pointStyle:'circle',boxWidth:8,boxHeight:8,font:{size:12,weight:'500'}}},
+    plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lab2,usePointStyle:true,pointStyle:'circle',boxWidth:8,boxHeight:8,font:{size:12,weight:'500'},filter:i=>state.yoy||i.text!=='Last year'}},
       tooltip:{backgroundColor:'rgba(28,28,30,.88)',titleColor:'#fff',bodyColor:'#fff',cornerRadius:12,padding:10,titleFont:{size:12,weight:'600'},bodyFont:{size:13},usePointStyle:true,boxWidth:8,boxHeight:8,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
     scales:{x:{grid:{display:false},border:{display:false},ticks:{color:lab2,maxTicksLimit:6,maxRotation:0,font:{size:11}}},
       y:{grid:{color:sep},border:{display:false},ticks:{color:lab2,maxTicksLimit:5,font:{size:11},callback:v=>v+'%'}}}};
@@ -835,7 +988,7 @@ function content(){
       {s:z.status,t:`${z.name} ${ST[z.status].phrase}`,m:`${z.tiers}% of check-ins went to Tier 2/3 review this week, against ${avg('tiers')}% district-wide.`},
       {s:gap>0?'watch':'ok',t:gap>0?`EL progress trails the district by ${gap} points`:`EL progress leads the district by ${Math.abs(gap)} points`,m:`${z.elpac}% of English learners are on track here, and attendance is ${z.att}%.`},
       {s:'watch',t:'Top themes in this week’s check-ins',m:z.tags.slice(0,3).map(cap).join(', ')+'.'}],
-      recs:[{t:z.act,b:z.why,s:z.status,scope:`${z.sites} sites`,imp:`${z.lcap} LCAP priority`},...CONTENT.default.recs.filter(r=>!r.t.includes(z.name)).slice(0,2)]};
+      recs:[{t:z.act,b:z.why,s:z.status,scope:`${z.sites} sites`,imp:`${z.lcap} LCAP priority`,zone:z.id},...CONTENT.default.recs.filter(r=>!r.t.includes(z.name)).slice(0,2)]};
   }
   return Object.assign({key:'default'},CONTENT.default);
 }
@@ -849,11 +1002,18 @@ function renderNotes(){
   if(state.dial==='lcap')ex=`<div class="xcard"><h3>Attendance change after six weeks, in points</h3>${barsHTML([['Intervention',3.1,'var(--green)'],['ELs in program',1.8,'var(--yellow)'],['Waitlist',0.4,'var(--label3)']],3.1)}</div>`;
   $('#extra').innerHTML=ex;
 }
+function contactRow(zoneId){
+  const ct=CONTACTS[zoneId];if(!ct)return '';
+  const who=ct.name?`${ct.name}, ${ct.role}`:ct.role;
+  const call=`<a class="pill" href="tel:${ct.phone}">${ico('phone',16,2.1)}Call ${ct.school}</a>`;
+  const mail=ct.email?`<a class="pill" href="mailto:${ct.email}?subject=${encodeURIComponent('San Juan Unified, '+ct.school+' check-in')}">${ico('mail',16,2)}Email</a>`:'';
+  return `<div class="contact-row"><span class="contact-who">${who}</span><div class="rec-actions flush">${call}${mail}</div><p class="contact-note">${ct.verified}</p></div>`;
+}
 function renderRecs(){
   const c=content();
   $('#recs').innerHTML=c.recs.map((r,i)=>{
     const id=c.key+'-'+i,added=state.brief.some(x=>x.id===id),sent=state.assigned.has(id);
-    return `<article class="rec"><div class="rec-top"><i style="background:var(${ST[r.s].v})"></i><div><h3>${r.t}</h3><p>${r.b}</p></div></div><div class="tags"><span class="tag">${r.scope}</span><span class="tag">${r.imp}</span></div><div class="rec-actions"><button class="pill${added?' on':''}" data-add="${id}" data-k="${i}" aria-pressed="${added}">${ico(added?'check':'plus',16,2.2)}${added?'In Board brief':'Add to Board brief'}</button><button class="pill${sent?' done':''}" data-send="${id}" aria-pressed="${sent}">${ico(sent?'check':'person',16,2.1)}${sent?'Sent to MTSS team':'Send to MTSS team'}</button></div></article>`;
+    return `<article class="rec"><div class="rec-top"><i style="background:var(${ST[r.s].v})"></i><div><h3>${r.t}</h3><p>${r.b}</p></div></div><div class="tags"><span class="tag">${r.scope}</span><span class="tag">${r.imp}</span></div>${r.zone?contactRow(r.zone):''}<div class="rec-actions"><button class="pill${added?' on':''}" data-add="${id}" data-k="${i}" aria-pressed="${added}">${ico(added?'check':'plus',16,2.2)}${added?'In Board brief':'Add to Board brief'}</button><button class="pill${sent?' done':''}" data-send="${id}" aria-pressed="${sent}">${ico(sent?'check':'person',16,2.1)}${sent?'Sent to MTSS team':'Send to MTSS team'}</button></div></article>`;
   }).join('');
 }
 function toggleBrief(id,r){
@@ -1045,6 +1205,8 @@ function wire(){
   $('#metricSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.metric){state.metric=b.dataset.v;render()}});
   $('#rangeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v==='ytd'?'ytd':+b.dataset.v;if(v!==state.range){state.range=v;render()}});
   $('#filterSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.filter){state.filter=b.dataset.v;render()}});
+  $('#yoyBtn').addEventListener('click',()=>{state.yoy=!state.yoy;$('#yoyBtn').setAttribute('aria-pressed',String(state.yoy));$('#yoyBtn').classList.toggle('on',state.yoy);drawChart()});
+  $('#hamburger').addEventListener('click',openDrawer);
   $$('.tile').forEach(t=>t.addEventListener('click',()=>runDial(t.dataset.dial)));
   $('#scopeChip').addEventListener('click',()=>isolate(null));
   $('#briefBtn').addEventListener('click',openBrief);
@@ -1058,7 +1220,11 @@ function wire(){
     if(s){const id=s.dataset.send;if(state.assigned.has(id))state.assigned.delete(id);else{state.assigned.add(id);island('Sent to the site MTSS team','Aggregate data only, no student names','--green','person')}renderRecs()}
   });
   $('#sheetLayer').addEventListener('click',e=>{if(e.target.closest('[data-close]'))closeSheet()});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheetLayer').hidden)closeSheet()});
+  $('#drawerLayer').addEventListener('click',e=>{if(e.target.closest('[data-drawer-close]'))closeDrawer()});
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&!$('#sheetLayer').hidden)closeSheet();
+    if(e.key==='Escape'&&!$('#drawerLayer').hidden)closeDrawer();
+  });
   if('ResizeObserver' in window){const ro=new ResizeObserver(es=>es.forEach(x=>placeThumb(x.target,false)));$$('.seg,.tabbar').forEach(g=>ro.observe(g))}
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>$$('.seg,.tabbar').forEach(g=>placeThumb(g,false)));
   let today=4212;
@@ -1067,7 +1233,7 @@ function wire(){
 
 /* ---------- init ---------- */
 $$('[data-i]').forEach(el=>{el.innerHTML=ico(el.dataset.i,+(el.dataset.s||20));el.style.display='grid'});
-buildSidebar();buildMap();buildSites();themeIcon();renderBadge();wireSideSearch();wireTabs();wire();
+buildSidebar();buildDrawer();buildMap();buildSites();themeIcon();renderBadge();wireSideSearch();wireTabs();wire();setupWidgetDrag();
 render();setTab('pulse');
 setupRefraction();
 setTimeout(()=>island('District Pulse is live','58 of 64 sites reporting today','--green','pulse'),700);
