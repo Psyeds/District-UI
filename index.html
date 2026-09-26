@@ -341,6 +341,23 @@ a.pill{text-decoration:none}
 .privacy{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0 12px}
 .privacy .capsule{color:var(--label)}
 .privacy .capsule span{display:grid;color:var(--green)}
+.pipe-group{margin-top:22px}
+.pipe-tile{width:100%;min-height:96px;flex-direction:row;align-items:center;gap:14px;margin-bottom:16px;padding:16px 18px}
+.pipe-tile .t-ico{flex:none;width:52px;height:52px;background:var(--accent);color:#fff;box-shadow:0 6px 18px -6px color-mix(in srgb,var(--accent) 80%,transparent)}
+.pipe-tile .pt-txt{flex:1;min-width:0}
+.pipe-tile strong{font-size:17px;display:flex;align-items:center;gap:8px}
+.pipe-tile .t-det{display:block;font-size:13.5px}
+.pipe-tile .live{width:8px;height:8px;border-radius:50%;background:var(--green);animation:ping 2s ease-out infinite}
+.pt-mini{flex:none;display:flex;align-items:center;gap:14px;position:relative;padding:0 4px}
+.pt-mini::before{content:"";position:absolute;left:10px;right:10px;top:50%;height:2px;margin-top:-1px;background:repeating-linear-gradient(90deg,var(--green) 0 6px,transparent 6px 12px);background-size:24px 2px;animation:minif .6s linear infinite}
+.pt-mini i{position:relative;width:18px;height:18px;border-radius:6px;background:var(--solid);box-shadow:0 0 0 1.5px var(--sep),0 3px 8px -4px rgba(0,0,0,.4)}
+.pt-mini i::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--green);animation:blink 1.5s ease-in-out infinite}
+.pt-mini i:nth-child(2)::after{animation-delay:.15s}.pt-mini i:nth-child(3)::after{animation-delay:.3s}.pt-mini i:nth-child(4)::after{animation-delay:.45s}.pt-mini i:nth-child(5)::after{animation-delay:.6s}
+.pt-go{flex:none;color:var(--label3)}
+@keyframes minif{to{background-position:24px 0}}
+@keyframes blink{0%,100%{opacity:.35}50%{opacity:1}}
+@media (max-width:560px){.pt-mini{display:none}.pipe-tile .t-det{display:block;font-size:12.5px}}
+@keyframes ping{70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .foot{--r:20px;--tint:var(--tint-clear);max-width:680px;margin:0 auto;padding:12px 16px;font-size:12px;line-height:1.45;color:var(--label2);text-align:center}
 
 /* floating tab bar */
@@ -380,6 +397,77 @@ a.pill{text-decoration:none}
 .brief-text{width:100%;min-height:140px;margin-top:10px;border:0;border-radius:14px;padding:10px;background:var(--fill);font-size:13px;line-height:1.4;color:var(--label)}
 .brief-text[hidden]{display:none}
 .empty{font-size:15px;color:var(--label2);line-height:1.45;padding:4px 2px 10px}
+
+/* data pipeline (n8n-style canvas) */
+.pipe-layer{position:fixed;inset:0;z-index:52;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 10px) 8px calc(env(safe-area-inset-bottom,0px) + 10px)}
+.pipe-layer[hidden]{display:none}
+.pipe{--r:30px;--tint:var(--tint-sheet);width:100%;max-width:1240px;height:min(92vh,820px);display:flex;flex-direction:column;overflow:hidden;transform-origin:0 0;will-change:transform}
+.pipe-layer .scrim{transition:opacity .28s ease}
+.pipe-layer.pop .pnode{animation:npop .34s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(var(--k)*22ms + 120ms)}
+@keyframes npop{from{opacity:0;transform:scale(.6)}}
+.pipe-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:14px 14px 10px 18px;border-bottom:.5px solid var(--sep)}
+.pipe-title{flex:1 1 220px;min-width:0}
+.pipe-title h2{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
+.pipe-title p{font-size:13px;color:var(--label2);margin-top:2px;line-height:1.35}
+.pipe-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pipe-tools .capsule{height:30px;font-size:12px;padding:0 10px;box-shadow:none}
+.pipe-tools .capsule.ok{--tint:color-mix(in srgb,var(--green) 22%,transparent);color:var(--label)}
+.pipe-tools .ibtn{width:32px;height:32px;border-radius:50%;border:0;background:var(--fill2);color:var(--label);display:grid;place-items:center;cursor:pointer}
+.pipe-main{flex:1;min-height:0;display:flex}
+.pipe-canvas{position:relative;flex:1;min-width:0;overflow:auto;display:flex;cursor:grab;overscroll-behavior:contain;
+  background-image:radial-gradient(circle,var(--label3) 1px,transparent 1.3px);background-size:22px 22px;background-color:color-mix(in srgb,var(--solid) 78%,transparent)}
+.pipe-canvas.drag{cursor:grabbing}
+.pipe-sizer{position:relative;flex:none;margin:auto;padding:14px}
+.pipe-stage{position:absolute;left:14px;top:14px;width:1250px;height:520px;transform-origin:0 0}
+.pipe-stage svg{position:absolute;inset:0;overflow:visible}
+.pipe-edge{fill:none;stroke:var(--label3);stroke-width:2}
+.pipe-edge.dash{stroke-dasharray:5 6}
+.pipe-edge.lit{stroke:var(--green);stroke-width:2.4;stroke-dasharray:7 7;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-14}}
+.pipe-port{fill:var(--solid);stroke:var(--label3);stroke-width:1.6}
+.pipe-elab{position:absolute;transform:translate(-50%,-50%);font-size:11px;font-weight:600;white-space:nowrap;padding:3px 8px;border-radius:999px;background:var(--solid);color:var(--label2);box-shadow:0 0 0 .5px var(--sep),0 4px 10px -6px rgba(0,0,0,.3);opacity:0;transition:opacity .3s;pointer-events:none;font-variant-numeric:tabular-nums}
+.pipe-elab.on{opacity:1}
+.pnode{position:absolute;width:156px;display:flex;flex-direction:column;align-items:center;gap:0;padding:0;border:0;background:none;text-align:center;cursor:pointer;color:var(--label)}
+.pnode .nbox{position:relative;width:84px;height:84px;border-radius:20px;display:grid;place-items:center;background:var(--solid);color:var(--c);
+  box-shadow:0 0 0 1.5px var(--sep),0 10px 24px -14px rgba(0,0,0,.5);transition:box-shadow .2s,transform .3s cubic-bezier(.3,1.4,.5,1)}
+.pnode.trig .nbox{border-radius:42px 20px 20px 42px}
+.pnode:hover .nbox{transform:translateY(-2px)}
+.pnode[aria-pressed="true"] .nbox{box-shadow:0 0 0 3px var(--blue),0 12px 28px -14px rgba(0,0,0,.55)}
+.pnode .nbox::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--c);opacity:.1}
+.pnode b{margin-top:9px;font-size:13.5px;font-weight:600;line-height:1.15}
+.pnode .sub{margin-top:2px;font-size:11px;color:var(--label2);line-height:1.2}
+.pnode .nst{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--solid);color:var(--label3);box-shadow:0 0 0 1.5px var(--sep);transition:background .25s,color .25s}
+.pnode.done .nst{background:var(--green);color:#fff;box-shadow:none}
+.pnode.run .nst{color:transparent;box-shadow:none}
+.pnode.run .nst::after{content:"";position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--blue);border-right-color:transparent;animation:spin .7s linear infinite}
+.pnode.run .nbox{box-shadow:0 0 0 2.5px var(--blue),0 0 26px -2px color-mix(in srgb,var(--blue) 55%,transparent)}
+.pnode .ntag{position:absolute;top:-9px;left:-8px;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;padding:2px 6px;border-radius:6px;background:var(--green);color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pipe-zone{position:absolute;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--label3)}
+.pipe-insp{flex:none;width:320px;border-left:.5px solid var(--sep);overflow:auto;padding:16px 16px 20px;font-size:14px;line-height:1.42}
+.pipe-insp h3{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.pipe-insp h4{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--label3);margin:16px 0 6px}
+.pipe-insp p{color:var(--label2)}
+.pipe-insp .kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px}
+.pipe-insp .kv dt{color:var(--label2)}
+.pipe-insp .kv dd{margin:0;font-weight:600}
+.pipe-insp .srcs{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.pipe-insp .srcs li{padding:9px 11px;border-radius:14px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim),0 0 0 .5px var(--sep)}
+.pipe-insp .srcs a,.pipe-insp .srcs b{font-size:13px;font-weight:600;color:var(--label);text-decoration:none}
+.pipe-insp .srcs a:hover{color:var(--blue)}
+.pipe-insp .srcs small{display:block;font-size:12px;color:var(--label2);margin-top:1px}
+.pipe-insp .grp{font-size:12px;font-weight:700;color:var(--label3);margin:14px 0 6px}
+.pipe-insp .stat{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--fill2);margin-top:6px}
+.pipe-insp .stat.demo{background:color-mix(in srgb,var(--green) 24%,transparent)}
+.pipe-insp .back{border:0;background:none;color:var(--blue);font-size:14px;font-weight:600;padding:0;margin-bottom:10px;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+@media (max-width:820px){
+  .pipe{height:calc(100dvh - 20px);--r:26px}
+  .pipe-main{flex-direction:column}
+  .pipe-canvas{flex:0 0 56%}
+  .pipe-head{padding:12px 12px 8px 14px}
+  .pipe-title p{display:none}
+  .pipe-insp{width:auto;flex:1;border-left:0;border-top:.5px solid var(--sep)}
+}
 
 /* dynamic island */
 .island-wrap{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 10px);pointer-events:none}
@@ -558,6 +646,13 @@ a.pill{text-decoration:none}
     <span class="capsule glass clear"><span data-i="eye" data-s="16"></span>Groups under 11 students hidden</span>
     <span class="capsule glass clear"><span data-i="person" data-s="16"></span>AI flags, site teams decide</span>
   </section>
+  <h2 class="group-title pipe-group">Compliance</h2>
+  <button class="tile glass lg-r pipe-tile" id="pipeDial" aria-haspopup="dialog" style="--accent:var(--blue)">
+    <span class="t-ico" data-i="flow" data-s="24"></span>
+    <span class="pt-txt"><strong>Data pipeline <i class="live" aria-hidden="true"></i></strong><span class="t-det" id="pipeDet">17 sources mapped · 12 steps from SIS to screen</span></span>
+    <span class="pt-mini" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+    <span class="pt-go" data-i="chev" data-s="18"></span>
+  </button>
   <footer class="foot glass">District Pulse concept demo by the Technical and Youth Systems Strategy Team. Every figure is simulated except the English learner home-language mix, which comes from San Juan Unified’s published 2023–24 LCAP.</footer>
 </main>
 
@@ -578,6 +673,31 @@ a.pill{text-decoration:none}
     <div class="grabber" aria-hidden="true"></div>
     <div class="sheet-head"><h2 id="sheetTitle"></h2><button class="xbtn" data-close aria-label="Close"><span data-i="x" data-s="16"></span></button></div>
     <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<div class="pipe-layer" id="pipeLayer" hidden>
+  <div class="scrim" data-pipe-close></div>
+  <div class="pipe glass" role="dialog" aria-modal="true" aria-labelledby="pipeTitle">
+    <div class="pipe-head">
+      <div class="pipe-title">
+        <h2 id="pipeTitle"><span data-i="flow" data-s="20" style="color:var(--blue)"></span>Data pipeline</h2>
+        <p>How a student record travels from the district SIS to this screen, and the standard that governs each step. Tap any node.</p>
+      </div>
+      <div class="pipe-tools">
+        <span class="capsule glass clear ok" id="pipeStatus"><span data-i="check" data-s="13"></span>16 sources mapped</span>
+        <span class="capsule glass clear demo">Simulated run</span>
+        <button class="pill prominent" id="pipeRun"><span data-i="play" data-s="14"></span>Run pipeline</button>
+        <button class="ibtn" id="pipeOut" aria-label="Zoom out"><span data-i="minus" data-s="16"></span></button>
+        <button class="ibtn" id="pipeIn" aria-label="Zoom in"><span data-i="plus" data-s="16"></span></button>
+        <button class="ibtn" id="pipeFit" aria-label="Fit to screen"><span data-i="scope" data-s="16"></span></button>
+        <button class="ibtn" data-pipe-close aria-label="Close"><span data-i="x" data-s="16"></span></button>
+      </div>
+    </div>
+    <div class="pipe-main">
+      <div class="pipe-canvas" id="pipeCanvas"><div class="pipe-sizer" id="pipeSizer"><div class="pipe-stage" id="pipeStage"></div></div></div>
+      <aside class="pipe-insp" id="pipeInsp" aria-live="polite"></aside>
+    </div>
   </div>
 </div>
 
@@ -640,7 +760,20 @@ const P={
   phone:'<path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.2 1z"/>',
   mail:'<rect x="3.5" y="5.5" width="17" height="13" rx="2.2"/><path d="m4.5 7 7.5 6 7.5-6"/>',
   grip:'<circle cx="9" cy="7" r="1.3"/><circle cx="15" cy="7" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="17" r="1.3"/><circle cx="15" cy="17" r="1.3"/>',
-  menu:'<path d="M4 6.5h16M4 12h16M4 17.5h16"/>'
+  menu:'<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
+  flow:'<rect x="3" y="4" width="6" height="5" rx="1.5"/><rect x="15" y="4" width="6" height="5" rx="1.5"/><rect x="9" y="15" width="6" height="5" rx="1.5"/><path d="M9 6.5h6M18 9v2.5a2 2 0 0 1-2 2h-2.5M12 13.5V15"/>',
+  play:'<path d="M7.5 5v14l11-7z" fill="currentColor"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  transfer:'<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>',
+  finger:'<path d="M8 20c-1.5-2-2.3-4.5-2.3-7.3a6.3 6.3 0 0 1 12.6 0v1"/><path d="M12 20.5c-1.2-2.2-1.8-4.8-1.8-7.8a1.8 1.8 0 0 1 3.6 0c0 3 .7 5.4 2 7.3"/><path d="M18.3 17.5c.2-.9.2-1.9 0-3"/>',
+  db:'<ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6M5 12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6"/>',
+  key:'<circle cx="8" cy="15" r="4"/><path d="m11 12 8.5-8.5M16.5 6.5l2.5 2.5M14.5 8.5l2 2"/>',
+  sigma:'<path d="M17.5 5.5h-11l6 6.5-6 6.5h11"/>',
+  eyeoff:'<path d="M4 4l16 16M10.2 5.7A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-2.8 3.6M6.3 7.2C3.9 8.9 2.5 12 2.5 12S6 18.5 12 18.5c1.5 0 2.9-.4 4-1"/><path d="M9.9 10a3 3 0 0 0 4.1 4.1"/>',
+  spark:'<path d="M12 3.5c.7 4.3 2.2 5.8 6.5 6.5-4.3.7-5.8 2.2-6.5 6.5-.7-4.3-2.2-5.8-6.5-6.5 4.3-.7 5.8-2.2 6.5-6.5z"/><path d="M18.5 15.5c.3 1.8.9 2.4 2.5 2.7-1.6.3-2.2.9-2.5 2.7-.3-1.8-.9-2.4-2.5-2.7 1.6-.3 2.2-.9 2.5-2.7z"/>',
+  api:'<path d="M8.5 7.5 4 12l4.5 4.5M15.5 7.5 20 12l-4.5 4.5M13.5 5l-3 14"/>',
+  screen:'<rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20.5h6M12 16.5v4"/>',
+  ext:'<path d="M14 4.5h5.5V10M19.5 4.5 11 13M17 14v4.5a1 1 0 0 1-1 1H5.5a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1H10"/>'
 };
 const ico=(k,s=20,w=1.9)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
 
@@ -1048,7 +1181,7 @@ function updateSites(){$$('.site').forEach(s=>{const id=s.dataset.site,open=stat
 /* ---------- actions ---------- */
 function render(){
   setPressed('#metricSeg',state.metric);setPressed('#rangeSeg',state.range);setPressed('#filterSeg',state.filter);
-  $$('.tile').forEach(t=>t.setAttribute('aria-pressed',String(t.dataset.dial===state.dial)));
+  $$('.tile[data-dial]').forEach(t=>t.setAttribute('aria-pressed',String(t.dataset.dial===state.dial)));
   renderSideSel();renderScope();renderWidgets();drawChart();paintMap();renderNotes();renderRecs();updateSites();
 }
 function isolate(id,quiet){
@@ -1066,6 +1199,7 @@ function runDial(k,force){
 
 /* ---------- search ---------- */
 const INDEX=[
+  {label:'Data pipeline',hint:'Sources and safeguards',icon:'flow',c:'--blue',terms:'data pipeline sources compliance ferpa encryption security privacy owasp nist cisa ptac sopipa n8n workflow',go:()=>openPipe()},
   {label:'Whole district',hint:'64 sites',icon:'grid',c:'--blue',terms:'whole district all overview everything reset',go:()=>isolate(null)},
   ...ZONES.map(z=>({label:z.name,hint:`${z.area}, ${ST[z.status].w.toLowerCase()}`,icon:'pin',c:ST[z.status].v,terms:`${z.name} ${z.area} ${z.tags.join(' ')} zone high school`,go:()=>isolate(z.id)})),
   {label:'Language access bottlenecks',hint:'Speed dial',icon:'lang',c:'--blue',terms:'language access el ell elpac english learner newcomer reclassification vocabulary dari pashto spanish',go:()=>runDial('lang',true)},
@@ -1200,14 +1334,208 @@ function setupRefraction(){
   $$('.lg-r').forEach(el=>{el.dataset.lg='lg'+(n++);ro.observe(el)});
 }
 
+/* ---------- data pipeline ---------- */
+/* Sources are the documents in compliance/sources/. Citations point at the clause or page used in
+   compliance/DATA_PROTECTION_SPEC.md. The run is a simulation: no backend exists yet. */
+const PSRC={
+  owasp:{g:'Security',t:'OWASP Top 10:2025',u:'https://top10.owasp.org/2025/'},
+  csf:{g:'Security',t:'NIST Cybersecurity Framework 2.0',u:'https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf'},
+  tls:{g:'Security',t:'NIST SP 800-52r2, TLS',u:'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-52r2.pdf'},
+  sto:{g:'Security',t:'NIST SP 800-111, storage encryption',u:'https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-111.pdf'},
+  keys:{g:'Security',t:'NIST SP 800-57 Pt 1 r5, key management',u:'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf'},
+  cisa:{g:'Security',t:'CISA K-12 report (2023)',u:'https://www.cisa.gov/sites/default/files/2023-01/K-12report_FINAL_V2_508c.pdf'},
+  ferpa:{g:'Student privacy',t:'FERPA, 34 CFR Part 99',u:'https://www.ecfr.gov/current/title-34/part-99'},
+  ptacDA:{g:'Student privacy',t:'PTAC FAQ: Disclosure Avoidance',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/FAQs_disclosure_avoidance_0.pdf'},
+  ptacDI:{g:'Student privacy',t:'PTAC: De-identification terms',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/data_deidentification_terms_0.pdf'},
+  ptacOES:{g:'Student privacy',t:'PTAC: Online Educational Services (2014)',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/Student%20Privacy%20and%20Online%20Educational%20Services%20%28February%202014%29_0.pdf'},
+  ptacSec:{g:'Student privacy',t:'PTAC Data Security Checklist',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/Data%20Security%20Checklist_0.pdf'},
+  ptacBR:{g:'Student privacy',t:'PTAC Data Breach Response Checklist',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/checklist_data_breach_response_092012_0.pdf'},
+  ptacCloud:{g:'Student privacy',t:'PTAC FAQ: Cloud Computing',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/FAQ_Cloud_Computing_0.pdf'},
+  nces:{g:'Student privacy',t:'NCES 2011-603, aggregate reporting',u:'https://nces.ed.gov/pubs2011/2011603.pdf'},
+  edc:{g:'California',t:'Ed Code 49073.1',u:'https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=EDC&sectionNum=49073.1'},
+  sopipa:{g:'California',t:'SOPIPA, Bus. & Prof. Code 22584',u:'https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=BPC&sectionNum=22584'},
+  cde:{g:'California',t:'CDE DataQuest suppression rule',u:'https://www.cde.ca.gov/ds/ad/fsenrcum.asp'}
+};
+const PNODES=[
+ {id:'trig',x:20,y:200,trig:true,t:'Nightly SIS sync',s:'Schedule · 2:00 AM',i:'clock',c:'--indigo',
+  what:'Starts each run. The district pushes an export to District Pulse. District Pulse never logs into the SIS.',
+  kv:[['Trigger','Cron, 02:00 Pacific'],['Direction','District pushes, we receive'],['Contract','Signed under Ed Code 49073.1']],
+  cite:[['edc','(b)(1): records stay district property, under district control'],['ferpa','99.31(a)(1)(i)(B): a vendor is a school official only under direct control'],['ptacOES','p4: direct control is usually set by a signed contract']]},
+ {id:'kms',x:180,y:26,t:'Key vault',s:'KMS · FIPS 140-3',i:'key',c:'--orange',
+  what:'Holds the pseudonym key and one master key per district. Keys never sit in code or in the database.',
+  kv:[['Master key','One per district'],['Rotation','Every 12 months'],['Strength','128-bit or more'],['Contract ends','Key destroyed, data unreadable']],
+  cite:[['keys','Table 4, p72: 112-bit disallowed after 2030'],['keys','§5.3.6, p54: up to a 2-year usage period'],['owasp','A04: keys in an HSM or cloud KMS, never in source'],['edc','(b)(7): certify records are not kept after the contract']]},
+ {id:'sftp',x:180,y:200,t:'Secure transfer',s:'SFTP · TLS 1.3',i:'transfer',c:'--blue',
+  what:'Receives the export over an encrypted channel. Email and plain FTP are refused.',
+  kv:[['Protocol','TLS 1.3, 1.2 minimum'],['Disabled','TLS 1.0, 1.1, all SSL'],['Ciphers','ECDHE with AES-GCM, no CBC']],
+  cite:[['tls','§3.1, p17: shall use 1.2, should use 1.3, shall not use 1.0'],['owasp','A04: forward secrecy, drop CBC, no FTP'],['ptacSec','Encrypt files in transfer, don’t email confidential data']]},
+ {id:'pseudo',x:340,y:200,t:'Pseudonymize',s:'Drop names · HMAC-SHA-256',i:'finger',c:'--indigo',
+  what:'Removes names, birth dates and addresses in memory, then swaps each student ID for a keyed hash. Nothing identifying is written to disk.',
+  kv:[['Removed','Name, DOB, address, family names'],['Student ID','HMAC-SHA-256(key, id)'],['Why keyed','A plain hash of a short ID can be reversed']],
+  cite:[['ferpa','99.3: PII includes name, student number, DOB and linkable data'],['ptacDI','Pseudonymized vs. de-identified data'],['owasp','A04: no unkeyed or deprecated hashes']]},
+ {id:'store',x:500,y:200,t:'Encrypted store',s:'AES-256-GCM at rest',i:'db',c:'--cyan',
+  what:'Keeps pseudonymous records only. Disk encryption, plus envelope encryption on sensitive columns. No human logins.',
+  kv:[['Disk','Volume encryption, KMS-backed'],['Columns','EL, IEP/504, tier: envelope-encrypted'],['Backups','Encrypted, restore tested quarterly'],['Hosting','Under district contract, never a public site']],
+  cite:[['sto','§3.1: full-disk and volume encryption'],['owasp','A04: authenticated encryption for all sensitive data'],['ptacCloud','Cloud hosting under the school-official exception'],['cisa','p5: implement and test backups']]},
+ {id:'agg',x:660,y:200,t:'Aggregate',s:'Zone · site · group',i:'sigma',c:'--blue',
+  what:'Rolls records up into counts per zone, site and student group. Only these totals move on. Row-level data stops here.',
+  kv:[['Output','Counts and rates per cell'],['Row-level data','Stops at this node']],
+  cite:[['ferpa','99.31(b)(1): release after a reasonable de-identification determination'],['nces','How states build aggregate reports']]},
+ {id:'supp',x:820,y:200,t:'Suppress small groups',s:'10 or fewer hidden',i:'eyeoff',c:'--red',
+  what:'Hides any group of 10 or fewer, then hides a second cell so the first can’t be worked out by subtraction. Rates near 0% or 100% show as “<5%” or “>95%”.',
+  kv:[['Primary','n ≤ 10 shows “Fewer than 11”'],['Complementary','Next-smallest cell in the row'],['Extremes','<5% and >95%'],['Differencing','Checked across filters']],
+  cite:[['cde','Cells of 10 or less are suppressed'],['ptacDA','p5: most states use 10; the subtraction attack'],['nces','p23: top and bottom coding; p20: percent × total attack'],['ferpa','99.31(b)(1): “single or multiple releases”']]},
+ {id:'ai',x:660,y:380,t:'AI flag model',s:'Pseudonymous input',i:'spark',c:'--indigo',
+  what:'Scores patterns such as attendance dips and Tier 2 spikes, and raises a flag with a reason. It never changes a tier, files a referral or contacts a family.',
+  kv:[['Input','Pseudonymous features, no free text'],['Output','Flag, reason, confidence'],['Automatic actions','None'],['Outside AI APIs','Zero-retention contract only']],
+  cite:[['sopipa','(b)(2): no profiles except for K-12 school purposes'],['sopipa','(b)(4)(E): service providers bound by contract'],['edc','(b)(3): no use beyond the contract']]},
+ {id:'review',x:820,y:380,t:'Site team review',s:'A person decides',i:'person',c:'--green',demo:true,
+  what:'The site MTSS team accepts, dismisses or escalates each flag. A student is re-identified only here, only for that team’s own site, and it is logged.',
+  kv:[['Decisions','Accept, dismiss, escalate'],['Re-identify','Own site only, logged'],['Target','Reviewed within 3 school days']],
+  cite:[['ferpa','99.31(a)(1)(ii): access limited to legitimate educational interest'],['ferpa','99.32: record of each access and disclosure']],
+  demo:'The “Send to site MTSS team” button on each suggested action is this step.'},
+ {id:'api',x:980,y:200,t:'Dashboard API',s:'Totals only · no-store',i:'api',c:'--blue',
+  what:'Serves suppressed totals to signed-in staff, filtered by role. Responses are never cached.',
+  kv:[['Payload','Totals, never rows'],['Headers','HSTS, Cache-Control: no-store'],['Roles','District, site, reviewer']],
+  cite:[['owasp','A01: broken access control, the top risk'],['owasp','A04: HSTS; don’t cache sensitive responses'],['ferpa','99.31(a)(1)(ii): reasonable access controls']]},
+ {id:'ui',x:1140,y:200,t:'District Pulse',s:'This dashboard',i:'screen',c:'--green',demo:true,
+  what:'The screen you are on. It only ever receives totals, so there is nothing identifying in the browser to find.',
+  kv:[['Sign-in','District SSO with MFA'],['Shows','Zones, rates, flags'],['Never shows','Student names or IDs']],
+  cite:[['cisa','p5: MFA is the first K-12 priority'],['owasp','A07: authentication failures'],['sopipa','(b)(1), (b)(3): no targeted ads, no selling data']],
+  demo:'Running now with simulated figures.'},
+ {id:'audit',x:1140,y:380,t:'Audit log',s:'Append-only',i:'list',c:'--orange',
+  what:'Records every decryption, re-identification, review decision and API call. Unusual query patterns raise an alert.',
+  kv:[['Kept','For the life of the record'],['Alerts','Narrow-filter bursts, decrypt spikes'],['Incident plan','Rehearsed yearly']],
+  cite:[['ferpa','99.32: record of each request and disclosure'],['csf','Detect and Respond functions'],['ptacBR','Breach response checklist'],['cisa','p5: exercise an incident response plan']]}
+];
+const PEDGES=[['trig','sftp','1 export'],['sftp','pseudo','41,318 rows'],['kms','pseudo','key'],['kms','store','key'],['pseudo','store','0 names'],
+  ['store','agg','41,318'],['agg','supp','1,152 cells'],['supp','api','1,041 cells'],['store','ai','features'],['ai','review','flags'],['review','api','decisions'],
+  ['api','ui','totals'],['review','audit','logged',1],['api','audit','logged',1]];
+const PSTEPS=[['trig','kms'],['sftp'],['pseudo'],['store'],['agg','ai'],['supp','review'],['api'],['ui','audit']];
+const PW=1250,PH=520,NB=84,NW=156;
+const pipe={built:false,scale:1,sel:null,running:false,ran:false,timers:[]};
+const pNode=id=>PNODES.find(n=>n.id===id);
+const nSrc=Object.keys(PSRC).length;
+
+function buildPipe(){
+  const st=$('#pipeStage');
+  const port=(n,side)=>({x:n.x+(side==='r'?NB:0),y:n.y+NB/2});
+  let svg=`<svg width="${PW}" height="${PH}" aria-hidden="true">`,labels='';
+  PEDGES.forEach(([a,b,l,dash],k)=>{
+    const p=port(pNode(a),'r'),q=port(pNode(b),'l'),dx=Math.max(50,Math.abs(q.x-p.x)*.5);
+    svg+=`<path class="pipe-edge${dash?' dash':''}" id="pe${k}" d="M${p.x} ${p.y}C${p.x+dx} ${p.y} ${q.x-dx} ${q.y} ${q.x} ${q.y}"/>`;
+    const mx=.125*p.x+.375*(p.x+dx)+.375*(q.x-dx)+.125*q.x,my=.5*p.y+.5*q.y;
+    labels+=`<span class="pipe-elab" id="pl${k}" style="left:${mx}px;top:${my}px">${l}</span>`;
+  });
+  PNODES.forEach(n=>{svg+=`<circle class="pipe-port" cx="${n.x+NB}" cy="${n.y+NB/2}" r="5"/>`;if(!n.trig)svg+=`<circle class="pipe-port" cx="${n.x}" cy="${n.y+NB/2}" r="5"/>`});
+  svg+='</svg>';
+  const zones=[['Ingest',20,172],['Keys',180,2],['Protect',500,172],['Share',980,172],['Human review loop',660,352]].map(([t,x,y])=>`<span class="pipe-zone" style="left:${x}px;top:${y}px">${t}</span>`).join('');
+  const nodes=PNODES.map(n=>`<button class="pnode${n.trig?' trig':''}" data-node="${n.id}" aria-pressed="false" style="--k:${PNODES.indexOf(n)};left:${n.x-(NW-NB)/2}px;top:${n.y}px;--c:var(${n.c})"><span class="nbox">${ico(n.i,36,1.7)}${n.demo?'<span class="ntag">Live in demo</span>':''}<span class="nst">${ico('check',13,2.6)}</span></span><b>${n.t}</b><span class="sub">${n.s}</span></button>`).join('');
+  st.innerHTML=svg+labels+zones+nodes;
+  st.addEventListener('click',e=>{const b=e.target.closest('.pnode');if(b)selectNode(pipe.sel===b.dataset.node?null:b.dataset.node)});
+  // mouse drag to pan (touch pans natively)
+  const cv=$('#pipeCanvas');let d=null;
+  cv.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.target.closest('.pnode'))return;d={x:e.clientX,y:e.clientY,l:cv.scrollLeft,t:cv.scrollTop};cv.classList.add('drag');cv.setPointerCapture(e.pointerId)});
+  cv.addEventListener('pointermove',e=>{if(!d)return;cv.scrollLeft=d.l-(e.clientX-d.x);cv.scrollTop=d.t-(e.clientY-d.y)});
+  const up=()=>{d=null;cv.classList.remove('drag')};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  pipe.built=true;
+}
+function zoomPipe(s){
+  pipe.scale=Math.min(1.4,Math.max(.4,s));
+  $('#pipeStage').style.transform=`scale(${pipe.scale})`;
+  const z=$('#pipeSizer');z.style.width=PW*pipe.scale+28+'px';z.style.height=PH*pipe.scale+28+'px';
+}
+function fitPipe(all){const cv=$('#pipeCanvas'),w=(cv.clientWidth-30)/PW,h=(cv.clientHeight-30)/PH;zoomPipe(all?Math.min(1,w,h):innerWidth<=820?Math.min(.84,Math.max(.45,h)):Math.min(1,Math.max(.84,w)));cv.scrollLeft=0;cv.scrollTop=0}
+function srcItem(k,note){const s=PSRC[k];return `<li><a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)} ${ico('ext',12,2)}</a><small>${esc(note)}</small></li>`}
+function drawInsp(){
+  const box=$('#pipeInsp');
+  if(!pipe.sel){
+    const uses={};PNODES.forEach(n=>n.cite.forEach(([k])=>{(uses[k]=uses[k]||new Set()).add(n.t)}));
+    const groups=[...new Set(Object.values(PSRC).map(s=>s.g))];
+    box.innerHTML=`<h3>${ico('flow',18,2)}Sources feeding this pipeline</h3><p>${PNODES.length} steps, ${PEDGES.length} connections, ${nSrc} sources. Every step cites the rule it follows. Tap a node for its settings.</p>
+      <span class="stat">${ico('lock',13,2)}No student names past step 4</span>
+      ${groups.map(g=>`<div class="grp">${g}</div><ul class="srcs">${Object.entries(PSRC).filter(([,s])=>s.g===g).map(([k])=>srcItem(k,'Used by: '+[...(uses[k]||[])].join(', '))).join('')}</ul>`).join('')}
+      <h4>About this view</h4><p>The run is a simulation with the same demo figures as the rest of the dashboard. The backend it describes is specified in the District Pulse data protection spec but not yet built.</p>`;
+    return;
+  }
+  const n=pNode(pipe.sel);
+  box.innerHTML=`<button class="back" id="pipeBack">${ico('chev',14,2.4).replace('<svg','<svg style="transform:scaleX(-1)"')}All sources</button>
+    <h3><span style="color:var(${n.c});display:grid">${ico(n.i,20,2)}</span>${esc(n.t)}</h3><p>${esc(n.what)}</p>
+    <span class="stat${n.demo?' demo':''}">${n.demo?ico('check',13,2.4)+'Live in this demo':ico('doc',13,2)+'Specified, backend not built yet'}</span>
+    ${n.demo&&typeof n.demo==='string'?`<p style="margin-top:8px">${esc(n.demo)}</p>`:''}
+    <h4>Settings</h4><dl class="kv">${n.kv.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>
+    <h4>Governed by</h4><ul class="srcs">${n.cite.map(([k,note])=>srcItem(k,note)).join('')}</ul>`;
+  box.querySelector('#pipeBack').onclick=()=>selectNode(null);
+}
+function selectNode(id){
+  pipe.sel=id;
+  $$('.pnode').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.node===id)));
+  drawInsp();$('#pipeInsp').scrollTop=0;
+}
+function lightFrom(id){PEDGES.forEach(([a],k)=>{if(a===id){$('#pe'+k).classList.add('lit');$('#pl'+k).classList.add('on')}})}
+function runPipe(){
+  if(pipe.running)return;
+  pipe.timers.forEach(clearTimeout);pipe.timers=[];pipe.running=true;
+  $$('.pnode').forEach(b=>b.classList.remove('run','done'));$$('.pipe-edge').forEach(p=>p.classList.remove('lit'));$$('.pipe-elab').forEach(l=>l.classList.remove('on'));
+  $('#pipeRun').disabled=true;$('#pipeStatus').innerHTML=ico('clock',13,2)+'Running…';
+  const el=id=>$(`.pnode[data-node="${id}"]`),gap=reduceMotion?0:560;
+  PSTEPS.forEach((ids,i)=>{
+    pipe.timers.push(setTimeout(()=>{ids.forEach(id=>el(id).classList.add('run'));const cv=$('#pipeCanvas'),x=(pNode(ids[0]).x+NB/2)*pipe.scale+14;if(cv.scrollWidth>cv.clientWidth)cv.scrollTo({left:Math.max(0,x-cv.clientWidth*.55),behavior:reduceMotion||document.hidden?'auto':'smooth'})},i*gap));
+    pipe.timers.push(setTimeout(()=>ids.forEach(id=>{const b=el(id);b.classList.remove('run');b.classList.add('done');lightFrom(id)}),i*gap+gap*.8));
+  });
+  pipe.timers.push(setTimeout(()=>{
+    pipe.running=false;pipe.ran=true;$('#pipeRun').disabled=false;
+    $('#pipeStatus').innerHTML=ico('check',13,2.4)+`${PNODES.length}/${PNODES.length} steps passed`;
+    island('Pipeline run complete','Simulated · 111 cells hidden · 0 names','--green','flow');
+  },PSTEPS.length*gap+80));
+}
+function flipFrom(panel,r,dur,rev){
+  const p=panel.getBoundingClientRect();
+  const from=`translate(${r.left-p.left}px,${r.top-p.top}px) scale(${r.width/p.width},${r.height/p.height})`;
+  return panel.animate(rev?[{transform:'none',opacity:1},{transform:from,opacity:.2}]:[{transform:from,opacity:.35,borderRadius:'30px'},{transform:'none',opacity:1}],
+    {duration:dur,easing:rev?'cubic-bezier(.4,0,.8,.6)':'cubic-bezier(.16,1.08,.3,1)',fill:rev?'forwards':'none'});
+}
+function openPipe(){
+  if(!pipe.built)buildPipe();
+  pipe.last=document.activeElement;
+  const L=$('#pipeLayer'),panel=L.querySelector('.pipe'),tile=$('#pipeDial');
+  panel.getAnimations().forEach(a=>a.cancel());delete L.dataset.closing;clearTimeout(pipe.endT);
+  L.hidden=false;document.body.classList.add('sheet-open');
+  drawInsp();fitPipe();
+  if(!reduceMotion&&panel.animate){
+    L.classList.remove('pop');void L.offsetWidth;L.classList.add('pop');
+    const sc=L.querySelector('.scrim');sc.style.opacity=0;requestAnimationFrame(()=>sc.style.opacity=1);
+    const an=flipFrom(panel,tile.getBoundingClientRect(),300,false);
+    setTimeout(()=>{if(an.playState!=='finished')an.finish()},380);
+  }
+  requestAnimationFrame(()=>$('.pnode').focus({preventScroll:true}));
+  if(!pipe.ran)pipe.timers.push(setTimeout(runPipe,reduceMotion?0:320));
+}
+function closePipe(){
+  const L=$('#pipeLayer'),panel=L.querySelector('.pipe'),tile=$('#pipeDial');
+  const done=()=>{L.hidden=true;L.classList.remove('pop');document.body.classList.remove('sheet-open');if(pipe.last&&pipe.last.focus)pipe.last.focus({preventScroll:true})};
+  if(reduceMotion||!panel.animate||L.dataset.closing)return done();
+  L.dataset.closing=1;L.querySelector('.scrim').style.opacity=0;
+  const an=flipFrom(panel,tile.getBoundingClientRect(),200,true);
+  const end=()=>{clearTimeout(pipe.endT);if(!L.dataset.closing)return;an.cancel();delete L.dataset.closing;done()};
+  an.onfinish=end;pipe.endT=setTimeout(end,280);
+}
+
 /* ---------- wiring ---------- */
 function wire(){
+  $('#pipeDet').textContent=`${nSrc} sources mapped · ${PNODES.length} steps from SIS to screen`;$('#pipeStatus').lastChild.textContent=`${nSrc} sources mapped`;
+  $('#pipeDial').addEventListener('click',openPipe);
+  $('#pipeLayer').addEventListener('click',e=>{if(e.target.closest('[data-pipe-close]'))closePipe()});
+  $('#pipeRun').addEventListener('click',runPipe);
+  $('#pipeIn').addEventListener('click',()=>zoomPipe(pipe.scale+.15));
+  $('#pipeOut').addEventListener('click',()=>zoomPipe(pipe.scale-.15));
+  $('#pipeFit').addEventListener('click',()=>fitPipe(true));
   $('#metricSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.metric){state.metric=b.dataset.v;render()}});
   $('#rangeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v==='ytd'?'ytd':+b.dataset.v;if(v!==state.range){state.range=v;render()}});
   $('#filterSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.filter){state.filter=b.dataset.v;render()}});
   $('#yoyBtn').addEventListener('click',()=>{state.yoy=!state.yoy;$('#yoyBtn').setAttribute('aria-pressed',String(state.yoy));$('#yoyBtn').classList.toggle('on',state.yoy);drawChart()});
   $('#hamburger').addEventListener('click',openDrawer);
-  $$('.tile').forEach(t=>t.addEventListener('click',()=>runDial(t.dataset.dial)));
+  $$('.tile[data-dial]').forEach(t=>t.addEventListener('click',()=>runDial(t.dataset.dial)));
   $('#scopeChip').addEventListener('click',()=>isolate(null));
   $('#briefBtn').addEventListener('click',openBrief);
   $('#fab').addEventListener('click',openSearch);
@@ -1222,6 +1550,7 @@ function wire(){
   $('#sheetLayer').addEventListener('click',e=>{if(e.target.closest('[data-close]'))closeSheet()});
   $('#drawerLayer').addEventListener('click',e=>{if(e.target.closest('[data-drawer-close]'))closeDrawer()});
   document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&!$('#pipeLayer').hidden){closePipe();return}
     if(e.key==='Escape'&&!$('#sheetLayer').hidden)closeSheet();
     if(e.key==='Escape'&&!$('#drawerLayer').hidden)closeDrawer();
   });
