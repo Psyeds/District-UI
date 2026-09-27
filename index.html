@@ -165,7 +165,24 @@ h1,h2,h3,p{margin:0}
 .hdr-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .capsule{--r:999px;display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px;font-size:14px;color:var(--label2);white-space:nowrap}
 .capsule b{color:var(--label);font-weight:600;font-variant-numeric:tabular-nums}
-.capsule.demo{--tint:color-mix(in srgb,var(--yellow) 42%,transparent);color:var(--label)}
+.capsule.demo{--tint:color-mix(in srgb,var(--yellow) 42%,transparent);color:var(--label);border:0;background:transparent;cursor:pointer;font-weight:600}
+.capsule.demo span{display:grid}
+/* data provenance tags + info buttons */
+.dtag{display:inline-block;vertical-align:middle;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;line-height:1.2;text-shadow:none;white-space:nowrap}
+h2 .dtag{margin-left:6px;position:relative;top:-2px}
+.dtag.sim{background:color-mix(in srgb,var(--yellow) 30%,transparent);color:var(--label)}
+.dtag.pub{background:color-mix(in srgb,var(--green) 24%,transparent);color:var(--label)}
+.dtag.interp{background:var(--fill2);color:var(--label2)}
+.info{display:inline-grid;place-items:center;width:26px;height:26px;margin:-5px -4px -5px 0;border:0;border-radius:50%;background:transparent;color:var(--label2);cursor:pointer;vertical-align:middle}
+.info:hover{color:var(--blue)}
+.info:focus-visible,.capsule.demo:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.tgt{color:var(--label2)}
+.gap{font-weight:600}
+.gap.good,.good{color:var(--green)}.gap.bad,.bad{color:var(--red)}
+.tline{display:flex;flex-wrap:wrap;gap:0 6px;font-size:12px;line-height:1.35}
+.info-sec{padding:12px 14px;border-radius:18px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim);margin-bottom:8px}
+.info-sec b{display:block;font-size:13px;color:var(--label2);font-weight:600;margin-bottom:2px}
+.info-sec p{font-size:15px;line-height:1.4}
 .scope{border:0;cursor:pointer;color:var(--label);font-weight:600}
 .scope[hidden]{display:none}
 .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:beat 2.2s infinite}
@@ -182,6 +199,13 @@ h1,h2,h3,p{margin:0}
 .tile[aria-pressed="true"]{--tint:rgba(255,255,255,.95);--sheen:0;color:#000}
 .tile[aria-pressed="true"] .t-det{color:rgba(60,60,67,.8)}
 .tile[aria-pressed="true"] .t-ico{background:var(--accent);color:#fff}
+/* phone: quick-glance first. Header, then the four status widgets, then speed dials and the rest. */
+@media (max-width:700px){
+  .main{display:flex;flex-direction:column}
+  .main>.hdr{order:-3}
+  .main>.glance-title,.main>.widgets{order:-2}
+  .glance-title .gt-hint{display:none}
+}
 @media (max-width:560px){
   .tile{--r:26px;min-height:116px;padding:12px}
   .t-det{display:none}
@@ -192,9 +216,9 @@ h1,h2,h3,p{margin:0}
 /* widgets */
 .widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin-bottom:12px}
 .widget{--r:26px;min-height:158px;padding:14px 14px 12px;display:flex;flex-direction:column;position:relative;transition:transform .18s ease}
-.widget.dragging-w{transition:none;box-shadow:0 20px 40px -14px rgba(0,0,0,.4)}
-.widget .grip{position:absolute;top:6px;right:6px;width:26px;height:26px;border:0;background:transparent;color:var(--label3);display:grid;place-items:center;cursor:grab;touch-action:none;z-index:2;border-radius:8px}
-.widget .grip:active{cursor:grabbing;background:var(--fill)}
+[data-widget].dragging-w{position:relative;z-index:6;transition:none;box-shadow:0 20px 40px -14px rgba(0,0,0,.4)}
+[data-widget]>.grip{position:absolute;top:6px;right:6px;width:26px;height:26px;border:0;background:transparent;color:var(--label3);display:grid;place-items:center;cursor:grab;touch-action:none;z-index:2;border-radius:8px}
+[data-widget]>.grip:active{cursor:grabbing;background:var(--fill)}
 .widget-body{display:flex;flex-direction:column;flex:1;min-height:0}
 .w-label{font-size:13px;font-weight:600;color:var(--label2)}
 .ring{position:relative;width:88px;height:88px;margin:4px auto 0}
@@ -211,7 +235,136 @@ h1,h2,h3,p{margin:0}
 .minibars{display:flex;align-items:flex-end;gap:5px;height:40px;margin-top:10px}
 .minibars span{flex:1;border-radius:4px;transition:opacity .3s}
 .w-foot{margin-top:auto;padding-top:8px;font-size:12px;color:var(--label2);line-height:1.3}
+.w-label{display:flex;align-items:center;gap:2px;padding-right:22px}
+.w-tgt{margin-top:6px}
+.w-tgt .gap{display:block;font-size:13px}
+.w-wk{font-size:11.5px;color:var(--label2);margin-top:2px}
 .good{color:var(--green);font-weight:600}.bad{color:var(--red);font-weight:600}
+
+/* draggable cards + dial focus */
+.fact,.card[data-widget]{position:relative}
+.card[data-widget] .card-head{padding-right:26px}
+[data-widget]>.grip:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.widget.focus{outline:2.5px solid var(--blue);outline-offset:2px;border-radius:var(--r)}
+.gt-hint{font-size:12px;font-weight:500;color:var(--label3);margin-left:6px}
+
+/* speed dial panel */
+.dial-panel{margin-bottom:12px;animation:dpIn .32s cubic-bezier(.2,1.2,.4,1)}
+.dial-panel[hidden]{display:none}
+@keyframes dpIn{from{opacity:0;transform:translateY(-8px)}}
+.dp-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.dp-head>div{flex:1;min-width:0}
+.dp-head h2{font-size:20px;font-weight:700;letter-spacing:-.015em}
+.dp-head p{font-size:13px;color:var(--label2)}
+.dp-ico{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff}
+.dp-body{display:grid;gap:12px}
+.dp-body.one{margin-bottom:12px}
+@media (min-width:900px){.dp-body:not(.one){grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}}
+.dstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
+.dstat{position:relative;padding:12px;border-radius:18px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim)}
+.dstat b{display:block;font-size:24px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.dstat span{display:block;font-size:12.5px;color:var(--label2);line-height:1.3;margin-top:2px}
+.dstat i{display:inline-block;font-style:normal;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:999px;margin-top:8px;color:var(--label)}
+.dstat i.real{background:color-mix(in srgb,var(--green) 24%,transparent)}
+.dstat i.sim{background:color-mix(in srgb,var(--yellow) 30%,transparent)}
+.dstat .tline{margin-top:4px}
+/* headline block shared by speed dials and the zone focus panel */
+.dp-find{padding:14px 16px;border-radius:22px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim);display:grid;gap:10px}
+.dp-find .kick{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--label2)}
+.dp-find h3{font-size:19px;font-weight:700;line-height:1.25;letter-spacing:-.01em}
+.dp-find p{font-size:14px;line-height:1.4;color:var(--label2)}
+.dp-find p b{color:var(--label);font-weight:600}
+.dp-act{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding-top:10px;border-top:.5px solid var(--sep)}
+.dp-act>div{flex:1 1 240px}
+.dp-act span{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--label2)}
+.dp-act strong{font-size:15px;font-weight:600;line-height:1.3}
+.zstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:760px){.zstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.zstats .dstat b{font-size:22px}
+.zp-nav{display:flex;align-items:center;gap:6px;flex:none}
+@media (max-width:640px){.dp-head{flex-wrap:wrap}.dp-head>div{flex:1 1 calc(100% - 60px)}.zp-nav{margin-left:auto}}
+.zp-nav .circle{width:36px;height:36px}
+.zp-nav em{font-style:normal;font-size:12px;color:var(--label2);font-variant-numeric:tabular-nums;min-width:40px;text-align:center}
+.sc-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+@media (max-width:760px){.sc-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sc-stats .dstat{padding:10px 12px}
+.sc-stats .dstat b{font-size:20px}
+/* evidence labels on suggested actions */
+.ev{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:13px;color:var(--label2);margin:0 0 10px 20px;line-height:1.3}
+.rec .lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--label2);margin-bottom:2px}
+.rec p .lbl{display:inline;margin-right:4px}
+.brief-list .bl{display:block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--label2);margin-top:6px}
+.brief-list .bl+p{margin-top:0}
+.split-note{font-size:12px;color:var(--label2);margin-top:4px}
+
+/* all schools */
+.sch-seg{max-width:100%;overflow-x:auto;scrollbar-width:none}
+.sch-q{flex:1 1 200px;max-width:320px}
+.sch-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:var(--label2);margin:2px 2px 8px}
+.sch-list{display:grid;gap:6px;max-height:620px;overflow:auto;padding-right:2px}
+.sch-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim)}
+.sch-main{flex:1;min-width:0}
+.sch-main b{display:block;font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sch-main span{display:block;font-size:12px;color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sch-n{flex:none;text-align:right;font-variant-numeric:tabular-nums}
+.sch-n b{display:block;font-size:16px;font-weight:700}
+.sch-n span{font-size:11.5px;color:var(--label2)}
+.sch-n span.up{color:var(--green);font-weight:600}.sch-n span.dn{color:var(--red);font-weight:600}
+.sch-chart{margin:4px 0 14px;padding:14px;border-radius:22px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim);outline:none}
+.sch-chart .card-head{margin-bottom:6px}
+.sc-nav{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sc-nav .circle{flex:none;width:40px;height:40px}
+.sc-nav .circle:disabled{opacity:.35;cursor:default}
+.sc-id{flex:1;min-width:0}
+.sc-id h3{margin:0;font-size:20px;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-id p{margin:2px 0 0;font-size:12.5px;color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-pos{flex:none;font-size:12px;color:var(--label2);font-variant-numeric:tabular-nums}
+.seg[hidden],.pill[hidden]{display:none}
+.sch-list{position:relative}
+.sch-row{cursor:pointer}
+.sch-row:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.sch-row.on{box-shadow:inset 0 0 0 2px var(--blue)}
+.tag-real,.tag-sim{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:999px;margin-left:4px}
+.tag-real{background:color-mix(in srgb,var(--green) 22%,transparent);color:var(--label)}
+.tag-sim{background:var(--fill2);color:var(--label2)}
+.sch-tel{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--fill2);color:var(--blue)}
+
+/* district facts (published data) */
+.facts-title{display:flex;align-items:center;gap:8px;margin-top:6px}
+.real-chip{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--green) 22%,transparent);color:var(--label);text-shadow:none}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:12px}
+.fact{--r:26px;padding:14px 14px 12px;display:flex;flex-direction:column;min-width:0}
+.fact .w-big{font-size:30px;margin-top:6px}
+.fact .f-sub{font-size:13px;color:var(--label2);margin-top:2px}
+.fact .f-delta{font-size:13px;margin-top:6px;color:var(--label)}
+.fact .f-delta b{font-weight:600}
+.fspark{display:block;width:100%;height:46px;margin-top:8px;overflow:visible}
+.fspark path{fill:none;stroke:var(--blue);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.fspark circle{fill:var(--blue);stroke:var(--solid);stroke-width:2}
+.fspark .hit{fill:transparent;stroke:none;cursor:default}
+.fspark g:hover circle,.fspark g:focus circle{r:5}
+.fact .w-foot{display:flex;justify-content:space-between;gap:8px;font-variant-numeric:tabular-nums}
+.kv-list{display:grid;gap:8px}
+.kv-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:baseline;padding:10px 12px;border-radius:18px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim)}
+.kv-row b{font-size:15px;font-weight:600}
+.kv-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.kv-row p{grid-column:1/-1;font-size:13px;color:var(--label2);line-height:1.35}
+.fs-badge{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:20px;background:color-mix(in srgb,var(--green) 18%,var(--plate));margin-bottom:12px}
+.fs-badge .ic{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--green);color:#fff}
+.fs-badge b{display:block;font-size:15px}
+.fs-badge p{font-size:13px;color:var(--label2);line-height:1.35;margin-top:2px}
+.vbars{display:flex;align-items:flex-end;gap:6px;height:120px;padding-top:18px;margin:6px 0 4px;border-bottom:1px solid var(--sep)}
+.vbars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;min-width:0}
+.vbars span.col{width:100%;max-width:34px;border-radius:4px 4px 0 0;background:var(--blue);min-height:2px}
+.vbars div.now span.col{background:var(--orange)}
+.vbars em{font-style:normal;font-size:12px;font-weight:600;color:var(--label);font-variant-numeric:tabular-nums}
+.vlabels{display:flex;gap:6px;font-size:10.5px;color:var(--label2);margin-bottom:12px}
+.vlabels span{flex:1;text-align:center;min-width:0}
+.fs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.fs-grid div{padding:10px 12px;border-radius:18px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim)}
+.fs-grid b{display:block;font-size:24px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.fs-grid span{font-size:12.5px;color:var(--label2);line-height:1.3;display:block}
+.sub-h{font-size:13px;font-weight:700;color:var(--label2);margin:4px 2px 6px}
 
 /* cards */
 .duo{display:grid;gap:12px;margin-bottom:12px}
@@ -230,6 +383,9 @@ h1,h2,h3,p{margin:0}
 /* segmented controls */
 .seg{position:relative;display:inline-flex;max-width:100%;padding:3px;border-radius:999px;background:var(--fill);isolation:isolate}
 .seg button{position:relative;z-index:1;border:0;background:transparent;padding:6px 13px;border-radius:999px;font-size:13px;font-weight:600;color:var(--label);cursor:pointer;white-space:nowrap}
+.seg{overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}
+.seg::-webkit-scrollbar{display:none}
+@media (max-width:560px){.seg button{padding:6px 10px;font-size:12.5px}.card-head .seg{max-width:100%}}
 .seg-thumb,.tab-thumb{position:absolute;z-index:0;left:0;width:0;border-radius:999px;transition:transform .5s cubic-bezier(.3,1.3,.45,1),width .5s cubic-bezier(.3,1.3,.45,1)}
 .seg-thumb{top:3px;bottom:3px;background:var(--thumb);box-shadow:var(--thumb-shadow)}
 .pop{animation:pop .5s cubic-bezier(.3,1.3,.45,1)}
@@ -259,6 +415,10 @@ h1,h2,h3,p{margin:0}
 .tip b{display:block;font-size:15px;margin-bottom:4px}
 .tr{display:flex;justify-content:space-between;gap:14px;color:var(--label2);line-height:1.5}
 .tr span:last-child{color:var(--label);font-weight:600;font-variant-numeric:tabular-nums}
+.tr span.good{color:var(--green)}.tr span.bad{color:var(--red)}
+.tr small{font-size:11px;color:var(--label3)}
+.tr:last-child span{font-size:11px;font-weight:500;color:var(--label3)}
+.tip{min-width:230px}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:13px;color:var(--label2)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
@@ -299,7 +459,7 @@ h1,h2,h3,p{margin:0}
 .contact-who{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
 .contact-note{font-size:11.5px;color:var(--label2);margin-top:8px;line-height:1.3}
 a.pill{text-decoration:none}
-.bench-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--label2);white-space:nowrap}
+.bench-chip{display:inline-flex;align-items:center;flex-wrap:wrap;gap:3px 5px;font-size:12.5px;color:var(--label2)}
 .bench-chip b{color:var(--label);font-weight:600}
 .pill{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:0;border-radius:999px;background:var(--fill2);color:var(--label);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .3s cubic-bezier(.3,1.4,.5,1)}
 .pill:active{transform:scale(.96)}
@@ -341,23 +501,6 @@ a.pill{text-decoration:none}
 .privacy{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0 12px}
 .privacy .capsule{color:var(--label)}
 .privacy .capsule span{display:grid;color:var(--green)}
-.pipe-group{margin-top:22px}
-.pipe-tile{width:100%;min-height:96px;flex-direction:row;align-items:center;gap:14px;margin-bottom:16px;padding:16px 18px}
-.pipe-tile .t-ico{flex:none;width:52px;height:52px;background:var(--accent);color:#fff;box-shadow:0 6px 18px -6px color-mix(in srgb,var(--accent) 80%,transparent)}
-.pipe-tile .pt-txt{flex:1;min-width:0}
-.pipe-tile strong{font-size:17px;display:flex;align-items:center;gap:8px}
-.pipe-tile .t-det{display:block;font-size:13.5px}
-.pipe-tile .live{width:8px;height:8px;border-radius:50%;background:var(--green);animation:ping 2s ease-out infinite}
-.pt-mini{flex:none;display:flex;align-items:center;gap:14px;position:relative;padding:0 4px}
-.pt-mini::before{content:"";position:absolute;left:10px;right:10px;top:50%;height:2px;margin-top:-1px;background:repeating-linear-gradient(90deg,var(--green) 0 6px,transparent 6px 12px);background-size:24px 2px;animation:minif .6s linear infinite}
-.pt-mini i{position:relative;width:18px;height:18px;border-radius:6px;background:var(--solid);box-shadow:0 0 0 1.5px var(--sep),0 3px 8px -4px rgba(0,0,0,.4)}
-.pt-mini i::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--green);animation:blink 1.5s ease-in-out infinite}
-.pt-mini i:nth-child(2)::after{animation-delay:.15s}.pt-mini i:nth-child(3)::after{animation-delay:.3s}.pt-mini i:nth-child(4)::after{animation-delay:.45s}.pt-mini i:nth-child(5)::after{animation-delay:.6s}
-.pt-go{flex:none;color:var(--label3)}
-@keyframes minif{to{background-position:24px 0}}
-@keyframes blink{0%,100%{opacity:.35}50%{opacity:1}}
-@media (max-width:560px){.pt-mini{display:none}.pipe-tile .t-det{display:block;font-size:12.5px}}
-@keyframes ping{70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .foot{--r:20px;--tint:var(--tint-clear);max-width:680px;margin:0 auto;padding:12px 16px;font-size:12px;line-height:1.45;color:var(--label2);text-align:center}
 
 /* floating tab bar */
@@ -398,76 +541,6 @@ a.pill{text-decoration:none}
 .brief-text[hidden]{display:none}
 .empty{font-size:15px;color:var(--label2);line-height:1.45;padding:4px 2px 10px}
 
-/* data pipeline (n8n-style canvas) */
-.pipe-layer{position:fixed;inset:0;z-index:52;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 10px) 8px calc(env(safe-area-inset-bottom,0px) + 10px)}
-.pipe-layer[hidden]{display:none}
-.pipe{--r:30px;--tint:var(--tint-sheet);width:100%;max-width:1240px;height:min(92vh,820px);display:flex;flex-direction:column;overflow:hidden;transform-origin:0 0;will-change:transform}
-.pipe-layer .scrim{transition:opacity .28s ease}
-.pipe-layer.pop .pnode{animation:npop .34s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(var(--k)*22ms + 120ms)}
-@keyframes npop{from{opacity:0;transform:scale(.6)}}
-.pipe-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:14px 14px 10px 18px;border-bottom:.5px solid var(--sep)}
-.pipe-title{flex:1 1 220px;min-width:0}
-.pipe-title h2{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
-.pipe-title p{font-size:13px;color:var(--label2);margin-top:2px;line-height:1.35}
-.pipe-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.pipe-tools .capsule{height:30px;font-size:12px;padding:0 10px;box-shadow:none}
-.pipe-tools .capsule.ok{--tint:color-mix(in srgb,var(--green) 22%,transparent);color:var(--label)}
-.pipe-tools .ibtn{width:32px;height:32px;border-radius:50%;border:0;background:var(--fill2);color:var(--label);display:grid;place-items:center;cursor:pointer}
-.pipe-main{flex:1;min-height:0;display:flex}
-.pipe-canvas{position:relative;flex:1;min-width:0;overflow:auto;display:flex;cursor:grab;overscroll-behavior:contain;
-  background-image:radial-gradient(circle,var(--label3) 1px,transparent 1.3px);background-size:22px 22px;background-color:color-mix(in srgb,var(--solid) 78%,transparent)}
-.pipe-canvas.drag{cursor:grabbing}
-.pipe-sizer{position:relative;flex:none;margin:auto;padding:14px}
-.pipe-stage{position:absolute;left:14px;top:14px;width:1250px;height:520px;transform-origin:0 0}
-.pipe-stage svg{position:absolute;inset:0;overflow:visible}
-.pipe-edge{fill:none;stroke:var(--label3);stroke-width:2}
-.pipe-edge.dash{stroke-dasharray:5 6}
-.pipe-edge.lit{stroke:var(--green);stroke-width:2.4;stroke-dasharray:7 7;animation:flow 1s linear infinite}
-@keyframes flow{to{stroke-dashoffset:-14}}
-.pipe-port{fill:var(--solid);stroke:var(--label3);stroke-width:1.6}
-.pipe-elab{position:absolute;transform:translate(-50%,-50%);font-size:11px;font-weight:600;white-space:nowrap;padding:3px 8px;border-radius:999px;background:var(--solid);color:var(--label2);box-shadow:0 0 0 .5px var(--sep),0 4px 10px -6px rgba(0,0,0,.3);opacity:0;transition:opacity .3s;pointer-events:none;font-variant-numeric:tabular-nums}
-.pipe-elab.on{opacity:1}
-.pnode{position:absolute;width:156px;display:flex;flex-direction:column;align-items:center;gap:0;padding:0;border:0;background:none;text-align:center;cursor:pointer;color:var(--label)}
-.pnode .nbox{position:relative;width:84px;height:84px;border-radius:20px;display:grid;place-items:center;background:var(--solid);color:var(--c);
-  box-shadow:0 0 0 1.5px var(--sep),0 10px 24px -14px rgba(0,0,0,.5);transition:box-shadow .2s,transform .3s cubic-bezier(.3,1.4,.5,1)}
-.pnode.trig .nbox{border-radius:42px 20px 20px 42px}
-.pnode:hover .nbox{transform:translateY(-2px)}
-.pnode[aria-pressed="true"] .nbox{box-shadow:0 0 0 3px var(--blue),0 12px 28px -14px rgba(0,0,0,.55)}
-.pnode .nbox::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--c);opacity:.1}
-.pnode b{margin-top:9px;font-size:13.5px;font-weight:600;line-height:1.15}
-.pnode .sub{margin-top:2px;font-size:11px;color:var(--label2);line-height:1.2}
-.pnode .nst{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--solid);color:var(--label3);box-shadow:0 0 0 1.5px var(--sep);transition:background .25s,color .25s}
-.pnode.done .nst{background:var(--green);color:#fff;box-shadow:none}
-.pnode.run .nst{color:transparent;box-shadow:none}
-.pnode.run .nst::after{content:"";position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--blue);border-right-color:transparent;animation:spin .7s linear infinite}
-.pnode.run .nbox{box-shadow:0 0 0 2.5px var(--blue),0 0 26px -2px color-mix(in srgb,var(--blue) 55%,transparent)}
-.pnode .ntag{position:absolute;top:-9px;left:-8px;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;padding:2px 6px;border-radius:6px;background:var(--green);color:#fff}
-@keyframes spin{to{transform:rotate(360deg)}}
-.pipe-zone{position:absolute;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--label3)}
-.pipe-insp{flex:none;width:320px;border-left:.5px solid var(--sep);overflow:auto;padding:16px 16px 20px;font-size:14px;line-height:1.42}
-.pipe-insp h3{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.pipe-insp h4{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--label3);margin:16px 0 6px}
-.pipe-insp p{color:var(--label2)}
-.pipe-insp .kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px}
-.pipe-insp .kv dt{color:var(--label2)}
-.pipe-insp .kv dd{margin:0;font-weight:600}
-.pipe-insp .srcs{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.pipe-insp .srcs li{padding:9px 11px;border-radius:14px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim),0 0 0 .5px var(--sep)}
-.pipe-insp .srcs a,.pipe-insp .srcs b{font-size:13px;font-weight:600;color:var(--label);text-decoration:none}
-.pipe-insp .srcs a:hover{color:var(--blue)}
-.pipe-insp .srcs small{display:block;font-size:12px;color:var(--label2);margin-top:1px}
-.pipe-insp .grp{font-size:12px;font-weight:700;color:var(--label3);margin:14px 0 6px}
-.pipe-insp .stat{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--fill2);margin-top:6px}
-.pipe-insp .stat.demo{background:color-mix(in srgb,var(--green) 24%,transparent)}
-.pipe-insp .back{border:0;background:none;color:var(--blue);font-size:14px;font-weight:600;padding:0;margin-bottom:10px;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
-@media (max-width:820px){
-  .pipe{height:calc(100dvh - 20px);--r:26px}
-  .pipe-main{flex-direction:column}
-  .pipe-canvas{flex:0 0 56%}
-  .pipe-head{padding:12px 12px 8px 14px}
-  .pipe-title p{display:none}
-  .pipe-insp{width:auto;flex:1;border-left:0;border-top:.5px solid var(--sep)}
-}
 
 /* dynamic island */
 .island-wrap{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;justify-content:center;padding-top:calc(env(safe-area-inset-top,0px) + 10px);pointer-events:none}
@@ -533,7 +606,7 @@ a.pill{text-decoration:none}
     </div>
     <nav class="side-list">
       <button class="side-row" data-zone=""><span class="sico" data-i="grid" data-s="20"></span>Whole district<span class="det">64</span></button>
-      <h3 class="side-head">Zones <span>Tier 3 open</span></h3>
+      <h3 class="side-head">Zones <span>Tier 3 cases</span></h3>
       <div id="sideZones"></div>
       <h3 class="side-head">Board</h3>
       <button class="side-row" id="sideBrief"><span class="sico" data-i="doc" data-s="20"></span>Board brief<span class="det" id="sideBriefCount">0</span></button>
@@ -557,30 +630,26 @@ a.pill{text-decoration:none}
     <div class="hdr-meta">
       <span class="capsule glass clear"><span class="live-dot" aria-hidden="true"></span><b id="ckToday">4,212</b> check-ins today</span>
       <span class="capsule glass clear"><b>58</b> of 64 sites reporting</span>
-      <span class="capsule glass demo">Simulated demo data</span>
+      <button class="capsule glass demo" data-info="data" aria-label="Simulated pilot data, not operational. See what is simulated and what is published.">Simulated pilot data · not operational<span data-i="info" data-s="15"></span></button>
       <button class="capsule glass clear scope" id="scopeChip" hidden><span id="scopeText"></span><span data-i="x" data-s="15"></span></button>
     </div>
   </header>
 
   <h2 class="group-title" data-sec="pulse">Speed dial</h2>
   <section class="tiles" aria-label="Speed dial" data-sec="pulse">
-    <button class="tile glass lg-r" data-dial="lang" aria-pressed="false" style="--accent:var(--blue)"><span class="t-ico" data-i="lang" data-s="22"></span><span><strong>Language access</strong><span class="t-det">EL lag and vocabulary flags</span></span></button>
-    <button class="tile glass lg-r" data-dial="tier3" aria-pressed="false" style="--accent:var(--red)"><span class="t-ico" data-i="tri" data-s="22"></span><span><strong>Tier 3 escalations</strong><span class="t-det">Intensive needs awaiting review</span></span></button>
-    <button class="tile glass lg-r" data-dial="lcap" aria-pressed="false" style="--accent:var(--green)"><span class="t-ico" data-i="bars" data-s="22"></span><span><strong>LCAP and attendance</strong><span class="t-det">Is intervention paying off</span></span></button>
+    <button class="tile glass lg-r" data-dial="lang" aria-pressed="false" style="--accent:var(--blue)"><span class="t-ico" data-i="lang" data-s="22"></span><span><strong>Language access</strong><span class="t-det">Where are English learners struggling?</span></span></button>
+    <button class="tile glass lg-r" data-dial="tier3" aria-pressed="false" style="--accent:var(--red)"><span class="t-ico" data-i="tri" data-s="22"></span><span><strong>Tier 3 escalations</strong><span class="t-det">Where are intensive-support cases getting stuck?</span></span></button>
+    <button class="tile glass lg-r" data-dial="lcap" aria-pressed="false" style="--accent:var(--green)"><span class="t-ico" data-i="bars" data-s="22"></span><span><strong>LCAP and attendance</strong><span class="t-det">Are interventions improving attendance?</span></span></button>
   </section>
 
-  <section class="widgets" aria-label="At a glance" data-sec="pulse">
-    <div class="widget glass lg-r" id="wAtt" data-widget="wAtt"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wAttBody"></div></div>
-    <div class="widget glass lg-r" id="wEl" data-widget="wEl"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wElBody"></div></div>
-    <div class="widget glass lg-r" id="wFlags" data-widget="wFlags"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wFlagsBody"></div></div>
-    <div class="widget glass lg-r" id="wT3" data-widget="wT3"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wT3Body"></div></div>
-  </section>
+  <section class="card glass dial-panel" id="dialPanel" data-sec="pulse" aria-live="polite" hidden></section>
 
-  <div class="duo">
-    <section class="card glass" id="sec-trend" data-sec="pulse" aria-labelledby="trendTitle">
+  <div class="duo" id="duoTop">
+    <section data-widget="sec-trend" class="card glass" id="sec-trend" data-sec="pulse" aria-labelledby="trendTitle">
+      <button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button>
       <div class="card-head">
-        <h2 id="trendTitle">Trend</h2>
-        <div class="seg" id="metricSeg" role="group" aria-label="Metric"><span class="seg-thumb" aria-hidden="true"></span><button data-v="tiers">Tier 2/3</button><button data-v="elpac">EL progress</button><button data-v="att">Attendance</button></div>
+        <h2 id="trendTitle">Trend <span class="dtag sim">Simulated</span></h2>
+        <div class="seg" id="metricSeg" role="group" aria-label="Metric"><span class="seg-thumb" aria-hidden="true"></span><button data-v="tiers">Tier 2/3 review</button><button data-v="elpac">EL progress</button><button data-v="att">Attendance</button></div>
       </div>
       <div class="card-sub">
         <p id="metricDesc"></p>
@@ -593,9 +662,10 @@ a.pill{text-decoration:none}
       <div class="chart-box"><canvas id="chart" role="img" aria-label="Trend chart"></canvas><p class="chart-msg" id="chartMsg" hidden></p></div>
     </section>
 
-    <section class="card glass" id="sec-map" data-sec="map" aria-labelledby="mapTitle">
+    <section data-widget="sec-map" class="card glass" id="sec-map" data-sec="map" aria-labelledby="mapTitle">
+      <button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button>
       <div class="card-head">
-        <h2 id="mapTitle">Zone map</h2>
+        <h2 id="mapTitle">Zone map <span class="dtag sim">Simulated</span> <button class="info" data-info="status" aria-label="What the zone colors mean"><span data-i="info" data-s="16"></span></button></h2>
         <div class="seg" id="filterSeg" role="group" aria-label="Filter zones"><span class="seg-thumb" aria-hidden="true"></span><button data-v="all">All</button><button data-v="watch">Watch</button><button data-v="crit">Critical</button></div>
       </div>
       <div class="map-wrap" id="mapWrap">
@@ -621,24 +691,80 @@ a.pill{text-decoration:none}
     </section>
   </div>
 
-  <div class="duo even">
-    <section class="card glass" id="sec-briefs" data-sec="briefs" aria-labelledby="briefsTitle">
-      <div class="card-head"><h2 id="briefsTitle">Briefings</h2><span class="card-note">Drafted by AI from aggregate counts</span></div>
-      <div class="notes" id="notes"></div>
-      <div class="extra" id="extra"></div>
+  <h2 class="group-title glance-title" data-sec="pulse">At a glance <span class="dtag sim">Simulated pilot data</span> <span class="gt-hint">Drag the handle to rearrange cards</span></h2>
+  <section class="widgets" aria-label="At a glance" data-sec="pulse">
+    <div class="widget glass lg-r" id="wAtt" data-widget="wAtt"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wAttBody"></div></div>
+    <div class="widget glass lg-r" id="wEl" data-widget="wEl"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wElBody"></div></div>
+    <div class="widget glass lg-r" id="wFlags" data-widget="wFlags"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wFlagsBody"></div></div>
+    <div class="widget glass lg-r" id="wT3" data-widget="wT3"><button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button><div class="widget-body" id="wT3Body"></div></div>
+  </section>
+
+  <h2 class="group-title facts-title" id="sec-facts" data-sec="pulse">District facts <span class="real-chip">Published data</span></h2>
+  <section class="facts" id="facts" aria-label="District facts from published state data" data-sec="pulse"></section>
+
+  <div class="duo even" id="duoMoney">
+    <section data-widget="sec-money" class="card glass" id="sec-money" data-sec="pulse" aria-labelledby="moneyTitle">
+      <button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button>
+      <div class="card-head"><h2 id="moneyTitle">Money and staff <span class="dtag pub">Published</span></h2><span class="card-note">2024-25, general fund</span></div>
+      <div id="money"></div>
+      <p class="src">Source: Ed-Data (CDE, EdSource, FCMAT/CSIS), San Juan Unified profile, CDS 34-67447. Pulled Sept 27, 2026.</p>
     </section>
-    <section class="card glass" id="sec-actions" data-sec="briefs" aria-labelledby="actionsTitle">
-      <div class="card-head"><h2 id="actionsTitle">Suggested actions</h2></div>
+    <section data-widget="sec-fiscal" class="card glass" id="sec-fiscal" data-sec="pulse" aria-labelledby="fiscalTitle">
+      <button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button>
+      <div class="card-head"><h2 id="fiscalTitle">Fiscal health <span class="dtag pub">Published</span></h2><span class="card-note">FCMAT, Sept 22, 2026</span></div>
+      <div id="fiscal"></div>
+      <p class="src">Source: FCMAT, “Fiscal Status of LEAs,” September 22, 2026. Glenn, Nevada and Santa Clara counties had not reported yet.</p>
+    </section>
+  </div>
+
+  <div class="duo even" id="duoBriefs">
+    <section data-widget="sec-briefs" class="card glass" id="sec-briefs" data-sec="briefs" aria-labelledby="briefsTitle">
+      <button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button>
+      <div class="card-head"><h2 id="briefsTitle">Briefings <span class="dtag sim">Simulated</span></h2><span class="card-note">Drafted by AI from aggregate counts</span></div>
+      <div class="notes" id="notes"></div>
+    </section>
+    <section data-widget="sec-actions" class="card glass" id="sec-actions" data-sec="briefs" aria-labelledby="actionsTitle">
+      <button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button>
+      <div class="card-head"><h2 id="actionsTitle">Suggested actions</h2><span class="card-note">Suggestions for discussion, not district decisions</span></div>
       <div class="recs" id="recs"></div>
     </section>
   </div>
 
   <section class="card glass" id="sec-sites" data-sec="sites" aria-labelledby="sitesTitle">
     <div class="card-head">
-      <h2 id="sitesTitle">Sites by zone</h2>
-      <div class="tier-key"><span><i style="background:var(--blue)"></i>Tier 1</span><span><i style="background:var(--indigo)"></i>Tier 2</span><span><i style="background:var(--orange)"></i>Tier 3</span></div>
+      <h2 id="sitesTitle">Sites by zone <span class="dtag sim">Simulated</span></h2>
+      <div class="tier-key"><span><i style="background:var(--blue)"></i>Not routed</span><span><i style="background:var(--indigo)"></i>Tier 2 review</span><span><i style="background:var(--orange)"></i>Tier 3 review</span></div>
     </div>
     <div class="list" id="sites"></div>
+  </section>
+
+  <section class="card glass" id="sec-schools" data-sec="sites" aria-labelledby="schoolsTitle">
+    <div class="card-head"><h2 id="schoolsTitle">All schools <span class="dtag pub">Published</span></h2><span class="card-note" id="schoolsNote"></span></div>
+    <div class="card-sub"><div class="seg sch-seg" id="schoolSeg" role="group" aria-label="School type"><span class="seg-thumb" aria-hidden="true"></span><button data-v="all">All</button><button data-v="Elementary">Elem</button><button data-v="Middle">Middle</button><button data-v="High">High</button><button data-v="charter">Charter</button><button data-v="other">Other</button></div>
+    <label class="field sch-q"><span data-i="search" data-s="16"></span><input id="schoolQ" type="search" placeholder="Find a school" aria-label="Find a school" autocomplete="off"></label></div>
+    <div class="sch-chart" id="schChart" tabindex="-1" aria-labelledby="scName">
+      <div class="sc-nav">
+        <button class="circle glass clear" id="scPrev" aria-label="Previous school"><span data-i="chevL" data-s="18"></span></button>
+        <div class="sc-id"><h3 id="scName" aria-live="polite"></h3><p id="scMeta"></p></div>
+        <span class="sc-pos" id="scPos"></span>
+        <button class="circle glass clear" id="scNext" aria-label="Next school"><span data-i="chevR" data-s="18"></span></button>
+      </div>
+      <div class="sc-stats" id="scStats"></div>
+      <div class="card-head">
+        <div class="seg" id="scMetricSeg" role="group" aria-label="School metric"><span class="seg-thumb" aria-hidden="true"></span><button data-v="enr">Enrollment</button><button data-v="tiers">Tier 2/3 review</button><button data-v="elpac">EL progress</button><button data-v="att">Attendance</button></div>
+      </div>
+      <div class="card-sub">
+        <p id="scDesc"></p>
+        <div class="seg" id="scRangeSeg" role="group" aria-label="Time range"><span class="seg-thumb" aria-hidden="true"></span><button data-v="7">7D</button><button data-v="30">30D</button><button data-v="ytd">YTD</button></div>
+      </div>
+      <div class="card-sub">
+        <span class="bench-chip" id="scChip"></span>
+        <button class="pill" id="scYoy" aria-pressed="false"><span data-i="bars" data-s="15"></span>Compare to last year</button>
+      </div>
+      <div class="chart-box"><canvas id="schoolChart" role="img" aria-label="School trend chart"></canvas><p class="chart-msg" id="scMsg" hidden></p></div>
+    </div>
+    <div class="sch-list" id="schoolList"></div>
+    <p class="src">Enrollment: Ed-Data school profiles, 2025-26 Census Day, pulled Sept 27, 2026. Carriage Drive Elementary is listed as closed and left out. Per-school attendance, Tier 2/3 review share and EL progress are simulated. Zones above are a simulated demo and cover only 5 high school areas.</p>
   </section>
 
   <section class="privacy" aria-label="Privacy safeguards">
@@ -646,14 +772,7 @@ a.pill{text-decoration:none}
     <span class="capsule glass clear"><span data-i="eye" data-s="16"></span>Groups under 11 students hidden</span>
     <span class="capsule glass clear"><span data-i="person" data-s="16"></span>AI flags, site teams decide</span>
   </section>
-  <h2 class="group-title pipe-group">Compliance</h2>
-  <button class="tile glass lg-r pipe-tile" id="pipeDial" aria-haspopup="dialog" style="--accent:var(--blue)">
-    <span class="t-ico" data-i="flow" data-s="24"></span>
-    <span class="pt-txt"><strong>Data pipeline <i class="live" aria-hidden="true"></i></strong><span class="t-det" id="pipeDet">17 sources mapped · 12 steps from SIS to screen</span></span>
-    <span class="pt-mini" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-    <span class="pt-go" data-i="chev" data-s="18"></span>
-  </button>
-  <footer class="foot glass">District Pulse concept demo by the Technical and Youth Systems Strategy Team. Every figure is simulated except the English learner home-language mix, which comes from San Juan Unified’s published 2023–24 LCAP.</footer>
+  <footer class="foot glass">District Pulse concept demo by the Technical and Youth Systems Strategy Team. Zone, site, school-level tier/attendance/EL, and check-in figures are simulated pilot data, not district records. District facts, Money and staff, Fiscal health, All schools, the published tiles in each speed dial and the English learner language mix are real published data from Ed-Data (pulled Sept 27, 2026) and FCMAT’s Fiscal Status of LEAs (Sept 22, 2026).</footer>
 </main>
 
 <nav class="tabbar-wrap" aria-label="Sections">
@@ -676,31 +795,6 @@ a.pill{text-decoration:none}
   </div>
 </div>
 
-<div class="pipe-layer" id="pipeLayer" hidden>
-  <div class="scrim" data-pipe-close></div>
-  <div class="pipe glass" role="dialog" aria-modal="true" aria-labelledby="pipeTitle">
-    <div class="pipe-head">
-      <div class="pipe-title">
-        <h2 id="pipeTitle"><span data-i="flow" data-s="20" style="color:var(--blue)"></span>Data pipeline</h2>
-        <p>How a student record travels from the district SIS to this screen, and the standard that governs each step. Tap any node.</p>
-      </div>
-      <div class="pipe-tools">
-        <span class="capsule glass clear ok" id="pipeStatus"><span data-i="check" data-s="13"></span>16 sources mapped</span>
-        <span class="capsule glass clear demo">Simulated run</span>
-        <button class="pill prominent" id="pipeRun"><span data-i="play" data-s="14"></span>Run pipeline</button>
-        <button class="ibtn" id="pipeOut" aria-label="Zoom out"><span data-i="minus" data-s="16"></span></button>
-        <button class="ibtn" id="pipeIn" aria-label="Zoom in"><span data-i="plus" data-s="16"></span></button>
-        <button class="ibtn" id="pipeFit" aria-label="Fit to screen"><span data-i="scope" data-s="16"></span></button>
-        <button class="ibtn" data-pipe-close aria-label="Close"><span data-i="x" data-s="16"></span></button>
-      </div>
-    </div>
-    <div class="pipe-main">
-      <div class="pipe-canvas" id="pipeCanvas"><div class="pipe-sizer" id="pipeSizer"><div class="pipe-stage" id="pipeStage"></div></div></div>
-      <aside class="pipe-insp" id="pipeInsp" aria-live="polite"></aside>
-    </div>
-  </div>
-</div>
-
 <div class="drawer-layer" id="drawerLayer" hidden>
   <div class="scrim" data-drawer-close></div>
   <div class="drawer glass" id="drawer" role="dialog" aria-modal="true" aria-label="Zones menu">
@@ -711,7 +805,7 @@ a.pill{text-decoration:none}
       </div>
       <nav class="side-list">
         <button class="side-row" data-dzone=""><span class="sico" data-i="grid" data-s="20"></span>Whole district<span class="det">64</span></button>
-        <h3 class="side-head">Zones <span>Tier 3 open</span></h3>
+        <h3 class="side-head">Zones <span>Tier 3 cases</span></h3>
         <div id="drawerZones"></div>
         <h3 class="side-head">Board</h3>
         <button class="side-row" id="drawerBrief"><span class="sico" data-i="doc" data-s="20"></span>Board brief<span class="det" id="drawerBriefCount">0</span></button>
@@ -750,6 +844,9 @@ const P={
   plus:'<path d="M12 5.5v13M5.5 12h13"/>',
   minus:'<path d="M6.5 12h11"/>',
   chev:'<path d="m9.5 6 6 6-6 6"/>',
+  chevR:'<path d="m9.5 6 6 6-6 6"/>',
+  chevL:'<path d="m14.5 6-6 6 6 6"/>',
+  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.2M12 7.9v.1"/>',
   grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/>',
   eye:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
   lock:'<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>',
@@ -801,11 +898,155 @@ const ST={
  crit:{v:'--red',w:'Critical',phrase:'needs attention now',i:'tri',g:'#fff'}
 };
 const METRICS={
- tiers:{label:'Tier 2/3 flags',desc:'Share of check-ins the parser routed to a site MTSS team for Tier 2 or Tier 3 review. Lower is better.',lower:true},
- elpac:{label:'EL progress',desc:'English learners on track on a local language-progress measure that mirrors the state ELPI. Higher is better.',lower:false},
- att:{label:'Attendance',desc:'Average daily attendance across reporting sites. Higher is better.',lower:false}
+ tiers:{label:'Tier 2/3 review share',desc:'Share of check-ins the parser routed to a site MTSS team for Tier 2 or Tier 3 review. A share of check-ins, not of students. Lower is better.',lower:true},
+ elpac:{label:'English learner progress',desc:'English learners on track on a local language-progress measure that mirrors the state ELPI. Higher is better.',lower:false},
+ att:{label:'Attendance rate',desc:'Average daily attendance across reporting sites. Higher is better.',lower:false}
 };
-const LANGS=[['Spanish',34.2],['Dari',16.3],['Pashto',10.6],['Russian',8.9],['Arabic',6.2],['Farsi',5.7],['Ukrainian',5.1],['Other',13.0]];
+/* ---------- metric semantics: target, gap and direction worded the same way everywhere ---------- */
+const OP={tiers:'≤',elpac:'≥',att:'≥'};
+const pts=p=>`${+p.toFixed(1)} pt${+p.toFixed(1)===1?'':'s'}`;
+function gapOf(m,v){
+  const b=BENCH[m],d=+(v-b.target).toFixed(1),good=b.good(v);
+  return {good,cls:good?'good':'bad',target:`Target ${OP[m]} ${b.target}%`,gap:d===0?'On target':`${pts(Math.abs(d))} ${d>0?'above':'below'} target`};
+}
+const tline=(m,v)=>{const g=gapOf(m,v);return `<span class="tline"><span class="tgt">${g.target}</span><span class="gap ${g.cls}">${g.gap}</span></span>`};
+const revLine=days=>`<span class="tline"><span class="tgt">Review target ≤ 3 days</span><span class="gap ${days>3?'bad':'good'}">Median ${days} days${days>3?` · ${days-3} over`:''}</span></span>`;
+const infoBtn=(k,label)=>`<button class="info" data-info="${k}" aria-label="About ${esc(label)}">${ico('info',15,2)}</button>`;
+/* Plain-language definitions behind every ⓘ. Wording follows the existing metric definitions. */
+const INFO={
+ tiers:{t:'Tier 2/3 review share',s:[
+  ['What is counted','Check-ins that the parser routed to a site MTSS team for Tier 2 or Tier 3 review.'],
+  ['Out of','All check-ins logged at reporting sites in the same period. It is a share of check-ins, not of students. One student can check in many times, so 16.4% does not mean 16.4% of students are in Tier 2 or Tier 3.'],
+  ['Tier 2 and Tier 3 here','Tier 2 is targeted support and Tier 3 is intensive support in the district’s MTSS framework. A routed check-in means a site team should look at it. The site team decides the tier. AI flags, site teams decide.'],
+  ['Target','12% or lower is the pilot target. The direction matters most: a falling share means fewer check-ins need escalation. It is a planning line, not a state standard.'],
+  ['Data','Simulated pilot data. Not district records.']]},
+ elpac:{t:'English learner progress',s:[
+  ['What is counted','English learners on track on a local language-progress measure that mirrors the state English Learner Progress Indicator (ELPI).'],
+  ['Out of','English learners at reporting sites.'],
+  ['Target','55% or higher. Higher is better.'],
+  ['Data','Simulated pilot data. The real count of English learners (10,281 in 2025-26) is in District facts.']]},
+ att:{t:'Attendance rate',s:[
+  ['What is counted','Average daily attendance across reporting sites: the share of enrolled students present on a typical day.'],
+  ['Target','95% or higher. Higher is better.'],
+  ['Not the same as chronic absenteeism','Chronic absenteeism (District facts, published) is the share of students who miss 10% or more of school days.'],
+  ['Data','Simulated pilot data. Not district records.']]},
+ t3:{t:'Tier 3 cases open',s:[
+  ['What is counted','Open Tier 3 escalations: check-ins routed for intensive-support review that a site team has not closed yet. A count of cases, not a percentage.'],
+  ['Median review time','School days from the flag to the site team’s review. Target is 3 days or fewer.'],
+  ['Data','Simulated pilot data. Not district records.']]},
+ status:{t:'Zone colors',s:[
+  ['On track','Green. No urgent pattern in this week’s check-ins.'],
+  ['Watch','Yellow. Tier 2 review share is rising or above the 12% target.'],
+  ['Critical','Red. A bottleneck that needs attention now, such as English learner progress far below target with a Tier 3 backlog.'],
+  ['Data','Zones and colors are simulated pilot data. The map is stylized and not to scale.']]},
+ data:{t:'What is real and what is simulated',s:[
+  ['Simulated pilot data','Check-ins, sites reporting, zones and the map, Tier 2/3 review share, Tier 3 cases, attendance rate, English learner progress, briefings, and school-level attendance, review share and EL progress. These show how the tool would work. They are not district records and not live.'],
+  ['Published data','District facts, Money and staff, Fiscal health, All schools enrollment, the English learner language mix, and every stat tagged Published. Sources: Ed-Data (pulled Sept 27, 2026) and FCMAT’s Fiscal Status of LEAs (Sept 22, 2026). Published figures are yearly public data, not live telemetry.'],
+  ['Suggested actions','Suggestions for discussion, labeled with the signal behind them. They are not district decisions.']]}
+};
+function openInfo(k){const x=INFO[k];if(!x)return;openSheet(x.t,body=>{body.innerHTML=x.s.map(([h,p])=>`<div class="info-sec"><b>${h}</b><p>${p}</p></div>`).join('')})}
+/* Ed-Data 2025-26: share of the district's 10,281 English learners (Ed-Data's language labels). */
+const LANGS=[['Persian (Farsi)',28.7],['Spanish',22.9],['Pashto',16.1],['Russian',14.0],['Ukrainian',5.5],['All other',12.9]];
+
+/* ---------- published data (not simulated) ----------
+   Ed-Data profile for San Juan Unified, CDS 34-67447-0000000, pulled 2026-09-27 from
+   ed-data.org/district/Sacramento/San-Juan-Unified. FCMAT "Fiscal Status of LEAs", 2026-09-22. */
+const FACTS=[
+ {k:'Enrollment',v:'52,069',sub:'students, Census Day 2025-26',yrs:['20-21','21-22','22-23','23-24','24-25','25-26'],s:[50762,49220,49036,49857,51289,52069],f:n=>n.toLocaleString(),d:'<b>+3,033</b> since the 2022-23 low',tone:''},
+ {k:'High-need students',v:'63.0%',sub:'32,789 low-income, EL, foster or homeless',yrs:['20-21','21-22','22-23','23-24','24-25','25-26'],s:[51.22,53.57,59.21,60.95,62.5,62.97],f:n=>n.toFixed(1)+'%',d:'<b>+11.8 pts</b> since 2020-21',tone:''},
+ {k:'English learners',v:'10,281',sub:'19.7% of students, 2025-26',yrs:['20-21','21-22','22-23','23-24','24-25','25-26'],s:[13.3,15.4,16.6,17.6,19.1,19.7],f:n=>n.toFixed(1)+'%',d:'<b>+3,520</b> students since 2020-21',tone:''},
+ {k:'Chronic absenteeism',v:'21.7%',sub:'11,865 students, 2024-25',yrs:['21-22','22-23','23-24','24-25'],s:[34.3,27.3,23.2,21.7],f:n=>n.toFixed(1)+'%',d:'▼ <b>12.6 pts</b> from the 2021-22 peak',tone:'good'},
+ {k:'Graduation rate',v:'81.7%',sub:'4,016 of 4,918, class of 2025',yrs:['20-21','21-22','22-23','23-24','24-25'],s:[78.7,81.6,77.2,78.0,81.7],f:n=>n.toFixed(1)+'%',d:'▲ <b>3.7 pts</b> vs 2023-24 · dropout 9.8%',tone:'good'},
+ {k:'Met ELA standard',v:'39.9%',sub:'CAASPP met or exceeded, 2024-25',yrs:['21-22','22-23','23-24','24-25'],s:[42.62,41.75,38.98,39.93],f:n=>n.toFixed(1)+'%',d:'▲ <b>0.9 pts</b> vs 2023-24',tone:'good'},
+ {k:'Met math standard',v:'28.1%',sub:'CAASPP met or exceeded, 2024-25',yrs:['21-22','22-23','23-24','24-25'],s:[29.55,29.6,29.08,28.13],f:n=>n.toFixed(1)+'%',d:'▼ <b>1.0 pt</b> vs 2023-24, lowest in four years',tone:'bad'},
+ {k:'Suspension rate',v:'3.8%',sub:'2,161 students, 2024-25',yrs:['21-22','22-23','23-24','24-25'],s:[4.5,4.5,4.9,3.8],f:n=>n.toFixed(1)+'%',d:'▼ <b>1.1 pts</b> vs 2023-24',tone:'good'}
+];
+const MONEY=[
+ {t:'Spending per student',v:'$19,886',p:'$1,662 below the average unified district ($21,548). Gap was $2,953 in 2023-24.'},
+ {t:'Spent more than it took in',v:'−$23.6M',p:'General fund revenue $696.0M vs spending $719.6M, before transfers. Federal money fell from $88.5M to $53.2M.'},
+ {t:'Salaries and benefits',v:'89%',p:'Share of unrestricted spending. Unified average is 86%, so less room to move money.'},
+ {t:'Teachers',v:'2,532',p:'20.4 students per teacher (county 21.2). 494 (19.5%) are counted as inexperienced.'},
+ {t:'Average teacher salary',v:'$93,243',p:'$9,788 below the unified average ($103,031). Up 4.8% on 2023-24.'}
+];
+const DISAPPROVED=[['19-20',1,'Sacramento City USD'],['20-21',1,'Sacramento City USD'],['21-22',2,'East San Gabriel Valley ROP, Lynwood USD'],['22-23',0,''],['23-24',0,''],['24-25',1,'Weed Union ESD'],['25-26',1,'Weed Union ESD'],['26-27',4,'Buttonwillow ESD, Sacramento City USD, Upper Lake USD, Weed Union ESD']];
+/* Ed-Data school profiles, 2025-26. [name,type,grades,charter(1),Title I (S schoolwide, T targeted, N none),enr 23-24,24-25,25-26,phone] */
+const SCHOOLS=[["Albert Schweitzer Elementary", "Elementary", "K-5", 0, "S", 319, 331, 349, "(916) 867-2094"],
+["Andrew Carnegie Middle", "Middle", "6-8", 0, "N", 698, 687, 686, "(916) 971-7853"],
+["Arcade Middle", "Middle", "6-8", 0, "S", 391, 595, 633, "(916) 971-7300"],
+["Arden Middle", "Middle", "6-8", 0, "N", 956, 1010, 1153, "(916) 971-7306"],
+["Arlington Heights Elementary", "Elementary", "K-5", 0, "S", 333, 329, 335, "(916) 971-5234"],
+["Aspire Alexander Twilight College Preparatory Academy", "Elementary", "K-5", 1, "S", 427, 437, 441, "(916) 979-1788"],
+["Aspire Alexander Twilight Secondary Academy", "K-12", "6-12", 1, "S", 473, 464, 508, "(916) 979-1788"],
+["Bella Vista High", "High", "9-12", 0, "N", 1926, 1939, 1909, "(916) 971-5052"],
+["California Montessori Project-San Juan Campuses", "Elementary", "K-8", 1, "T", 1477, 1545, 1475, "(916) 971-2432"],
+["Cambridge Heights Elementary", "Elementary", "K-5", 0, "N", 321, 348, 350, "(916) 867-2000"],
+["Cameron Ranch Elementary", "Elementary", "K-5", 0, "S", 397, 406, 387, "(916) 575-2302"],
+["Carmichael Elementary", "Elementary", "K-5", 0, "S", 383, 374, 375, "(916) 971-5727"],
+["Casa Roble Fundamental High", "High", "9-12", 0, "N", 1103, 1150, 1213, "(916) 971-5452"],
+["Charles Peck Elementary", "Elementary", "K-5", 0, "S", 306, 303, 333, "(916) 979-8570"],
+["Cottage Elementary", "Elementary", "K-5", 0, "S", 490, 502, 527, "(916) 575-2306"],
+["Coyle Avenue Elementary", "Elementary", "K-5", 0, "S", 325, 331, 329, "(916) 979-8012"],
+["Del Campo High", "High", "9-12", 0, "N", 1557, 1548, 1531, "(916) 971-5664"],
+["Del Dayo Elementary", "Elementary", "K-6", 0, "N", 520, 496, 515, "(916) 575-2323"],
+["Del Paso Manor Elementary", "Elementary", "K-6", 0, "S", 702, 734, 719, "(916) 575-2330"],
+["Dyer-Kelly Elementary", "Elementary", "K-5", 0, "S", 718, 735, 769, "(916) 971-7150"],
+["Earl LeGette Elementary", "Elementary", "K-6", 0, "N", 548, 622, 635, "(916) 979-8430"],
+["El Camino Fundamental High", "High", "9-12", 0, "N", 1296, 1226, 1171, "(916) 971-7430"],
+["El Sereno Alternative Education", "Alternative", "9-12", 0, "N", 145, 166, 146, "(916) 971-5060"],
+["Encina High", "High", "9-12", 0, "S", 628, 766, 879, "(916) 971-7538"],
+["Gateway International", "Elementary", "K-8", 1, "S", 592, 628, 660, "(916) 286-1985"],
+["General Davie, Jr. Primary Center", "Elementary", "", 0, "N", null, 1, null, "(916) 575-2416"],
+["Gold River Discovery Center K-8", "Elementary", "K-8", 0, "N", 722, 712, 700, "(916) 971-5349"],
+["Golden Valley Orchard", "Elementary", "K-8", 1, "T", 296, 292, 312, "(916) 987-1490"],
+["Golden Valley River", "Elementary", "K-8", 1, "T", 305, 297, 317, "(916) 987-6141"],
+["Grand Oaks Elementary", "Elementary", "K-5", 0, "S", 336, 348, 343, "(916) 971-5208"],
+["Green Oaks Fundamental Elementary", "Elementary", "K-5", 0, "N", 305, 307, 288, "(916) 979-8209"],
+["Greer Elementary", "Elementary", "K-5", 0, "S", 708, 762, 777, "(916) 971-7157"],
+["Harry Dewey Fundamental Elementary", "Elementary", "K-6", 0, "N", 388, 408, 417, "(916) 867-2020"],
+["Howe Avenue Elementary", "Elementary", "K-5", 0, "S", 710, 741, 803, "(916) 971-5165"],
+["James R. Cowan Fundamental Elementary", "Elementary", "K-6", 0, "N", 406, 406, 377, "(916) 979-8240"],
+["John Barrett Middle", "Middle", "6-8", 0, "S", 743, 802, 849, "(916) 971-7842"],
+["Katherine Johnson Middle", "Middle", "6-8", 0, "S", 616, 612, 558, "(916) 971-5500"],
+["Kingswood K-8", "Elementary", "K-8", 0, "S", 555, 546, 535, "(916) 971-5246"],
+["La Entrada Continuation High", "Continuation", "11-12", 0, "S", 115, 102, 84, "(916) 979-8050"],
+["La Vista Center", "Special Ed", "7-12", 0, "S", 20, 28, 37, "(916) 971-5221"],
+["Laurel Ruff Transition", "Special Ed", "12", 0, "N", 155, 142, 132, "(916) 971-7586"],
+["Lichen K-8", "Elementary", "K-8", 0, "S", 487, 498, 485, "(916) 971-5237"],
+["Louis Pasteur Fundamental Middle", "Middle", "6-8", 0, "N", 703, 708, 684, "(916) 971-7891"],
+["Mariemont Elementary", "Elementary", "K-5", 0, "N", 581, 589, 631, "(916) 575-2360"],
+["Mariposa Avenue Elementary", "Elementary", "K-5", 0, "S", 311, 326, 338, "(916) 971-5212"],
+["Marvin Marshall Preschool and Children's Center", "Special Ed", "K", 0, "", null, null, null, "(916) 971-7375"],
+["Mary Deterding Elementary", "Elementary", "K-6", 0, "N", 616, 670, 656, "(916) 979-8138"],
+["Meraki High", "Alternative", "9-12", 0, "N", 82, 93, 84, "(916) 971-5001"],
+["Mesa Verde High", "High", "9-12", 0, "S", 881, 894, 847, "(916) 971-5288"],
+["Mira Loma High", "High", "9-12", 0, "S", 1632, 1655, 1679, "(916) 971-7465"],
+["Mission Avenue Open Elementary", "Elementary", "K-6", 0, "N", 430, 415, 416, "(916) 575-2362"],
+["New Pacific Charter - Arden Arcade", "Elementary", "01-03", 1, "", null, null, 19, "(866) 992-9033"],
+["Northridge Elementary", "Elementary", "K-6", 0, "S", 398, 423, 406, "(916) 971-2066"],
+["Oakview Community Elementary", "Elementary", "K-5", 0, "N", 425, 407, 397, "(916) 986-2215"],
+["Options for Youth-San Juan", "High", "7-12", 1, "N", 790, 720, 742, "(916) 485-5155"],
+["Orangevale Open K-8", "Elementary", "K-8", 0, "N", 585, 593, 630, "(916) 979-8067"],
+["Ottomon Way Elementary", "Elementary", "K-5", 0, "S", 247, 258, 254, "(916) 979-8228"],
+["Pasadena Avenue Elementary", "Elementary", "K-5", 0, "S", 334, 343, 333, "(916) 971-7373"],
+["Pershing Elementary", "Elementary", "K-6", 0, "N", 503, 494, 479, "(916) 979-8076"],
+["Ralph Richardson Center", "Special Ed", "K-12", 0, "N", 54, 54, 50, "(916) 971-7411"],
+["Rio Americano High", "High", "9-12", 0, "N", 1867, 1891, 1930, "(916) 971-7494"],
+["San Juan Choices Charter", "K-12", "6-12", 1, "N", 277, 246, 248, "(916) 979-8378"],
+["San Juan High", "High", "9-12", 0, "S", 570, 559, 523, "(916) 971-5112"],
+["Sierra Oaks K-8", "Elementary", "K-8", 0, "N", 619, 614, 583, "(916) 575-2390"],
+["Skycrest Elementary", "Elementary", "K-5", 0, "S", 409, 436, 423, "(916) 867-2098"],
+["Starr King K-8", "Elementary", "K-8", 0, "S", 854, 885, 866, "(916) 971-7320"],
+["Sylvan Middle", "Middle", "6-8", 0, "S", 627, 604, 594, "(916) 971-7873"],
+["Thomas Edison Language Institute K-8", "Elementary", "K-8", 0, "S", 863, 883, 923, "(916) 979-8960"],
+["Thomas Kelly Elementary", "Elementary", "K-5", 0, "S", 332, 321, 315, "(916) 867-2041"],
+["Trajan Elementary", "Elementary", "K-5", 0, "N", 398, 391, 385, "(916) 971-5200"],
+["Twin Lakes Elementary", "Elementary", "K-6", 0, "N", 484, 494, 485, "(916) 986-2243"],
+["Valley Oaks", "K-12", "6-12", 0, "", null, null, null, "(916) 482-7757"],
+["Visions In Education", "K-12", "K-12", 1, "S", 7009, 7460, 7877, "(916) 883-1601"],
+["Whitney Avenue Elementary", "Elementary", "K-5", 0, "S", 401, 411, 414, "(916) 575-2407"],
+["Will Rogers Middle", "Middle", "6-8", 0, "S", 581, 564, 570, "(916) 971-7889"],
+["Winston Churchill Middle", "Middle", "6-8", 0, "N", 995, 987, 1012, "(916) 971-7324"],
+["Woodside K-8", "Elementary", "K-8", 0, "S", 420, 506, 508, "(916) 971-5216"]];
 const Z=id=>ZONES.find(z=>z.id===id);
 const SITES=ZONES.reduce((a,z)=>a+z.sites,0);
 const T3=ZONES.reduce((a,z)=>a+z.t3,0);
@@ -821,12 +1062,15 @@ function series(zid,metric,days){
   const shift=base-out[41];
   return out.map(x=>+(x+shift).toFixed(1)).slice(42-days);
 }
+/* School-day labels ending Wed Sept 23, 2026. Short labels drop the year, so the full date (with year)
+   is kept alongside for tooltips; a yearless "Aug 13" read after Sept 2026 resolves to Aug 13, 2027. */
 function dates(days){const out=[];const d=new Date(2026,8,23);while(out.length<days){if(d.getDay()%6!==0)out.unshift(d.toLocaleDateString('en-US',{month:'short',day:'numeric'}));d.setDate(d.getDate()-1)}return out}
+function fullDates(days){const out=[];const d=new Date(2026,8,23);while(out.length<days){if(d.getDay()%6!==0)out.unshift(d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}));d.setDate(d.getDate()-1)}return out}
 
 const CONTENT={
  default:{notes:[
   {s:'crit',t:'Encina is the clearest bottleneck',m:'EL progress sits about 10 points under the district, and math vocabulary flags doubled in two weeks.'},
-  {s:'watch',t:'Tier 2 flags are rising in two zones',m:'San Juan High and Bella Vista, mostly reading stamina and chronic absence in grades 9 and 10.'},
+  {s:'watch',t:'Tier 2/3 review share is rising in two zones',m:'San Juan High and Bella Vista, mostly reading stamina and chronic absence in grades 9 and 10.'},
   {s:'ok',t:'Del Campo and Mesa Verde are steady',m:'Their attendance gains line up with the mentoring pilot funded in the LCAP.'}],
   recs:[
   {t:'Send an ELD coaching cycle to Encina feeder sites',b:'Two sites account for most new vocabulary flags. A six-week cycle targets academic language in math.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
@@ -835,9 +1079,9 @@ const CONTENT={
  lang:{notes:[
   {s:'crit',t:'Encina ELs are about 10 points behind',m:'First-year newcomers make up most of the gap.'},
   {s:'watch',t:'Math vocabulary is the top EL flag',m:'It now leads reading comprehension in grades 6 through 10.'},
-  {s:'ok',t:'Family liaisons are paying off',m:'Sites with Dari and Pashto liaisons show faster reclassification pacing.'}],
+  {s:'ok',t:'Sites with family liaisons reclassify faster',m:'Sites with Dari and Pashto liaisons show faster reclassification pacing.'}],
   recs:[
-  {t:'Add Dari and Pashto liaison hours at Encina feeders',b:'Over a quarter of the district’s English learners speak Dari or Pashto, and liaison coverage there is thinnest.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
+  {t:'Add Dari and Pashto liaison hours at Encina feeders',b:'Persian (Farsi) and Pashto speakers are 45% of the district’s 10,281 English learners (Ed-Data 2025-26), and liaison coverage there is thinnest.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
   {t:'Build math language routines into ELD PLCs',b:'Pair designated ELD with math teams on sentence frames for the most-flagged terms.',s:'watch',scope:'Secondary',imp:'Medium impact'},
   {t:'Start a spring reclassification readiness list',b:'Surface students close to criteria so sites can plan before the Summative ELPAC window.',s:'ok',scope:'64 sites',imp:'Planning'}]},
  tier3:{notes:[
@@ -849,22 +1093,28 @@ const CONTENT={
   {t:'Set a 3-day review standard in the MTSS handbook',b:'Makes response time a shared expectation that shows up on this dashboard.',s:'watch',scope:'64 sites',imp:'Policy'},
   {t:'Route Tier 3 behavior flags to Student Support Services',b:'Connects intensive needs to counseling and mental health partners without a second referral form.',s:'ok',scope:'District',imp:'Workflow'}]},
  lcap:{notes:[
-  {s:'ok',t:'Intervention is moving attendance',m:'Students in a Tier 2 attendance intervention gained 3.1 points in six weeks, versus 0.4 on the waitlist.'},
+  {s:'ok',t:'Intervention students gained more attendance',m:'Students in a Tier 2 attendance intervention gained 3.1 points in six weeks, versus 0.4 on the waitlist. Encouraging, not yet proof.'},
   {s:'watch',t:'Smaller gains for ELs and foster youth',m:'These are the groups the LCAP targets most directly.'},
   {s:'crit',t:'Coverage is thin where need is highest',m:'San Juan High and Encina have the least intervention coverage relative to need.'}],
   recs:[
   {t:'Shift mentoring slots toward coverage gaps',b:'Move supplemental dollars from zones with surplus coverage to San Juan High and Encina.',s:'crit',scope:'2 zones',imp:'High impact',zone:'encina'},
   {t:'Report attendance gains by student group',b:'Shows the Board the LCAP is closing gaps, not just raising averages.',s:'watch',scope:'Board packet',imp:'Accountability'},
-  {t:'Keep the waitlist comparison running',b:'It is the district’s strongest evidence that the intervention caused the gain.',s:'ok',scope:'District',imp:'Evaluation'}]}
+  {t:'Keep the waitlist comparison running',b:'It is the fairest test of whether the intervention, not something else, drives the gain.',s:'ok',scope:'District',imp:'Evaluation'}]}
 };
+/* Evidence tags for the suggested actions. Presentation only: each restates a figure already on the page. */
+[['default',[{zone:'encina',m:'elpac'},{zone:'sanjuan',m:'tiers'},{zone:'delcampo',m:'att'}]],
+ ['lang',[{k:'pub',t:'Persian (Farsi) and Pashto speakers are 45% of the district’s 10,281 English learners (Ed-Data 2025-26)'},{k:'sim',t:'Math vocabulary is now the top English learner flag in grades 6 through 10'},{k:'interp',t:'Planning step ahead of the Summative ELPAC window, no metric attached'}]],
+ ['tier3',[{zone:'encina',m:'t3'},{k:'sim',t:'Median review takes 6 school days against a 3-day target'},{k:'interp',t:'Workflow change, no metric attached'}]],
+ ['lcap',[{k:'sim',t:'San Juan High and Encina have the least intervention coverage relative to need'},{k:'sim',t:'Attendance gains are smaller for English learners (1.8 pts) than overall (3.1 pts)'},{k:'sim',t:'Intervention students +3.1 attendance pts vs waitlist +0.4 over six weeks'}]]
+].forEach(([k,sigs])=>sigs.forEach((s,i)=>{CONTENT[k].recs[i].sig=s}));
 const DIALS={
  lang:{zone:'encina',metric:'elpac',filter:'all',t:'Language access',s:'Encina isolated, EL progress in view',c:'--blue',i:'lang'},
- tier3:{zone:null,metric:'tiers',filter:'watch',t:'Tier 3 escalations',s:`${T3} open across 5 zones`,c:'--red',i:'tri'},
+ tier3:{zone:null,metric:'tiers',filter:'watch',t:'Tier 3 escalations',s:`${T3} Tier 3 cases open across 5 zones`,c:'--red',i:'tri'},
  lcap:{zone:null,metric:'att',filter:'all',t:'LCAP and attendance',s:'Intervention results against the waitlist',c:'--green',i:'bars'}
 };
 
 /* ---------- state ---------- */
-const state={metric:'tiers',range:30,zone:null,filter:'all',dial:null,open:null,brief:[],assigned:new Set(),yoy:false,widgetOrder:loadWidgetOrder()};
+const state={school:null,scMetric:'enr',scRange:30,scYoy:false,schoolType:'all',schoolQ:'',schoolSort:'size',metric:'tiers',range:30,zone:null,filter:'all',dial:null,open:null,brief:[],assigned:new Set(),yoy:false,widgetOrder:loadWidgetOrder()};
 const cur=()=>state.zone?Z(state.zone):null;
 const scopeLabel=()=>state.zone?`${cur().name} zone`:'Whole district';
 
@@ -941,10 +1191,10 @@ function themeIcon(){const b=$('#themeBtn');b.innerHTML=ico(isDark()?'sun':'moon
 
 /* ---------- widgets ---------- */
 function delta(d,lower){const good=lower?d<=0:d>=0;return `<span class="${good?'good':'bad'}">${d>0?'▲':d<0?'▼':''} ${Math.abs(d)}</span>`}
-function ring(label,val,min,max,color,d){
+function ring(label,val,min,max,color){
   const C=2*Math.PI*32,arc=C*.75,f=Math.max(0,Math.min(1,(val-min)/(max-min))),th=(135+270*f)*Math.PI/180;
   const kx=(40+32*Math.cos(th)).toFixed(2),ky=(40+32*Math.sin(th)).toFixed(2);
-  return `<div class="w-label">${label}</div><div class="ring"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="ring-track" cx="40" cy="40" r="32" stroke-dasharray="${arc.toFixed(2)} ${C.toFixed(2)}" transform="rotate(135 40 40)"/><circle class="ring-arc" cx="40" cy="40" r="32" style="stroke:var(${color})" stroke-dasharray="${(arc*f).toFixed(2)} ${C.toFixed(2)}" transform="rotate(135 40 40)"/><circle class="ring-knob" cx="${kx}" cy="${ky}" r="4.6"/></svg><span class="ring-val">${val}</span><span class="ring-min">${min}</span><span class="ring-max">${max}</span></div><div class="w-foot">${delta(d,false)} vs last week</div>`;
+  return `<div class="w-label">${label}</div><div class="ring"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="ring-track" cx="40" cy="40" r="32" stroke-dasharray="${arc.toFixed(2)} ${C.toFixed(2)}" transform="rotate(135 40 40)"/><circle class="ring-arc" cx="40" cy="40" r="32" style="stroke:var(${color})" stroke-dasharray="${(arc*f).toFixed(2)} ${C.toFixed(2)}" transform="rotate(135 40 40)"/><circle class="ring-knob" cx="${kx}" cy="${ky}" r="4.6"/></svg><span class="ring-val">${val}</span><span class="ring-min">${min}</span><span class="ring-max">${max}</span></div>`;
 }
 function spark(s){
   const w=140,h=44,mn=Math.min(...s),mx=Math.max(...s),k=(mx-mn)||1;
@@ -953,15 +1203,209 @@ function spark(s){
   const last=pts[pts.length-1];
   return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--orange);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--orange);stop-opacity:0"/></linearGradient></defs><path d="${line}L${w} ${h}L0 ${h}Z" fill="url(#sg)"/><path d="${line}" fill="none" style="stroke:var(--orange)" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3" style="fill:var(--orange)"/></svg>`;
 }
+function factSpark(x){
+  const w=180,h=46,s=x.s,mn=Math.min(...s),mx=Math.max(...s),k=(mx-mn)||1;
+  const pts=s.map((v,i)=>[i/(s.length-1)*w,h-6-(v-mn)/k*(h-12)]);
+  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+  const dots=pts.map((p,i)=>`<g tabindex="0"><title>${x.yrs[i]}: ${x.f(s[i])}</title><rect class="hit" x="${(p[0]-w/(s.length-1)/2).toFixed(1)}" y="0" width="${(w/(s.length-1)).toFixed(1)}" height="${h}"/>${i===s.length-1?`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5"/>`:`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="0"/>`}</g>`).join('');
+  return `<svg class="fspark" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(x.k)} by year: ${s.map((v,i)=>x.yrs[i]+' '+x.f(v)).join(', ')}"><path d="${line}" vector-effect="non-scaling-stroke"/>${dots}</svg>`;
+}
+function renderFacts(){
+  $('#facts').innerHTML=FACTS.map((x,i)=>`<article class="fact glass" data-widget="f${i}"><button class="grip" aria-label="Drag to move this card">${ico('grip',15)}</button><span class="w-label">${x.k}</span><span class="w-big">${x.v}</span><span class="f-sub">${x.sub}</span><span class="f-delta${x.tone?' '+x.tone:''}">${x.d}</span>${factSpark(x)}<span class="w-foot"><span>${x.yrs[0]}</span><span>Ed-Data</span><span>${x.yrs[x.yrs.length-1]}</span></span></article>`).join('');
+  $('#money').innerHTML=`<div class="kv-list">${MONEY.map(m=>`<div class="kv-row"><b>${m.t}</b><span class="v">${m.v}</span><p>${m.p}</p></div>`).join('')}</div>`;
+  const mx=Math.max(...DISAPPROVED.map(d=>d[1]));
+  $('#fiscal').innerHTML=`<div class="fs-badge"><span class="ic">${ico('check',18,2.6)}</span><div><b>San Juan Unified is on none of FCMAT’s warning lists</b><p>Not disapproved or conditionally approved for 2026-27, no lack of going concern designation, and not qualified or negative at 2025-26 second interim.</p></div></div>
+  <h3 class="sub-h">Disapproved budgets statewide, by year</h3>
+  <div class="vbars" role="img" aria-label="Disapproved budgets: ${DISAPPROVED.map(d=>d[0]+' '+d[1]).join(', ')}">${DISAPPROVED.map((d,i)=>`<div${i===DISAPPROVED.length-1?' class="now"':''} title="${d[0]}: ${d[1]}${d[2]?' · '+d[2]:''}"><em>${d[1]}</em><span class="col" style="height:${d[1]/mx*100}%"></span></div>`).join('')}</div>
+  <div class="vlabels" aria-hidden="true">${DISAPPROVED.map(d=>`<span>${d[0]}</span>`).join('')}</div>
+  <div class="fs-grid">
+    <div><b>25</b><span>budgets conditionally approved for 2026-27, incl. Los Angeles, Oakland, Antioch</span></div>
+    <div><b>7</b><span>lack of going concern designations in 2026-27, incl. Los Angeles and Burbank</span></div>
+    <div><b>28</b><span>qualified certifications at 2025-26 second interim (may not meet obligations)</span></div>
+    <div><b>5</b><span>negative certifications at 2025-26 second interim (will not meet obligations)</span></div>
+  </div>
+  <div class="kv-list">
+    <div class="kv-row"><b>Next door: Sacramento City USD</b><span class="v bad">Watch</span><p>2026-27 budget disapproved, second negative certification in a row, and a lack of going concern designation since Oct. 10, 2025.</p></div>
+    <div class="kv-row"><b>FCMAT reviews of San Juan Unified</b><span class="v">3</span><p>Technology department (Oct. 2016), special education (Nov. 2016) and food services (Apr. 2017). All operational reviews, none about fiscal distress. Listed at fcmat.org/fcmat-reports.</p></div>
+    <div class="kv-row"><b>Unified district reserves</b><span class="v">21.9%</span><p>Statewide average for 2024-25, down from 24.4% the year before. High school districts rose to 26.1%.</p></div>
+  </div>`;
+}
+/* ---------- speed dial panel ---------- */
+const DIAL_FOCUS={lang:'wEl',tier3:'wT3',lcap:'wAtt'};
+function statTile(v,l,real){return `<div class="dstat"><b>${v}</b><span>${l}</span><i class="${real?'real':'sim'}">${real?'Published':'Simulated'}</i></div>`}
+/* Headline block: finding → supporting metric → action. Used by the speed dials and the zone panel. */
+function findHTML(kick,head,support,rec,recId){
+  const added=recId&&state.brief.some(x=>x.id===recId);
+  return `<div class="dp-find"><span class="kick">${kick}</span><h3>${head}</h3><p>${support}</p>${rec?`<div class="dp-act"><div><span>Suggested action</span><strong>${rec.t}</strong></div><button class="pill${added?' on':''}" data-padd="${recId}" aria-pressed="${!!added}">${ico(added?'check':'plus',16,2.2)}${added?'In Board brief':'Add to Board brief'}</button></div>`:''}</div>`;
+}
+const ZONE_SIG={sanjuan:'tiers',mesaverde:'t3',bellavista:'tiers',encina:'elpac',delcampo:'att'};
+function zoneStat(m,z){
+  if(m==='t3')return `<div class="dstat"><b>${z.t3}</b><span>Tier 3 cases open</span>${revLine(z.rev)}</div>`;
+  return `<div class="dstat"><b>${z[m]}%</b><span>${METRICS[m].label}</span>${tline(m,z[m])}</div>`;
+}
+function renderZonePanel(P){
+  const z=cur(),i=ZONES.indexOf(z),st=ST[z.status],rec=content().recs[0];
+  P.style.setProperty('--accent',`var(${st.v})`);
+  P.innerHTML=`<div class="dp-head"><span class="dp-ico">${ico('pin',20,2)}</span><div><h2>${z.name} zone <span class="dtag sim">Simulated</span></h2><p>${z.area} · ${z.sites} sites · ${st.w}</p></div>
+   <div class="zp-nav"><button class="circle glass clear" data-zstep="-1" aria-label="Previous zone">${ico('chevL',18)}</button><em>${i+1} of ${ZONES.length}</em><button class="circle glass clear" data-zstep="1" aria-label="Next zone">${ico('chevR',18)}</button></div>
+   <button class="pill" id="zoneClear">${ico('x',14,2.4)}Clear</button></div>
+   <div class="dp-body one"><div class="zstats">${['att','tiers','elpac','t3'].map(m=>zoneStat(m,z)).join('')}</div>
+   ${findHTML('Why',`Top themes in this week’s check-ins: ${z.tags.slice(0,3).map(cap).join(', ')}.`,z.why,rec,content().key+'-0')}</div>`;
+  P.hidden=false;
+  $('#zoneClear').addEventListener('click',()=>isolate(null));
+}
+function renderDialPanel(){
+  const P=$('#dialPanel'),k=state.dial;
+  $$('.widget').forEach(w=>w.classList.toggle('focus',!!k&&DIAL_FOCUS[k]===w.id));
+  if(!k&&state.zone){renderZonePanel(P);return}
+  if(!k){P.hidden=true;P.innerHTML='';return}
+  const d=DIALS[k],rec=CONTENT[k].recs[0],rid=k+'-0';let left='',stats='',find='';
+  if(k==='lang'){
+    const e=Z('encina');
+    left=`<div class="xcard"><h3>English learners by home language</h3>${barsHTML(LANGS,28.7,'%')}<p class="src">Ed-Data, 2025-26, share of 10,281 English learners.</p></div>`;
+    stats=statTile('10,281','English learners in 2025-26, 19.7% of students',1)+statTile('+3,520','more English learners than in 2020-21',1)+statTile('45%','of English learners speak Persian (Farsi) or Pashto',1)+statTile(`${e.elpac}%`,`Encina English learner progress${tline('elpac',e.elpac)}`,0);
+    const behind=+(avg('elpac')-e.elpac).toFixed(1);
+    find=findHTML('Where are English learners struggling?',`Encina. ${e.elpac}% of its English learners are on track, ${pts(BENCH.elpac.target-e.elpac)} below the 55% target.`,`That is <b>${pts(behind)} behind the district</b> (${avg('elpac')}%). Most of the gap is first-year newcomers, and math vocabulary is now the top English learner flag. <span class="dtag sim">Simulated</span>`,rec,rid);
+  }
+  if(k==='tier3'){
+    const over=ZONES.filter(z=>z.rev>3).length;
+    left=`<div class="xcard"><h3>Open Tier 3 escalations by zone</h3>${barsHTML([...ZONES].sort((a,b)=>b.t3-a.t3).map(z=>[z.name,z.t3,`var(${ST[z.status].v})`]),44)}<p class="src">Simulated zone counts.</p></div>`;
+    stats=statTile(T3,'Tier 3 cases open across 5 zones',0)+statTile(`${over} of 5`,'zones over the 3-day review target',0)+statTile('270','pupil services staff (counselors, psychologists, nurses and others), 2024-25',1)+statTile('190','students per pupil services staff member, 2024-25',1);
+    const two=Z('encina').t3+Z('sanjuan').t3;
+    find=findHTML('Where are intensive-support cases getting stuck?',`Encina and San Juan High hold ${Math.round(two/T3*100)}% of the ${T3} open Tier 3 cases.`,`Reviews take a median <b>6 school days</b> against a 3-day target (Encina ${Z('encina').rev}, San Juan High ${Z('sanjuan').rev}). ${over} of 5 zones are over target. <span class="dtag sim">Simulated</span>`,rec,rid);
+  }
+  if(k==='lcap'){
+    left=`<div class="xcard"><h3>Chronic absenteeism by year</h3>${barsHTML([['2021-22',34.3,'var(--red)'],['2022-23',27.3,'var(--orange)'],['2023-24',23.2,'var(--yellow)'],['2024-25',21.7,'var(--green)']],34.3,'%')}<p class="src">Ed-Data, share of students missing 10% or more of school days.</p><h3 style="margin-top:14px">Attendance change after six weeks, in points</h3>${barsHTML([['Intervention',3.1,'var(--green)'],['ELs in program',1.8,'var(--yellow)'],['Waitlist',0.4,'var(--label3)']],3.1)}<p class="src">Simulated pilot results.</p></div>`;
+    stats=statTile('63.0%','high-need students, the count that drives LCAP supplemental and concentration funds',1)+statTile('$489.9M','LCFF revenue in 2024-25, 70.4% of the general fund',1)+statTile('−12.6 pts','drop in chronic absenteeism since 2021-22',1)+statTile('+3.1 pts','attendance gain for students in the intervention, six weeks',0);
+    find=findHTML('Are interventions improving attendance?','Early signs are positive, but not yet proof.',`Intervention students gained <b>3.1 attendance points</b> in six weeks, against 0.4 on the waitlist. Gains are smaller for English learners (1.8), and coverage is thinnest in San Juan High and Encina. <span class="dtag sim">Simulated pilot</span>`,rec,rid);
+  }
+  P.style.setProperty('--accent',`var(${d.c})`);
+  P.innerHTML=`<div class="dp-head"><span class="dp-ico">${ico(d.i,20,2)}</span><div><h2>${d.t}</h2><p>${d.s}</p></div><button class="pill" id="dialClear">${ico('x',14,2.4)}Clear</button></div><div class="dp-body one">${find}</div><div class="dp-body">${left}<div class="dstats">${stats}</div></div>`;
+  P.hidden=false;
+  $('#dialClear').addEventListener('click',()=>runDial(k));
+}
+
+/* ---------- all schools (Ed-Data) ---------- */
+const SCH_OTHER=['K-12','Special Ed','Alternative','Continuation'];
+function schoolMatch(x){
+  const t=state.schoolType;
+  if(t==='charter'&&!x[3])return false;
+  if(t==='other'&&(x[3]||!SCH_OTHER.includes(x[1])))return false;
+  if(['Elementary','Middle','High'].includes(t)&&(x[3]||x[1]!==t))return false;
+  const q=state.schoolQ.trim().toLowerCase();
+  return !q||x[0].toLowerCase().includes(q);
+}
+function renderSchools(){
+  setPressed('#schoolSeg',state.schoolType);
+  const rows=SCHOOLS.filter(schoolMatch).sort((a,b)=>state.schoolSort==='size'?(b[7]||0)-(a[7]||0):a[0].localeCompare(b[0]));
+  const kids=rows.reduce((a,x)=>a+(x[7]||0),0);
+  const t1={S:'Title I schoolwide',T:'Title I targeted',N:''};
+  $('#schoolsNote').textContent=`${SCHOOLS.length} open schools · ${SCHOOLS.filter(x=>!x[3]).length} district-run · ${SCHOOLS.filter(x=>x[3]).length} charter`;
+  $('#schoolList').innerHTML=`<div class="sch-bar"><span>${rows.length} shown · ${kids.toLocaleString()} students</span><button class="pill" id="schoolSort">${ico('bars',14,2)}${state.schoolSort==='size'?'Largest first':'A to Z'}</button></div>`+
+   (rows.length?rows.map(x=>{
+     const ch=x[7]!=null&&x[5]!=null?x[7]-x[5]:null;
+     const meta=[x[1],x[2]&&`grades ${x[2]}`,x[3]&&'Charter',t1[x[4]]].filter(Boolean).join(' · ');
+     const tel=x[8]?`<a class="sch-tel" href="tel:${x[8].replace(/\D/g,'')}" aria-label="Call ${esc(x[0])}">${ico('phone',15,2)}</a>`:'';
+     return `<div class="sch-row${x[0]===state.school?' on':''}" data-name="${esc(x[0])}" role="button" tabindex="0" aria-pressed="${x[0]===state.school}"><div class="sch-main"><b>${esc(x[0])}</b><span>${meta}</span></div><div class="sch-n"><b>${x[7]!=null?x[7].toLocaleString():'—'}</b>${ch!=null?`<span class="${ch>0?'up':ch<0?'dn':''}">${ch>0?'▲ +'+ch.toLocaleString():ch<0?'▼ '+(-ch).toLocaleString():'No change'} since 23-24</span>`:'<span>no count</span>'}</div>${tel}</div>`}).join(''):'<p class="empty">No school matches that search.</p>');
+  $('#schoolSort').addEventListener('click',()=>{state.schoolSort=state.schoolSort==='size'?'name':'size';renderSchools()});
+  schoolView=rows;
+  if(rows.length&&!rows.some(x=>x[0]===state.school))state.school=rows[0][0];
+  drawSchoolTrend();
+}
+/* ---------- per-school chart (cycles through the filtered list, in list order) ---------- */
+let schoolView=[],schoolChart=null;
+const SC_METRICS={
+ enr:{desc:'Census Day enrollment by school year, from Ed-Data school profiles. Published data.'},
+ tiers:{desc:'Share of this school’s check-ins routed to its MTSS team for Tier 2 or Tier 3 review. A share of check-ins, not of students. Lower is better. Simulated.'},
+ elpac:{desc:'This school’s English learners on track on a local language-progress measure. Higher is better. Simulated.'},
+ att:{desc:'Average daily attendance at this school. Higher is better. Simulated.'}
+};
+/* Each school gets its own fixed base (seeded by its name), so its numbers stay the same every visit. */
+function schoolBase(name,m){const r=rng(hash(name+'|'+m));const spread={tiers:4.5,elpac:9,att:2.6}[m];return +(avg(m)+(r()-.5)*2*spread).toFixed(1)}
+function schoolSeries(name,m,days,salt=''){
+  const base=schoolBase(name,m),r=rng(hash(name+m+salt));
+  const drift=(rng(hash(name+m+'d'))()-.5)*(m==='att'?.06:.14);
+  const out=[];let v=base-drift*42;
+  for(let i=0;i<42;i++){v+=drift+(r()-.5)*(m==='att'?0.5:1.1);out.push(v)}
+  const shift=base-out[41];
+  return out.map(x=>+Math.min(m==='att'?99.6:100,x+shift).toFixed(1)).slice(42-days);
+}
+function selectSchool(name){
+  state.school=name;
+  $$('.sch-row').forEach(r=>{const on=r.dataset.name===name;r.classList.toggle('on',on);r.setAttribute('aria-pressed',String(on))});
+  const row=$$('.sch-row').find(r=>r.dataset.name===name),L=$('#schoolList');
+  if(row){const t=row.offsetTop,b=t+row.offsetHeight;if(t<L.scrollTop+40)L.scrollTop=t-40;else if(b>L.scrollTop+L.clientHeight)L.scrollTop=b-L.clientHeight+8}
+  drawSchoolTrend();
+}
+function stepSchool(d){
+  if(!schoolView.length)return;
+  const i=schoolView.findIndex(x=>x[0]===state.school);
+  selectSchool(schoolView[(i+d+schoolView.length)%schoolView.length][0]);
+}
+function drawSchoolTrend(){
+  const x=schoolView.find(s=>s[0]===state.school),m=state.scMetric,enr=m==='enr';
+  const t1={S:'Title I schoolwide',T:'Title I targeted',N:''};
+  $('#scPrev').disabled=$('#scNext').disabled=schoolView.length<2;
+  setPressed('#scMetricSeg',m);
+  $('#scDesc').textContent=SC_METRICS[m].desc;
+  $('#scRangeSeg').hidden=enr;$('#scYoy').hidden=enr;
+  if(!enr)setPressed('#scRangeSeg',state.scRange);
+  if(!x){$('#scStats').innerHTML='';$('#scName').textContent='No school matches';$('#scMeta').textContent='Clear the search or pick another type.';$('#scPos').textContent='';$('#scChip').innerHTML='';$('#scMsg').hidden=false;$('#scMsg').textContent='No school matches that filter.';if(schoolChart){schoolChart.destroy();schoolChart=null}return}
+  $('#scName').textContent=x[0];
+  $('#scMeta').textContent=[x[3]?'Charter':x[1],x[2]&&`grades ${x[2]}`,t1[x[4]],x[8]].filter(Boolean).join(' · ');
+  $('#scPos').textContent=`${schoolView.indexOf(x)+1} of ${schoolView.length}`;
+  $('#scStats').innerHTML=['att','tiers','elpac'].map(k=>{const v=schoolBase(x[0],k);return `<div class="dstat"><b>${v}%</b><span>${METRICS[k].label}</span>${tline(k,v)}<i class="sim">Simulated</i></div>`}).join('')+
+    `<div class="dstat"><b>${x[7]!=null?x[7].toLocaleString():'—'}</b><span>${x[7]!=null?'Students, 2025-26':'No published enrollment'}</span><i class="real">Published</i></div>`;
+  let val;
+  if(enr){
+    const ch=x[7]!=null&&x[5]!=null?x[7]-x[5]:null;
+    $('#scChip').innerHTML=x[7]!=null?`2025-26 <b>${x[7].toLocaleString()}</b> students${ch!=null?` &middot; <span class="${ch>=0?'good':'bad'}">${ch>0?'▲ +'+ch.toLocaleString():ch<0?'▼ '+(-ch).toLocaleString():'no change'} since 2023-24</span>`:''}<span class="tag-real">Published</span>`:`No published count<span class="tag-real">Published</span>`;
+  }else{
+    val=schoolBase(x[0],m);const g=gapOf(m,val);
+    $('#scChip').innerHTML=`Now <b>${val}%</b> &middot; <span class="tgt">${g.target}</span> &middot; <span class="gap ${g.cls}">${g.gap}</span>${infoBtn(m,METRICS[m].label)}<span class="tag-sim">Simulated</span>`;
+  }
+  if(!window.Chart)return;
+  const blue=css('--blue'),lab2=css('--label2'),sep=css('--sep'),orange=css('--orange');
+  const line=(label,data,color,extra)=>Object.assign({label,data,borderColor:color,backgroundColor:c=>grad(c,color),fill:true,tension:.4,borderWidth:2.5,pointRadius:0,pointHoverRadius:5,pointHoverBorderWidth:2,pointHoverBackgroundColor:'#fff',pointHoverBorderColor:color,spanGaps:true},extra||{});
+  let labels,ds,unit,full=null;
+  if(enr){
+    labels=['2023-24','2024-25','2025-26'];unit=' students';
+    const pts=[x[5],x[6],x[7]];
+    $('#scMsg').hidden=pts.some(v=>v!=null);$('#scMsg').textContent='Ed-Data has no enrollment count for this school.';
+    ds=[line(x[0],pts,blue,{pointRadius:4,pointBackgroundColor:blue,tension:.3})];
+  }else{
+    $('#scMsg').hidden=true;unit='%';
+    const days=state.scRange==='ytd'?42:state.scRange;
+    labels=dates(days);full=fullDates(days);
+    ds=[line(x[0],schoolSeries(x[0],m,days),blue),line('District',series(null,m,days),lab2,{backgroundColor:lab2,fill:false,borderDash:[5,5],borderWidth:1.75})];
+    if(state.scYoy)ds.push(line('Last year',schoolSeries(x[0],m,days,'yoy').map(v=>+(v-(BENCH[m].good(val)?1:-1)*val*.03).toFixed(1)),orange,{fill:false,borderDash:[2,3],borderWidth:1.75}));
+    ds.push({label:`Target ${OP[m]} ${BENCH[m].target}%`,data:Array(days).fill(BENCH[m].target),borderColor:lab2,backgroundColor:lab2,borderWidth:1.25,borderDash:[6,5],pointRadius:0,fill:false});
+  }
+  const short=s=>s.length>24?s.slice(0,23)+'…':s;
+  const options={responsive:true,maintainAspectRatio:false,animation:{duration:reduceMotion?0:500,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lab2,usePointStyle:true,pointStyle:'circle',boxWidth:8,boxHeight:8,font:{size:12,weight:'500'},generateLabels:c=>Chart.defaults.plugins.legend.labels.generateLabels(c).map(l=>Object.assign(l,{text:short(l.text)}))}},
+      tooltip:{backgroundColor:'rgba(28,28,30,.88)',titleColor:'#fff',bodyColor:'#fff',cornerRadius:12,padding:10,titleFont:{size:12,weight:'600'},bodyFont:{size:13},usePointStyle:true,boxWidth:8,boxHeight:8,callbacks:{title:its=>full?[METRICS[m].label+' (simulated)',full[its[0].dataIndex]]:['Census Day enrollment (published)',its[0].label],label:c=>c.dataset.label.startsWith('Target')?` ${c.dataset.label}`:c.parsed.y==null?` ${c.dataset.label}: no count`:` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}${unit}`}}},
+    scales:{x:{grid:{display:false},border:{display:false},ticks:{color:lab2,maxTicksLimit:6,maxRotation:0,font:{size:11}}},
+      y:{grid:{color:sep},border:{display:false},grace:enr?'10%':0,ticks:{color:lab2,maxTicksLimit:5,font:{size:11},callback:v=>enr?v.toLocaleString():v+'%'}}}};
+  $('#schoolChart').setAttribute('aria-label',enr?`${x[0]} enrollment: ${labels.map((l,i)=>l+' '+(ds[0].data[i]??'no count')).join(', ')}`:`${x[0]} ${m} trend, simulated`);
+  if(schoolChart){schoolChart.data={labels,datasets:ds};schoolChart.options=options;schoolChart.update()}
+  else schoolChart=new Chart($('#schoolChart'),{type:'line',data:{labels,datasets:ds},options});
+}
+function showSchool(name){
+  state.schoolType='all';state.schoolQ=name;$('#schoolQ').value=name;if(name)state.school=name;renderSchools();
+  $('#sec-schools').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+}
 function renderWidgets(){
   const z=cur(),g=m=>z?z[m]:avg(m);
   const dl=m=>{const s=series(z&&z.id,m,42);return +(s[41]-s[36]).toFixed(1)};
-  $('#wAttBody').innerHTML=ring('Attendance',g('att'),85,100,'--green',dl('att'));
-  $('#wElBody').innerHTML=ring('EL progress',g('elpac'),25,65,'--cyan',dl('elpac'));
-  $('#wFlagsBody').innerHTML=`<div class="w-label">Tier 2/3 flags</div><div class="w-big">${g('tiers')}<small>%</small></div>${spark(series(z&&z.id,'tiers',42).slice(-20))}<div class="w-foot">${delta(dl('tiers'),true)} vs last week</div>`;
+  const tgt=m=>{const g=gapOf(m,g0(m));return `<div class="w-foot w-tgt"><span class="tgt">${g.target}</span><span class="gap ${g.cls}">${g.gap}</span></div>`},g0=g;
+  const wk=(m,lower)=>`<div class="w-wk">${delta(dl(m),lower)} vs last week</div>`;
+  $('#wAttBody').innerHTML=ring(`Attendance rate${infoBtn('att','attendance rate')}`,g('att'),85,100,'--green')+tgt('att')+wk('att',false);
+  $('#wElBody').innerHTML=ring(`EL progress${infoBtn('elpac','English learner progress')}`,g('elpac'),25,65,'--cyan')+tgt('elpac')+wk('elpac',false);
+  $('#wFlagsBody').innerHTML=`<div class="w-label">Tier 2/3 review share${infoBtn('tiers','Tier 2/3 review share')}</div><div class="w-big">${g('tiers')}<small>%</small></div>${spark(series(z&&z.id,'tiers',42).slice(-20))}${tgt('tiers')}${wk('tiers',true)}`;
   const t3=z?z.t3:T3,rev=z?z.rev:6,mx=Math.max(...ZONES.map(x=>x.t3));
   const bars=ZONES.map(x=>`<span style="height:${Math.max(14,x.t3/mx*100)}%;background:var(${ST[x.status].v});opacity:${!z||z.id===x.id?1:.28}"></span>`).join('');
-  $('#wT3Body').innerHTML=`<div class="w-label">Tier 3 open</div><div class="w-big">${t3}</div><div class="minibars" aria-hidden="true">${bars}</div><div class="w-foot"><span class="${rev>3?'bad':'good'}">${rev} days</span> median review, target 3</div>`;
+  $('#wT3Body').innerHTML=`<div class="w-label">Tier 3 cases open${infoBtn('t3','Tier 3 cases open')}</div><div class="w-big">${t3}</div><div class="minibars" aria-hidden="true">${bars}</div><div class="w-foot w-tgt"><span class="tgt">Review target ≤ 3 days</span><span class="gap ${rev>3?'bad':'good'}">Median ${rev} days${rev>3?` · ${rev-3} over`:''}</span></div>`;
   applyWidgetOrder();
 }
 function loadWidgetOrder(){
@@ -970,45 +1414,66 @@ function loadWidgetOrder(){
 }
 function saveWidgetOrder(){try{localStorage.setItem('dp-widget-order',JSON.stringify(state.widgetOrder))}catch(e){}}
 function applyWidgetOrder(){state.widgetOrder.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.order=i})}
-function setupWidgetDrag(){
-  const grid=$('.widgets');let active=null,startX=0,startY=0,dragging=false;
-  const cards=()=>[...grid.querySelectorAll('.widget')];
-  function onDown(e){
-    const grip=e.target.closest('.grip');if(!grip)return;
-    active=grip.closest('.widget');if(!active)return;
-    e.preventDefault();
-    startX=e.clientX;startY=e.clientY;dragging=false;
-    active.setPointerCapture(e.pointerId);
-    active.addEventListener('pointermove',onMove);
-    active.addEventListener('pointerup',onUp,{once:true});
-  }
+/* Drag-to-reorder for any grid whose direct children carry data-widget and a .grip handle.
+   Order lives in CSS `order`, is saved per grid, and arrow keys on a grip move it one slot. */
+function sortable(grid,key,order){
+  if(!grid)return;
+  const items=()=>[...grid.children].filter(c=>c.dataset&&c.dataset.widget);
+  const ids=items().map(c=>c.dataset.widget);
+  if(!order){order=ids.slice();try{const v=JSON.parse(localStorage.getItem(key));if(Array.isArray(v)&&v.length===ids.length&&ids.every(i=>v.includes(i)))order=v}catch(e){}}
+  const apply=()=>items().forEach(c=>c.style.order=order.indexOf(c.dataset.widget));
+  const save=()=>{try{localStorage.setItem(key,JSON.stringify(order))}catch(e){}};
+  const move=(id,to)=>{const i=order.indexOf(id);if(i<0)return;order.splice(i,1);order.splice(Math.max(0,Math.min(order.length,to)),0,id)};
+  apply();
+  let active=null,sx=0,sy=0,dragging=false;
   function onMove(e){
     if(!active)return;
-    const dx=e.clientX-startX,dy=e.clientY-startY;
+    const dx=e.clientX-sx,dy=e.clientY-sy;
     if(!dragging&&Math.hypot(dx,dy)<6)return;
-    if(!dragging){dragging=true;active.classList.add('dragging-w');active.style.zIndex=5}
-    active.style.transform=`translate(${dx}px,${dy}px) scale(1.04)`;
+    if(!dragging){dragging=true;active.classList.add('dragging-w')}
+    active.style.transform=`translate(${dx}px,${dy}px) scale(1.03)`;
     const r=active.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
     let best=null,bd=1e9;
-    cards().forEach(c=>{if(c===active)return;const cr=c.getBoundingClientRect();const d=Math.hypot(cx-(cr.left+cr.width/2),cy-(cr.top+cr.height/2));if(d<bd){bd=d;best=c}});
-    if(best){
-      const ai=state.widgetOrder.indexOf(active.dataset.widget),bi=state.widgetOrder.indexOf(best.dataset.widget);
-      if(ai>-1&&bi>-1&&bd<r.width*.6){
-        state.widgetOrder.splice(ai,1);state.widgetOrder.splice(bi,0,active.dataset.widget);
-        cards().forEach(c=>{if(c!==active)c.style.order=state.widgetOrder.indexOf(c.dataset.widget)});
-      }
+    items().forEach(c=>{if(c===active)return;const q=c.getBoundingClientRect();const d=Math.hypot(cx-(q.left+q.width/2),cy-(q.top+q.height/2));if(d<bd){bd=d;best=c}});
+    if(best&&bd<Math.min(r.width,best.offsetWidth)*.55){
+      const before=active.getBoundingClientRect();
+      move(active.dataset.widget,order.indexOf(best.dataset.widget));apply();
+      const after=active.getBoundingClientRect();
+      sx+=after.left-before.left;sy+=after.top-before.top;
+      active.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.03)`;
     }
   }
   function onUp(){
     if(active){
-      active.classList.remove('dragging-w');active.style.transform='';active.style.zIndex='';
+      active.classList.remove('dragging-w');active.style.transform='';
       active.removeEventListener('pointermove',onMove);
-      applyWidgetOrder();saveWidgetOrder();
+      apply();save();
       if(dragging)island('Layout saved','Your card order is remembered next time','--blue','grip');
     }
     active=null;dragging=false;
   }
-  grid.addEventListener('pointerdown',onDown);
+  grid.addEventListener('pointerdown',e=>{
+    const grip=e.target.closest('.grip');if(!grip)return;
+    const card=grip.closest('[data-widget]');if(!card||card.parentElement!==grid)return;
+    e.preventDefault();active=card;sx=e.clientX;sy=e.clientY;dragging=false;
+    active.setPointerCapture(e.pointerId);
+    active.addEventListener('pointermove',onMove);
+    active.addEventListener('pointerup',onUp,{once:true});
+    active.addEventListener('pointercancel',onUp,{once:true});
+  });
+  grid.addEventListener('keydown',e=>{
+    const grip=e.target.closest('.grip');if(!grip)return;
+    const card=grip.closest('[data-widget]');if(!card||card.parentElement!==grid)return;
+    const step={ArrowLeft:-1,ArrowUp:-1,ArrowRight:1,ArrowDown:1}[e.key];if(!step)return;
+    e.preventDefault();move(card.dataset.widget,order.indexOf(card.dataset.widget)+step);apply();save();grip.focus();
+  });
+}
+function setupSortables(){
+  sortable($('.widgets'),'dp-widget-order',state.widgetOrder);
+  sortable($('#facts'),'dp-facts-order');
+  sortable($('#duoTop'),'dp-top-order');
+  sortable($('#duoMoney'),'dp-money-order');
+  sortable($('#duoBriefs'),'dp-briefs-order');
 }
 
 /* ---------- chart ---------- */
@@ -1021,16 +1486,15 @@ function ensureChart(){
     chartLoading=true;
     const s=document.createElement('script');
     s.src='https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
-    s.onload=()=>drawChart();
+    s.onload=()=>{drawChart();drawSchoolTrend()};
     s.onerror=()=>{const m=$('#chartMsg');m.hidden=false;m.textContent='The chart library didn’t load. Check the connection, then reload the page.'};
     document.head.appendChild(s);
   }
   return false;
 }
 function updateBenchChip(){
-  const b=BENCH[state.metric],z=cur(),val=z?z[state.metric]:avg(state.metric);
-  const good=b.good(val);
-  $('#benchChip').innerHTML=`Target <b>${b.target}%</b> &middot; ${b.dir} &middot; <span class="${good?'good':'bad'}">${good?'meeting target':'off target'}</span>`;
+  const m=state.metric,z=cur(),val=z?z[m]:avg(m),g=gapOf(m,val);
+  $('#benchChip').innerHTML=`${z?z.name:'District'} now <b>${val}%</b> &middot; <span class="tgt">${g.target}</span> &middot; <span class="gap ${g.cls}">${g.gap}</span>${infoBtn(m,METRICS[m].label)}`;
 }
 function drawChart(){
   $('#metricDesc').textContent=METRICS[state.metric].desc;
@@ -1049,17 +1513,18 @@ function drawChart(){
     ds.push(line('Last year',lastYear,orange,{fill:false,borderDash:[2,3],borderWidth:1.75,pointRadius:0}));
   }
   const bench=BENCH[state.metric].target;
-  ds.push({label:'Target',data:Array(days).fill(bench),borderColor:lab2,borderWidth:1.25,borderDash:[6,5],pointRadius:0,fill:false});
-  const data={labels:dates(days),datasets:ds};
+  ds.push({label:`Target ${OP[state.metric]} ${bench}%`,data:Array(days).fill(bench),borderColor:lab2,borderWidth:1.25,borderDash:[6,5],pointRadius:0,fill:false});
+  const data={labels:dates(days),datasets:ds},full=fullDates(days),mlabel=METRICS[state.metric].label;
   const options={responsive:true,maintainAspectRatio:false,animation:{duration:reduceMotion?0:600,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lab2,usePointStyle:true,pointStyle:'circle',boxWidth:8,boxHeight:8,font:{size:12,weight:'500'},filter:i=>state.yoy||i.text!=='Last year'}},
-      tooltip:{backgroundColor:'rgba(28,28,30,.88)',titleColor:'#fff',bodyColor:'#fff',cornerRadius:12,padding:10,titleFont:{size:12,weight:'600'},bodyFont:{size:13},usePointStyle:true,boxWidth:8,boxHeight:8,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      tooltip:{backgroundColor:'rgba(28,28,30,.88)',titleColor:'#fff',bodyColor:'#fff',cornerRadius:12,padding:10,titleFont:{size:12,weight:'600'},bodyFont:{size:13},usePointStyle:true,boxWidth:8,boxHeight:8,callbacks:{title:its=>[mlabel+' (simulated)',full[its[0].dataIndex]],label:c=>c.dataset.label.startsWith('Target')?` ${c.dataset.label}`:` ${c.dataset.label}: ${c.parsed.y}%`}}},
     scales:{x:{grid:{display:false},border:{display:false},ticks:{color:lab2,maxTicksLimit:6,maxRotation:0,font:{size:11}}},
       y:{grid:{color:sep},border:{display:false},ticks:{color:lab2,maxTicksLimit:5,font:{size:11},callback:v=>v+'%'}}}};
+  $('#chart').setAttribute('aria-label',`${mlabel}, ${z?z.name+' and district':'district'}, ${full[0]} to ${full[full.length-1]}. Simulated.`);
   if(chart){chart.data=data;chart.options=options;chart.update()}
   else chart=new Chart($('#chart'),{type:'line',data,options});
 }
-function redrawChart(){if(chart){chart.destroy();chart=null}drawChart()}
+function redrawChart(){if(chart){chart.destroy();chart=null}drawChart();if(schoolChart){schoolChart.destroy();schoolChart=null}drawSchoolTrend()}
 
 /* ---------- map ---------- */
 let moved=false;
@@ -1105,9 +1570,10 @@ function paintMap(){
 }
 function showTip(e,z){
   const tip=$('#tip'),box=$('#mapWrap').getBoundingClientRect();
-  tip.innerHTML=`<b>${z.name}</b><div class="tr"><span>Status</span><span>${ST[z.status].w}</span></div><div class="tr"><span>Tier 2/3 flags</span><span>${z.tiers}%</span></div><div class="tr"><span>EL progress</span><span>${z.elpac}%</span></div><div class="tr"><span>Attendance</span><span>${z.att}%</span></div><div class="tr"><span>Tier 3 open</span><span>${z.t3}</span></div>`;
+  const row=(m,l)=>`<div class="tr"><span>${l} <small>${OP[m]} ${BENCH[m].target}%</small></span><span class="${gapOf(m,z[m]).cls}">${z[m]}%</span></div>`;
+  tip.innerHTML=`<b>${z.name}</b><div class="tr"><span>Status</span><span>${ST[z.status].w}</span></div>${row('att','Attendance rate')}${row('tiers','Tier 2/3 review share')}${row('elpac','EL progress')}<div class="tr"><span>Tier 3 cases open</span><span>${z.t3}</span></div><div class="tr"><span>Simulated. Targets in small type.</span></div>`;
   let x=e.clientX-box.left+14,y=e.clientY-box.top+14;
-  if(x>box.width-196)x-=206;if(y>box.height-150)y-=160;
+  if(x>box.width-246)x-=256;if(y>box.height-190)y-=200;
   tip.style.left=Math.max(6,x)+'px';tip.style.top=Math.max(6,y)+'px';tip.classList.add('show');
 }
 function hideTip(){$('#tip').classList.remove('show')}
@@ -1118,10 +1584,10 @@ function content(){
   if(state.zone){
     const z=cur(),d=avg('elpac'),gap=+(d-z.elpac).toFixed(1);
     return {key:'zone-'+z.id,notes:[
-      {s:z.status,t:`${z.name} ${ST[z.status].phrase}`,m:`${z.tiers}% of check-ins went to Tier 2/3 review this week, against ${avg('tiers')}% district-wide.`},
+      {s:z.status,t:`${z.name} ${ST[z.status].phrase}`,m:`${z.tiers}% of check-ins went to Tier 2/3 review this week (target ≤ 12%), against ${avg('tiers')}% district-wide.`},
       {s:gap>0?'watch':'ok',t:gap>0?`EL progress trails the district by ${gap} points`:`EL progress leads the district by ${Math.abs(gap)} points`,m:`${z.elpac}% of English learners are on track here, and attendance is ${z.att}%.`},
       {s:'watch',t:'Top themes in this week’s check-ins',m:z.tags.slice(0,3).map(cap).join(', ')+'.'}],
-      recs:[{t:z.act,b:z.why,s:z.status,scope:`${z.sites} sites`,imp:`${z.lcap} LCAP priority`,zone:z.id},...CONTENT.default.recs.filter(r=>!r.t.includes(z.name)).slice(0,2)]};
+      recs:[{t:z.act,b:z.why,s:z.status,scope:`${z.sites} sites`,imp:`${z.lcap} LCAP priority`,zone:z.id,sig:{zone:z.id,m:ZONE_SIG[z.id]}},...CONTENT.default.recs.filter(r=>!r.t.includes(z.name)).slice(0,2)]};
   }
   return Object.assign({key:'default'},CONTENT.default);
 }
@@ -1129,11 +1595,6 @@ function barsHTML(rows,max,colorFn){return `<div class="bars">${rows.map(([l,v,c
 function renderNotes(){
   const c=content(),times=['now','8m ago','1h ago'];
   $('#notes').innerHTML=c.notes.map((n,i)=>`<article class="note"><span class="n-ico" style="--c:var(${ST[n.s].v});--g:${ST[n.s].g}">${ico(ST[n.s].i,20,2.1)}</span><div class="n-main"><div class="n-top"><b>${n.t}</b><span class="n-time">${times[i]}</span></div><p class="n-msg">${n.m}</p></div></article>`).join('');
-  let ex='';
-  if(state.dial==='lang')ex=`<div class="xcard"><h3>English learners by home language</h3>${barsHTML(LANGS,34.2,'%')}<p class="src">Source: San Juan Unified 2023–24 LCAP. Real published figures, shown for context.</p></div>`;
-  if(state.dial==='tier3')ex=`<div class="xcard"><h3>Open Tier 3 escalations by zone</h3>${barsHTML([...ZONES].sort((a,b)=>b.t3-a.t3).map(z=>[z.name,z.t3,`var(${ST[z.status].v})`]),44)}</div>`;
-  if(state.dial==='lcap')ex=`<div class="xcard"><h3>Attendance change after six weeks, in points</h3>${barsHTML([['Intervention',3.1,'var(--green)'],['ELs in program',1.8,'var(--yellow)'],['Waitlist',0.4,'var(--label3)']],3.1)}</div>`;
-  $('#extra').innerHTML=ex;
 }
 function contactRow(zoneId){
   const ct=CONTACTS[zoneId];if(!ct)return '';
@@ -1142,29 +1603,41 @@ function contactRow(zoneId){
   const mail=ct.email?`<a class="pill" href="mailto:${ct.email}?subject=${encodeURIComponent('San Juan Unified, '+ct.school+' check-in')}">${ico('mail',16,2)}Email</a>`:'';
   return `<div class="contact-row"><span class="contact-who">${who}</span><div class="rec-actions flush">${call}${mail}</div><p class="contact-note">${ct.verified}</p></div>`;
 }
+/* Evidence behind each suggestion: kind (simulated signal, published fact, or dashboard interpretation) + text. */
+const SIG_KIND={sim:'Simulated signal',pub:'Published fact',interp:'Dashboard interpretation'};
+function sigOf(r){
+  const s=r.sig;if(!s)return {k:'interp',t:'No metric attached'};
+  if(!s.zone)return s;
+  const z=Z(s.zone);
+  if(s.m==='t3')return {k:'sim',t:`${z.name}: ${z.t3} Tier 3 cases open, median review ${z.rev} days (target ≤ 3)`};
+  const g=gapOf(s.m,z[s.m]);return {k:'sim',t:`${z.name}: ${METRICS[s.m].label} ${z[s.m]}%, ${g.gap.toLowerCase().replace('target',`the ${OP[s.m]} ${BENCH[s.m].target}% target`)}`};
+}
 function renderRecs(){
   const c=content();
   $('#recs').innerHTML=c.recs.map((r,i)=>{
-    const id=c.key+'-'+i,added=state.brief.some(x=>x.id===id),sent=state.assigned.has(id);
-    return `<article class="rec"><div class="rec-top"><i style="background:var(${ST[r.s].v})"></i><div><h3>${r.t}</h3><p>${r.b}</p></div></div><div class="tags"><span class="tag">${r.scope}</span><span class="tag">${r.imp}</span></div>${r.zone?contactRow(r.zone):''}<div class="rec-actions"><button class="pill${added?' on':''}" data-add="${id}" data-k="${i}" aria-pressed="${added}">${ico(added?'check':'plus',16,2.2)}${added?'In Board brief':'Add to Board brief'}</button><button class="pill${sent?' done':''}" data-send="${id}" aria-pressed="${sent}">${ico(sent?'check':'person',16,2.1)}${sent?'Sent to MTSS team':'Send to MTSS team'}</button></div></article>`;
+    const id=c.key+'-'+i,added=state.brief.some(x=>x.id===id),sent=state.assigned.has(id),sg=sigOf(r);
+    return `<article class="rec"><div class="ev"><span class="dtag ${sg.k}">${SIG_KIND[sg.k]}</span><span>${sg.t}</span></div><div class="rec-top"><i style="background:var(${ST[r.s].v})"></i><div><span class="lbl">Suggested action</span><h3>${r.t}</h3><p><span class="lbl">Observation</span>${r.b}</p></div></div><div class="tags"><span class="tag">${r.scope}</span><span class="tag">${r.imp}</span></div>${r.zone?contactRow(r.zone):''}<div class="rec-actions"><button class="pill${added?' on':''}" data-add="${id}" data-k="${i}" aria-pressed="${added}">${ico(added?'check':'plus',16,2.2)}${added?'In Board brief':'Add to Board brief'}</button><button class="pill${sent?' done':''}" data-send="${id}" aria-pressed="${sent}">${ico(sent?'check':'person',16,2.1)}${sent?'Sent to MTSS team':'Send to MTSS team'}</button></div></article>`;
   }).join('');
 }
 function toggleBrief(id,r){
   const i=state.brief.findIndex(x=>x.id===id);
   if(i>=0)state.brief.splice(i,1);
-  else{state.brief.push({id,t:r.t,b:r.b,scope:scopeLabel()});const n=state.brief.length;island('Added to Board brief',`${n} talking point${n>1?'s':''} ready`,'--blue','doc')}
-  renderRecs();renderBadge();
+  else{const sg=sigOf(r);state.brief.push({id,t:r.t,b:r.b,sig:sg,scope:scopeLabel()});const n=state.brief.length;island('Added to Board brief',`${n} talking point${n>1?'s':''} ready`,'--blue','doc')}
+  renderRecs();renderBadge();renderDialPanel();
 }
 
 /* ---------- sites list ---------- */
 function buildSites(){
   $('#sites').innerHTML=ZONES.map(z=>{
+    /* Data note: the Tier 2 / Tier 3 split is a fixed 72/28 estimate of the zone's review share, not a measured split. */
     const t1=+(100-z.tiers).toFixed(1),t2=+(z.tiers*.72).toFixed(1),t3=+(z.tiers-t2).toFixed(1);
     return `<div class="site" data-site="${z.id}"><button class="s-row" aria-expanded="false" aria-controls="sb-${z.id}"><span class="s-ico" style="--c:var(${ST[z.status].v});--g:${ST[z.status].g}">${ico(ST[z.status].i,18,2.1)}</span><span><span class="s-name">${z.name}</span><span class="s-sub">${z.area}, ${z.sites} sites</span></span><span class="s-det">${ST[z.status].w}</span><span class="chev">${ico('chev',14,2.4)}</span></button>
 <div class="s-body" id="sb-${z.id}"><div class="s-inner"><div class="s-pad">
-<div class="stack" role="img" aria-label="Tier 1 ${t1}%, Tier 2 ${t2}%, Tier 3 ${t3}%"><span style="flex:${t1};background:var(--blue)"></span><span style="flex:${t2};background:var(--indigo)"></span><span style="flex:${t3};background:var(--orange)"></span></div>
-<div class="stack-key"><span><i style="background:var(--blue)"></i>Tier 1 ${t1}%</span><span><i style="background:var(--indigo)"></i>Tier 2 ${t2}%</span><span><i style="background:var(--orange)"></i>Tier 3 ${t3}%</span></div>
-<div class="mgrid"><div class="m"><b>${z.checkins.toLocaleString()}</b><span>Check-ins today</span></div><div class="m"><b>${z.t3}</b><span>Tier 3 open</span></div><div class="m"><b>${z.elpac}%</b><span>EL progress</span></div><div class="m"><b>${z.att}%</b><span>Attendance</span></div></div>
+<h3 class="sub-h">Check-ins by review level, share of check-ins (not students)</h3>
+<div class="stack" role="img" aria-label="Check-ins: not routed ${t1}%, Tier 2 review about ${t2}%, Tier 3 review about ${t3}%"><span style="flex:${t1};background:var(--blue)"></span><span style="flex:${t2};background:var(--indigo)"></span><span style="flex:${t3};background:var(--orange)"></span></div>
+<div class="stack-key"><span><i style="background:var(--blue)"></i>Not routed ${t1}%</span><span><i style="background:var(--indigo)"></i>Tier 2 review ~${t2}%</span><span><i style="background:var(--orange)"></i>Tier 3 review ~${t3}%</span></div>
+<p class="split-note">Review share ${z.tiers}% (target ≤ 12%). The Tier 2 and Tier 3 split is estimated.</p>
+<div class="mgrid"><div class="m"><b>${z.checkins.toLocaleString()}</b><span>Check-ins today</span></div><div class="m"><b>${z.t3}</b><span>Tier 3 cases open</span></div><div class="m"><b class="${gapOf('elpac',z.elpac).cls}">${z.elpac}%</b><span>EL progress, target ≥ 55%</span></div><div class="m"><b class="${gapOf('att',z.att).cls}">${z.att}%</b><span>Attendance, target ≥ 95%</span></div></div>
 <p class="s-act"><b>Suggested:</b> ${z.act}. <span class="muted">LCAP priority: ${z.lcap}.</span></p>
 <div class="rec-actions flush"><button class="pill" data-show="${z.id}">${ico('map',16,2)}Show on map</button></div>
 </div></div></div></div>`;
@@ -1182,7 +1655,7 @@ function updateSites(){$$('.site').forEach(s=>{const id=s.dataset.site,open=stat
 function render(){
   setPressed('#metricSeg',state.metric);setPressed('#rangeSeg',state.range);setPressed('#filterSeg',state.filter);
   $$('.tile[data-dial]').forEach(t=>t.setAttribute('aria-pressed',String(t.dataset.dial===state.dial)));
-  renderSideSel();renderScope();renderWidgets();drawChart();paintMap();renderNotes();renderRecs();updateSites();
+  renderSideSel();renderScope();renderWidgets();renderDialPanel();drawChart();paintMap();renderNotes();renderRecs();updateSites();
 }
 function isolate(id,quiet){
   state.zone=id||null;state.dial=null;if(id)state.open=id;
@@ -1199,15 +1672,18 @@ function runDial(k,force){
 
 /* ---------- search ---------- */
 const INDEX=[
-  {label:'Data pipeline',hint:'Sources and safeguards',icon:'flow',c:'--blue',terms:'data pipeline sources compliance ferpa encryption security privacy owasp nist cisa ptac sopipa n8n workflow',go:()=>openPipe()},
   {label:'Whole district',hint:'64 sites',icon:'grid',c:'--blue',terms:'whole district all overview everything reset',go:()=>isolate(null)},
   ...ZONES.map(z=>({label:z.name,hint:`${z.area}, ${ST[z.status].w.toLowerCase()}`,icon:'pin',c:ST[z.status].v,terms:`${z.name} ${z.area} ${z.tags.join(' ')} zone high school`,go:()=>isolate(z.id)})),
+  {label:'All schools',hint:`${SCHOOLS.length} open schools`,icon:'list',c:'--blue',terms:'schools directory list all schools charter elementary middle high title i enrollment phone',go:()=>showSchool('')},
+  ...SCHOOLS.map(x=>({label:x[0],hint:`${x[3]?'Charter':x[1]}${x[7]!=null?' · '+x[7].toLocaleString()+' students':''}`,icon:'pin',c:'--blue',terms:`${x[0]} school ${x[1]} ${x[3]?'charter':''}`,go:()=>showSchool(x[0])})),
+  {label:'District facts',hint:'Published data',icon:'bars',c:'--green',terms:'district facts enrollment graduation chronic absenteeism caaspp test scores ela math suspension english learners ed-data real data',go:()=>$('#sec-facts').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'})},
+  {label:'Fiscal health',hint:'FCMAT status',icon:'check',c:'--green',terms:'fiscal health budget fcmat going concern qualified negative certification reserves money spending salary teachers sacramento city',go:()=>$('#sec-fiscal').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'})},
   {label:'Language access bottlenecks',hint:'Speed dial',icon:'lang',c:'--blue',terms:'language access el ell elpac english learner newcomer reclassification vocabulary dari pashto spanish',go:()=>runDial('lang',true)},
   {label:'Tier 3 critical escalations',hint:'Speed dial',icon:'tri',c:'--red',terms:'tier 3 intensive critical escalation behavior mtss review',go:()=>runDial('tier3',true)},
   {label:'LCAP equity and attendance',hint:'Speed dial',icon:'bars',c:'--green',terms:'lcap equity attendance chronic absence roi foster intervention',go:()=>runDial('lcap',true)},
-  {label:'Tier 2 spikes',hint:'Watch zones',icon:'eye',c:'--orange',terms:'tier 2 targeted spike watch',go:()=>{Object.assign(state,{dial:null,zone:null,filter:'watch',metric:'tiers'});render();island('Tier 2 spikes','Watch and critical zones in view','--orange','eye')}},
-  {label:'Math vocabulary flags',hint:'Issue in 3 zones',icon:'lang',c:'--indigo',terms:'math vocabulary academic language',go:()=>runDial('lang',true)},
-  {label:'Reading flags',hint:'Issue in 2 zones',icon:'list',c:'--indigo',terms:'reading literacy comprehension stamina',go:()=>isolate('sanjuan')},
+  {label:'Tier 2 spikes',hint:'Watch zones, review share',icon:'eye',c:'--orange',terms:'tier 2 targeted spike watch review share',go:()=>{Object.assign(state,{dial:null,zone:null,filter:'watch',metric:'tiers'});render();island('Tier 2 spikes','Watch and critical zones in view','--orange','eye')}},
+  {label:'Math vocabulary flags',hint:'Theme in 3 zones',icon:'lang',c:'--indigo',terms:'math vocabulary academic language',go:()=>runDial('lang',true)},
+  {label:'Reading flags',hint:'Theme in 2 zones',icon:'list',c:'--indigo',terms:'reading literacy comprehension stamina',go:()=>isolate('sanjuan')},
   {label:'Board brief',hint:'Collected talking points',icon:'doc',c:'--blue',terms:'board brief packet meeting talking points',go:()=>openBrief()}
 ];
 function find(q){const w=q.trim().toLowerCase().split(/\s+/).filter(Boolean);if(!w.length)return[];return INDEX.filter(i=>w.every(x=>(i.label+' '+i.hint+' '+i.terms).toLowerCase().includes(x))).slice(0,8)}
@@ -1252,13 +1728,14 @@ function closeSheet(restore=true){
   $('#sheetLayer').hidden=true;document.body.classList.remove('sheet-open');
   if(restore&&lastFocus&&lastFocus.focus)lastFocus.focus({preventScroll:true});
 }
-function briefText(){return 'District Pulse Board brief (simulated demo data)\n\n'+state.brief.map((x,i)=>`${i+1}. ${x.t}\n   ${x.b}\n   Scope: ${x.scope}`).join('\n\n')}
+const factLabel=k=>k==='pub'?'Fact (published data)':k==='sim'?'Fact (simulated pilot signal)':'Basis (dashboard interpretation)';
+function briefText(){return 'District Pulse Board brief (draft talking points)\nFigures marked simulated are demo pilot data, not district records. Recommendations are suggestions for discussion, not district decisions.\n\n'+state.brief.map((x,i)=>`${i+1}. Recommendation: ${x.t}\n   ${factLabel(x.sig.k)}: ${x.sig.t}\n   Trend / observation: ${x.b}\n   Scope: ${x.scope}`).join('\n\n')}
 function drawBrief(body){
   if(!state.brief.length){body.innerHTML='<p class="empty">Nothing here yet. Tap “Add to Board brief” on any suggested action and it lands here as a talking point, ready to copy into a Board packet.</p>';return}
   const n=state.brief.length;
-  body.innerHTML=`<p class="sheet-note">${n} talking point${n>1?'s':''}. Figures in this demo are simulated.</p><ol class="brief-list">${state.brief.map(x=>`<li><div><b>${x.t}</b><p>${x.b}</p><p>${x.scope}</p></div><button class="xbtn" data-rm="${x.id}" aria-label="Remove ${esc(x.t)}">${ico('minus',16,2.4)}</button></li>`).join('')}</ol><div class="sheet-actions"><button class="pill prominent" id="copyBrief">${ico('copy',16,2)}Copy brief</button><button class="pill" id="clearBrief">Clear all</button></div><textarea class="brief-text" id="briefText" readonly hidden aria-label="Board brief text"></textarea>`;
-  body.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{state.brief=state.brief.filter(x=>x.id!==b.dataset.rm);renderBadge();renderRecs();drawBrief(body)});
-  body.querySelector('#clearBrief').onclick=()=>{state.brief=[];renderBadge();renderRecs();drawBrief(body)};
+  body.innerHTML=`<p class="sheet-note">${n} talking point${n>1?'s':''}. Each one separates the fact, the trend and the recommendation. Simulated figures are demo pilot data, not district records.</p><ol class="brief-list">${state.brief.map(x=>`<li><div><span class="bl">Recommendation</span><b>${x.t}</b><span class="bl">${factLabel(x.sig.k)}</span><p>${x.sig.t}</p><span class="bl">Trend / observation</span><p>${x.b}</p><span class="bl">Scope</span><p>${x.scope}</p></div><button class="xbtn" data-rm="${x.id}" aria-label="Remove ${esc(x.t)}">${ico('minus',16,2.4)}</button></li>`).join('')}</ol><div class="sheet-actions"><button class="pill prominent" id="copyBrief">${ico('copy',16,2)}Copy brief</button><button class="pill" id="clearBrief">Clear all</button></div><textarea class="brief-text" id="briefText" readonly hidden aria-label="Board brief text"></textarea>`;
+  body.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{state.brief=state.brief.filter(x=>x.id!==b.dataset.rm);renderBadge();renderRecs();renderDialPanel();drawBrief(body)});
+  body.querySelector('#clearBrief').onclick=()=>{state.brief=[];renderBadge();renderRecs();renderDialPanel();drawBrief(body)};
   body.querySelector('#copyBrief').onclick=async e=>{
     const btn=e.currentTarget,txt=briefText();
     try{await navigator.clipboard.writeText(txt);btn.innerHTML=ico('check',16,2.4)+'Copied';setTimeout(()=>{if(btn.isConnected)btn.innerHTML=ico('copy',16,2)+'Copy brief'},1800)}
@@ -1334,207 +1811,30 @@ function setupRefraction(){
   $$('.lg-r').forEach(el=>{el.dataset.lg='lg'+(n++);ro.observe(el)});
 }
 
-/* ---------- data pipeline ---------- */
-/* Sources are the documents in compliance/sources/. Citations point at the clause or page used in
-   compliance/DATA_PROTECTION_SPEC.md. The run is a simulation: no backend exists yet. */
-const PSRC={
-  owasp:{g:'Security',t:'OWASP Top 10:2025',u:'https://top10.owasp.org/2025/'},
-  csf:{g:'Security',t:'NIST Cybersecurity Framework 2.0',u:'https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf'},
-  tls:{g:'Security',t:'NIST SP 800-52r2, TLS',u:'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-52r2.pdf'},
-  sto:{g:'Security',t:'NIST SP 800-111, storage encryption',u:'https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-111.pdf'},
-  keys:{g:'Security',t:'NIST SP 800-57 Pt 1 r5, key management',u:'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf'},
-  cisa:{g:'Security',t:'CISA K-12 report (2023)',u:'https://www.cisa.gov/sites/default/files/2023-01/K-12report_FINAL_V2_508c.pdf'},
-  ferpa:{g:'Student privacy',t:'FERPA, 34 CFR Part 99',u:'https://www.ecfr.gov/current/title-34/part-99'},
-  ptacDA:{g:'Student privacy',t:'PTAC FAQ: Disclosure Avoidance',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/FAQs_disclosure_avoidance_0.pdf'},
-  ptacDI:{g:'Student privacy',t:'PTAC: De-identification terms',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/data_deidentification_terms_0.pdf'},
-  ptacOES:{g:'Student privacy',t:'PTAC: Online Educational Services (2014)',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/Student%20Privacy%20and%20Online%20Educational%20Services%20%28February%202014%29_0.pdf'},
-  ptacSec:{g:'Student privacy',t:'PTAC Data Security Checklist',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/Data%20Security%20Checklist_0.pdf'},
-  ptacBR:{g:'Student privacy',t:'PTAC Data Breach Response Checklist',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/checklist_data_breach_response_092012_0.pdf'},
-  ptacCloud:{g:'Student privacy',t:'PTAC FAQ: Cloud Computing',u:'https://studentprivacy.ed.gov/sites/default/files/resource_document/file/FAQ_Cloud_Computing_0.pdf'},
-  nces:{g:'Student privacy',t:'NCES 2011-603, aggregate reporting',u:'https://nces.ed.gov/pubs2011/2011603.pdf'},
-  edc:{g:'California',t:'Ed Code 49073.1',u:'https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=EDC&sectionNum=49073.1'},
-  sopipa:{g:'California',t:'SOPIPA, Bus. & Prof. Code 22584',u:'https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=BPC&sectionNum=22584'},
-  cde:{g:'California',t:'CDE DataQuest suppression rule',u:'https://www.cde.ca.gov/ds/ad/fsenrcum.asp'}
-};
-const PNODES=[
- {id:'trig',x:20,y:200,trig:true,t:'Nightly SIS sync',s:'Schedule · 2:00 AM',i:'clock',c:'--indigo',
-  what:'Starts each run. The district pushes an export to District Pulse. District Pulse never logs into the SIS.',
-  kv:[['Trigger','Cron, 02:00 Pacific'],['Direction','District pushes, we receive'],['Contract','Signed under Ed Code 49073.1']],
-  cite:[['edc','(b)(1): records stay district property, under district control'],['ferpa','99.31(a)(1)(i)(B): a vendor is a school official only under direct control'],['ptacOES','p4: direct control is usually set by a signed contract']]},
- {id:'kms',x:180,y:26,t:'Key vault',s:'KMS · FIPS 140-3',i:'key',c:'--orange',
-  what:'Holds the pseudonym key and one master key per district. Keys never sit in code or in the database.',
-  kv:[['Master key','One per district'],['Rotation','Every 12 months'],['Strength','128-bit or more'],['Contract ends','Key destroyed, data unreadable']],
-  cite:[['keys','Table 4, p72: 112-bit disallowed after 2030'],['keys','§5.3.6, p54: up to a 2-year usage period'],['owasp','A04: keys in an HSM or cloud KMS, never in source'],['edc','(b)(7): certify records are not kept after the contract']]},
- {id:'sftp',x:180,y:200,t:'Secure transfer',s:'SFTP · TLS 1.3',i:'transfer',c:'--blue',
-  what:'Receives the export over an encrypted channel. Email and plain FTP are refused.',
-  kv:[['Protocol','TLS 1.3, 1.2 minimum'],['Disabled','TLS 1.0, 1.1, all SSL'],['Ciphers','ECDHE with AES-GCM, no CBC']],
-  cite:[['tls','§3.1, p17: shall use 1.2, should use 1.3, shall not use 1.0'],['owasp','A04: forward secrecy, drop CBC, no FTP'],['ptacSec','Encrypt files in transfer, don’t email confidential data']]},
- {id:'pseudo',x:340,y:200,t:'Pseudonymize',s:'Drop names · HMAC-SHA-256',i:'finger',c:'--indigo',
-  what:'Removes names, birth dates and addresses in memory, then swaps each student ID for a keyed hash. Nothing identifying is written to disk.',
-  kv:[['Removed','Name, DOB, address, family names'],['Student ID','HMAC-SHA-256(key, id)'],['Why keyed','A plain hash of a short ID can be reversed']],
-  cite:[['ferpa','99.3: PII includes name, student number, DOB and linkable data'],['ptacDI','Pseudonymized vs. de-identified data'],['owasp','A04: no unkeyed or deprecated hashes']]},
- {id:'store',x:500,y:200,t:'Encrypted store',s:'AES-256-GCM at rest',i:'db',c:'--cyan',
-  what:'Keeps pseudonymous records only. Disk encryption, plus envelope encryption on sensitive columns. No human logins.',
-  kv:[['Disk','Volume encryption, KMS-backed'],['Columns','EL, IEP/504, tier: envelope-encrypted'],['Backups','Encrypted, restore tested quarterly'],['Hosting','Under district contract, never a public site']],
-  cite:[['sto','§3.1: full-disk and volume encryption'],['owasp','A04: authenticated encryption for all sensitive data'],['ptacCloud','Cloud hosting under the school-official exception'],['cisa','p5: implement and test backups']]},
- {id:'agg',x:660,y:200,t:'Aggregate',s:'Zone · site · group',i:'sigma',c:'--blue',
-  what:'Rolls records up into counts per zone, site and student group. Only these totals move on. Row-level data stops here.',
-  kv:[['Output','Counts and rates per cell'],['Row-level data','Stops at this node']],
-  cite:[['ferpa','99.31(b)(1): release after a reasonable de-identification determination'],['nces','How states build aggregate reports']]},
- {id:'supp',x:820,y:200,t:'Suppress small groups',s:'10 or fewer hidden',i:'eyeoff',c:'--red',
-  what:'Hides any group of 10 or fewer, then hides a second cell so the first can’t be worked out by subtraction. Rates near 0% or 100% show as “<5%” or “>95%”.',
-  kv:[['Primary','n ≤ 10 shows “Fewer than 11”'],['Complementary','Next-smallest cell in the row'],['Extremes','<5% and >95%'],['Differencing','Checked across filters']],
-  cite:[['cde','Cells of 10 or less are suppressed'],['ptacDA','p5: most states use 10; the subtraction attack'],['nces','p23: top and bottom coding; p20: percent × total attack'],['ferpa','99.31(b)(1): “single or multiple releases”']]},
- {id:'ai',x:660,y:380,t:'AI flag model',s:'Pseudonymous input',i:'spark',c:'--indigo',
-  what:'Scores patterns such as attendance dips and Tier 2 spikes, and raises a flag with a reason. It never changes a tier, files a referral or contacts a family.',
-  kv:[['Input','Pseudonymous features, no free text'],['Output','Flag, reason, confidence'],['Automatic actions','None'],['Outside AI APIs','Zero-retention contract only']],
-  cite:[['sopipa','(b)(2): no profiles except for K-12 school purposes'],['sopipa','(b)(4)(E): service providers bound by contract'],['edc','(b)(3): no use beyond the contract']]},
- {id:'review',x:820,y:380,t:'Site team review',s:'A person decides',i:'person',c:'--green',demo:true,
-  what:'The site MTSS team accepts, dismisses or escalates each flag. A student is re-identified only here, only for that team’s own site, and it is logged.',
-  kv:[['Decisions','Accept, dismiss, escalate'],['Re-identify','Own site only, logged'],['Target','Reviewed within 3 school days']],
-  cite:[['ferpa','99.31(a)(1)(ii): access limited to legitimate educational interest'],['ferpa','99.32: record of each access and disclosure']],
-  demo:'The “Send to site MTSS team” button on each suggested action is this step.'},
- {id:'api',x:980,y:200,t:'Dashboard API',s:'Totals only · no-store',i:'api',c:'--blue',
-  what:'Serves suppressed totals to signed-in staff, filtered by role. Responses are never cached.',
-  kv:[['Payload','Totals, never rows'],['Headers','HSTS, Cache-Control: no-store'],['Roles','District, site, reviewer']],
-  cite:[['owasp','A01: broken access control, the top risk'],['owasp','A04: HSTS; don’t cache sensitive responses'],['ferpa','99.31(a)(1)(ii): reasonable access controls']]},
- {id:'ui',x:1140,y:200,t:'District Pulse',s:'This dashboard',i:'screen',c:'--green',demo:true,
-  what:'The screen you are on. It only ever receives totals, so there is nothing identifying in the browser to find.',
-  kv:[['Sign-in','District SSO with MFA'],['Shows','Zones, rates, flags'],['Never shows','Student names or IDs']],
-  cite:[['cisa','p5: MFA is the first K-12 priority'],['owasp','A07: authentication failures'],['sopipa','(b)(1), (b)(3): no targeted ads, no selling data']],
-  demo:'Running now with simulated figures.'},
- {id:'audit',x:1140,y:380,t:'Audit log',s:'Append-only',i:'list',c:'--orange',
-  what:'Records every decryption, re-identification, review decision and API call. Unusual query patterns raise an alert.',
-  kv:[['Kept','For the life of the record'],['Alerts','Narrow-filter bursts, decrypt spikes'],['Incident plan','Rehearsed yearly']],
-  cite:[['ferpa','99.32: record of each request and disclosure'],['csf','Detect and Respond functions'],['ptacBR','Breach response checklist'],['cisa','p5: exercise an incident response plan']]}
-];
-const PEDGES=[['trig','sftp','1 export'],['sftp','pseudo','41,318 rows'],['kms','pseudo','key'],['kms','store','key'],['pseudo','store','0 names'],
-  ['store','agg','41,318'],['agg','supp','1,152 cells'],['supp','api','1,041 cells'],['store','ai','features'],['ai','review','flags'],['review','api','decisions'],
-  ['api','ui','totals'],['review','audit','logged',1],['api','audit','logged',1]];
-const PSTEPS=[['trig','kms'],['sftp'],['pseudo'],['store'],['agg','ai'],['supp','review'],['api'],['ui','audit']];
-const PW=1250,PH=520,NB=84,NW=156;
-const pipe={built:false,scale:1,sel:null,running:false,ran:false,timers:[]};
-const pNode=id=>PNODES.find(n=>n.id===id);
-const nSrc=Object.keys(PSRC).length;
-
-function buildPipe(){
-  const st=$('#pipeStage');
-  const port=(n,side)=>({x:n.x+(side==='r'?NB:0),y:n.y+NB/2});
-  let svg=`<svg width="${PW}" height="${PH}" aria-hidden="true">`,labels='';
-  PEDGES.forEach(([a,b,l,dash],k)=>{
-    const p=port(pNode(a),'r'),q=port(pNode(b),'l'),dx=Math.max(50,Math.abs(q.x-p.x)*.5);
-    svg+=`<path class="pipe-edge${dash?' dash':''}" id="pe${k}" d="M${p.x} ${p.y}C${p.x+dx} ${p.y} ${q.x-dx} ${q.y} ${q.x} ${q.y}"/>`;
-    const mx=.125*p.x+.375*(p.x+dx)+.375*(q.x-dx)+.125*q.x,my=.5*p.y+.5*q.y;
-    labels+=`<span class="pipe-elab" id="pl${k}" style="left:${mx}px;top:${my}px">${l}</span>`;
-  });
-  PNODES.forEach(n=>{svg+=`<circle class="pipe-port" cx="${n.x+NB}" cy="${n.y+NB/2}" r="5"/>`;if(!n.trig)svg+=`<circle class="pipe-port" cx="${n.x}" cy="${n.y+NB/2}" r="5"/>`});
-  svg+='</svg>';
-  const zones=[['Ingest',20,172],['Keys',180,2],['Protect',500,172],['Share',980,172],['Human review loop',660,352]].map(([t,x,y])=>`<span class="pipe-zone" style="left:${x}px;top:${y}px">${t}</span>`).join('');
-  const nodes=PNODES.map(n=>`<button class="pnode${n.trig?' trig':''}" data-node="${n.id}" aria-pressed="false" style="--k:${PNODES.indexOf(n)};left:${n.x-(NW-NB)/2}px;top:${n.y}px;--c:var(${n.c})"><span class="nbox">${ico(n.i,36,1.7)}${n.demo?'<span class="ntag">Live in demo</span>':''}<span class="nst">${ico('check',13,2.6)}</span></span><b>${n.t}</b><span class="sub">${n.s}</span></button>`).join('');
-  st.innerHTML=svg+labels+zones+nodes;
-  st.addEventListener('click',e=>{const b=e.target.closest('.pnode');if(b)selectNode(pipe.sel===b.dataset.node?null:b.dataset.node)});
-  // mouse drag to pan (touch pans natively)
-  const cv=$('#pipeCanvas');let d=null;
-  cv.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.target.closest('.pnode'))return;d={x:e.clientX,y:e.clientY,l:cv.scrollLeft,t:cv.scrollTop};cv.classList.add('drag');cv.setPointerCapture(e.pointerId)});
-  cv.addEventListener('pointermove',e=>{if(!d)return;cv.scrollLeft=d.l-(e.clientX-d.x);cv.scrollTop=d.t-(e.clientY-d.y)});
-  const up=()=>{d=null;cv.classList.remove('drag')};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
-  pipe.built=true;
-}
-function zoomPipe(s){
-  pipe.scale=Math.min(1.4,Math.max(.4,s));
-  $('#pipeStage').style.transform=`scale(${pipe.scale})`;
-  const z=$('#pipeSizer');z.style.width=PW*pipe.scale+28+'px';z.style.height=PH*pipe.scale+28+'px';
-}
-function fitPipe(all){const cv=$('#pipeCanvas'),w=(cv.clientWidth-30)/PW,h=(cv.clientHeight-30)/PH;zoomPipe(all?Math.min(1,w,h):innerWidth<=820?Math.min(.84,Math.max(.45,h)):Math.min(1,Math.max(.84,w)));cv.scrollLeft=0;cv.scrollTop=0}
-function srcItem(k,note){const s=PSRC[k];return `<li><a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)} ${ico('ext',12,2)}</a><small>${esc(note)}</small></li>`}
-function drawInsp(){
-  const box=$('#pipeInsp');
-  if(!pipe.sel){
-    const uses={};PNODES.forEach(n=>n.cite.forEach(([k])=>{(uses[k]=uses[k]||new Set()).add(n.t)}));
-    const groups=[...new Set(Object.values(PSRC).map(s=>s.g))];
-    box.innerHTML=`<h3>${ico('flow',18,2)}Sources feeding this pipeline</h3><p>${PNODES.length} steps, ${PEDGES.length} connections, ${nSrc} sources. Every step cites the rule it follows. Tap a node for its settings.</p>
-      <span class="stat">${ico('lock',13,2)}No student names past step 4</span>
-      ${groups.map(g=>`<div class="grp">${g}</div><ul class="srcs">${Object.entries(PSRC).filter(([,s])=>s.g===g).map(([k])=>srcItem(k,'Used by: '+[...(uses[k]||[])].join(', '))).join('')}</ul>`).join('')}
-      <h4>About this view</h4><p>The run is a simulation with the same demo figures as the rest of the dashboard. The backend it describes is specified in the District Pulse data protection spec but not yet built.</p>`;
-    return;
-  }
-  const n=pNode(pipe.sel);
-  box.innerHTML=`<button class="back" id="pipeBack">${ico('chev',14,2.4).replace('<svg','<svg style="transform:scaleX(-1)"')}All sources</button>
-    <h3><span style="color:var(${n.c});display:grid">${ico(n.i,20,2)}</span>${esc(n.t)}</h3><p>${esc(n.what)}</p>
-    <span class="stat${n.demo?' demo':''}">${n.demo?ico('check',13,2.4)+'Live in this demo':ico('doc',13,2)+'Specified, backend not built yet'}</span>
-    ${n.demo&&typeof n.demo==='string'?`<p style="margin-top:8px">${esc(n.demo)}</p>`:''}
-    <h4>Settings</h4><dl class="kv">${n.kv.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>
-    <h4>Governed by</h4><ul class="srcs">${n.cite.map(([k,note])=>srcItem(k,note)).join('')}</ul>`;
-  box.querySelector('#pipeBack').onclick=()=>selectNode(null);
-}
-function selectNode(id){
-  pipe.sel=id;
-  $$('.pnode').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.node===id)));
-  drawInsp();$('#pipeInsp').scrollTop=0;
-}
-function lightFrom(id){PEDGES.forEach(([a],k)=>{if(a===id){$('#pe'+k).classList.add('lit');$('#pl'+k).classList.add('on')}})}
-function runPipe(){
-  if(pipe.running)return;
-  pipe.timers.forEach(clearTimeout);pipe.timers=[];pipe.running=true;
-  $$('.pnode').forEach(b=>b.classList.remove('run','done'));$$('.pipe-edge').forEach(p=>p.classList.remove('lit'));$$('.pipe-elab').forEach(l=>l.classList.remove('on'));
-  $('#pipeRun').disabled=true;$('#pipeStatus').innerHTML=ico('clock',13,2)+'Running…';
-  const el=id=>$(`.pnode[data-node="${id}"]`),gap=reduceMotion?0:560;
-  PSTEPS.forEach((ids,i)=>{
-    pipe.timers.push(setTimeout(()=>{ids.forEach(id=>el(id).classList.add('run'));const cv=$('#pipeCanvas'),x=(pNode(ids[0]).x+NB/2)*pipe.scale+14;if(cv.scrollWidth>cv.clientWidth)cv.scrollTo({left:Math.max(0,x-cv.clientWidth*.55),behavior:reduceMotion||document.hidden?'auto':'smooth'})},i*gap));
-    pipe.timers.push(setTimeout(()=>ids.forEach(id=>{const b=el(id);b.classList.remove('run');b.classList.add('done');lightFrom(id)}),i*gap+gap*.8));
-  });
-  pipe.timers.push(setTimeout(()=>{
-    pipe.running=false;pipe.ran=true;$('#pipeRun').disabled=false;
-    $('#pipeStatus').innerHTML=ico('check',13,2.4)+`${PNODES.length}/${PNODES.length} steps passed`;
-    island('Pipeline run complete','Simulated · 111 cells hidden · 0 names','--green','flow');
-  },PSTEPS.length*gap+80));
-}
-function flipFrom(panel,r,dur,rev){
-  const p=panel.getBoundingClientRect();
-  const from=`translate(${r.left-p.left}px,${r.top-p.top}px) scale(${r.width/p.width},${r.height/p.height})`;
-  return panel.animate(rev?[{transform:'none',opacity:1},{transform:from,opacity:.2}]:[{transform:from,opacity:.35,borderRadius:'30px'},{transform:'none',opacity:1}],
-    {duration:dur,easing:rev?'cubic-bezier(.4,0,.8,.6)':'cubic-bezier(.16,1.08,.3,1)',fill:rev?'forwards':'none'});
-}
-function openPipe(){
-  if(!pipe.built)buildPipe();
-  pipe.last=document.activeElement;
-  const L=$('#pipeLayer'),panel=L.querySelector('.pipe'),tile=$('#pipeDial');
-  panel.getAnimations().forEach(a=>a.cancel());delete L.dataset.closing;clearTimeout(pipe.endT);
-  L.hidden=false;document.body.classList.add('sheet-open');
-  drawInsp();fitPipe();
-  if(!reduceMotion&&panel.animate){
-    L.classList.remove('pop');void L.offsetWidth;L.classList.add('pop');
-    const sc=L.querySelector('.scrim');sc.style.opacity=0;requestAnimationFrame(()=>sc.style.opacity=1);
-    const an=flipFrom(panel,tile.getBoundingClientRect(),300,false);
-    setTimeout(()=>{if(an.playState!=='finished')an.finish()},380);
-  }
-  requestAnimationFrame(()=>$('.pnode').focus({preventScroll:true}));
-  if(!pipe.ran)pipe.timers.push(setTimeout(runPipe,reduceMotion?0:320));
-}
-function closePipe(){
-  const L=$('#pipeLayer'),panel=L.querySelector('.pipe'),tile=$('#pipeDial');
-  const done=()=>{L.hidden=true;L.classList.remove('pop');document.body.classList.remove('sheet-open');if(pipe.last&&pipe.last.focus)pipe.last.focus({preventScroll:true})};
-  if(reduceMotion||!panel.animate||L.dataset.closing)return done();
-  L.dataset.closing=1;L.querySelector('.scrim').style.opacity=0;
-  const an=flipFrom(panel,tile.getBoundingClientRect(),200,true);
-  const end=()=>{clearTimeout(pipe.endT);if(!L.dataset.closing)return;an.cancel();delete L.dataset.closing;done()};
-  an.onfinish=end;pipe.endT=setTimeout(end,280);
-}
-
 /* ---------- wiring ---------- */
 function wire(){
-  $('#pipeDet').textContent=`${nSrc} sources mapped · ${PNODES.length} steps from SIS to screen`;$('#pipeStatus').lastChild.textContent=`${nSrc} sources mapped`;
-  $('#pipeDial').addEventListener('click',openPipe);
-  $('#pipeLayer').addEventListener('click',e=>{if(e.target.closest('[data-pipe-close]'))closePipe()});
-  $('#pipeRun').addEventListener('click',runPipe);
-  $('#pipeIn').addEventListener('click',()=>zoomPipe(pipe.scale+.15));
-  $('#pipeOut').addEventListener('click',()=>zoomPipe(pipe.scale-.15));
-  $('#pipeFit').addEventListener('click',()=>fitPipe(true));
   $('#metricSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.metric){state.metric=b.dataset.v;render()}});
   $('#rangeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v==='ytd'?'ytd':+b.dataset.v;if(v!==state.range){state.range=v;render()}});
   $('#filterSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.filter){state.filter=b.dataset.v;render()}});
+  document.addEventListener('click',e=>{
+    const i=e.target.closest('[data-info]');if(i){e.preventDefault();openInfo(i.dataset.info);return}
+    const zs=e.target.closest('[data-zstep]');if(zs&&state.zone){const k=ZONES.findIndex(z=>z.id===state.zone),n=ZONES.length;isolate(ZONES[(k+ +zs.dataset.zstep+n)%n].id,true);$(`[data-zstep="${zs.dataset.zstep}"]`).focus({preventScroll:true});return}
+    const pa=e.target.closest('[data-padd]');if(pa){const id=pa.dataset.padd,k=+id.slice(id.lastIndexOf('-')+1),c=content();if(c.key===id.slice(0,id.lastIndexOf('-')))toggleBrief(id,c.recs[k])}
+  });
   $('#yoyBtn').addEventListener('click',()=>{state.yoy=!state.yoy;$('#yoyBtn').setAttribute('aria-pressed',String(state.yoy));$('#yoyBtn').classList.toggle('on',state.yoy);drawChart()});
   $('#hamburger').addEventListener('click',openDrawer);
+  $('#schoolSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.schoolType){state.schoolType=b.dataset.v;renderSchools();placeThumb($('#schoolSeg'),true)}});
+  $('#scPrev').addEventListener('click',()=>stepSchool(-1));
+  $('#scNext').addEventListener('click',()=>stepSchool(1));
+  $('#schChart').addEventListener('keydown',e=>{if(e.target.closest('.seg'))return;if(e.key==='ArrowLeft'){e.preventDefault();stepSchool(-1)}if(e.key==='ArrowRight'){e.preventDefault();stepSchool(1)}});
+  $('#scMetricSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.scMetric){state.scMetric=b.dataset.v;drawSchoolTrend()}});
+  $('#scRangeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v==='ytd'?'ytd':+b.dataset.v;if(v!==state.scRange){state.scRange=v;drawSchoolTrend()}});
+  $('#scYoy').addEventListener('click',()=>{state.scYoy=!state.scYoy;$('#scYoy').setAttribute('aria-pressed',String(state.scYoy));$('#scYoy').classList.toggle('on',state.scYoy);drawSchoolTrend()});
+  $('#schoolList').addEventListener('click',e=>{if(e.target.closest('a,button'))return;const r=e.target.closest('.sch-row');if(!r)return;selectSchool(r.dataset.name);const c=$('#schChart');if(c.getBoundingClientRect().top<0)c.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'})});
+  $('#schoolList').addEventListener('keydown',e=>{const r=e.target.closest('.sch-row');if(!r)return;
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();selectSchool(r.dataset.name)}
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();stepSchool(e.key==='ArrowDown'?1:-1);const n=$$('.sch-row').find(x=>x.dataset.name===state.school);if(n)n.focus({preventScroll:true})}});
+  $('#schoolQ').addEventListener('input',e=>{state.schoolQ=e.target.value;renderSchools()});
   $$('.tile[data-dial]').forEach(t=>t.addEventListener('click',()=>runDial(t.dataset.dial)));
   $('#scopeChip').addEventListener('click',()=>isolate(null));
   $('#briefBtn').addEventListener('click',openBrief);
@@ -1550,7 +1850,6 @@ function wire(){
   $('#sheetLayer').addEventListener('click',e=>{if(e.target.closest('[data-close]'))closeSheet()});
   $('#drawerLayer').addEventListener('click',e=>{if(e.target.closest('[data-drawer-close]'))closeDrawer()});
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'&&!$('#pipeLayer').hidden){closePipe();return}
     if(e.key==='Escape'&&!$('#sheetLayer').hidden)closeSheet();
     if(e.key==='Escape'&&!$('#drawerLayer').hidden)closeDrawer();
   });
@@ -1562,8 +1861,8 @@ function wire(){
 
 /* ---------- init ---------- */
 $$('[data-i]').forEach(el=>{el.innerHTML=ico(el.dataset.i,+(el.dataset.s||20));el.style.display='grid'});
-buildSidebar();buildDrawer();buildMap();buildSites();themeIcon();renderBadge();wireSideSearch();wireTabs();wire();setupWidgetDrag();
-render();setTab('pulse');
+buildSidebar();buildDrawer();buildMap();buildSites();themeIcon();renderBadge();wireSideSearch();wireTabs();wire();
+renderFacts();renderSchools();render();setupSortables();setTab('pulse');
 setupRefraction();
 setTimeout(()=>island('District Pulse is live','58 of 64 sites reporting today','--green','pulse'),700);
 })();
