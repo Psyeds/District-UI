@@ -392,7 +392,17 @@ h2 .dtag{margin-left:6px;position:relative;top:-2px}
 @keyframes pop{35%{scale:1.1 1.24}}
 
 /* map */
-.map-wrap{position:relative;border-radius:18px;overflow:hidden;background:var(--plate);box-shadow:inset 0 0 0 .5px var(--plate-rim);touch-action:none}
+.map-wrap{position:relative;border-radius:18px;overflow:hidden;background:var(--plate);box-shadow:inset 0 0 0 .5px var(--plate-rim)}
+.map-wrap .maplibregl-map{border-radius:18px;font-family:var(--font)}
+.map-wrap .map-ctrl{z-index:5}
+.map-wrap .maplibregl-ctrl-attrib{font-size:10px}
+.maplibregl-popup.stip .maplibregl-popup-content{background:rgba(28,28,30,.92);color:#fff;border-radius:12px;padding:8px 11px;box-shadow:0 8px 24px rgba(0,0,0,.35);font-family:var(--font);font-size:12.5px;line-height:1.35;white-space:nowrap}
+.maplibregl-popup.stip .maplibregl-popup-tip{border-top-color:rgba(28,28,30,.92);border-bottom-color:rgba(28,28,30,.92);border-left-color:rgba(28,28,30,.92);border-right-color:rgba(28,28,30,.92)}
+.map-wrap .chart-msg{z-index:4;background:var(--plate)}
+.legend i.lring{background:transparent;box-shadow:inset 0 0 0 1.5px var(--label2)}
+.stip b{display:block;font-size:13.5px;font-weight:600}
+.stip span{display:block;color:rgba(255,255,255,.78)}
+.stip em{display:block;font-style:normal;font-weight:600;color:#64D2FF;margin-top:3px}
 #map{display:block;width:100%;height:auto;aspect-ratio:4/3;cursor:grab;user-select:none;-webkit-user-select:none}
 #map.dragging{cursor:grabbing}
 .zone{stroke:rgba(255,255,255,.92);stroke-width:2;stroke-linejoin:round;fill-opacity:.8;cursor:pointer;transition:opacity .3s,fill-opacity .3s}
@@ -403,8 +413,11 @@ h2 .dtag{margin-left:6px;position:relative;top:-2px}
 .zone:focus-visible{stroke:var(--blue);stroke-width:4}
 .zlabel{font-family:var(--font);font-size:11px;font-weight:700;fill:#fff;pointer-events:none;paint-order:stroke;stroke:rgba(0,0,0,.32);stroke-width:2.6px;stroke-linejoin:round}
 .zsub{font-family:var(--font);font-size:8.5px;font-weight:500;fill:rgba(255,255,255,.94);pointer-events:none;paint-order:stroke;stroke:rgba(0,0,0,.26);stroke-width:2px}
-.river{fill:none;stroke:var(--cyan);stroke-width:6;stroke-linecap:round;opacity:.55}
-.rlabel{font-family:var(--font);font-size:8px;font-style:italic;fill:var(--label2)}
+.mdot{fill:#fff;stroke:rgba(0,0,0,.55);stroke-width:.9;cursor:pointer;transition:opacity .3s}
+.mdot:hover{stroke:var(--blue);stroke-width:2}
+.mdot.dim{opacity:.18}
+.mdot.on{fill:var(--blue);stroke:#fff;stroke-width:2.2}
+.legend .ldot{background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.5)}
 .map-ctrl{position:absolute;top:10px;right:10px;z-index:2;display:flex;flex-direction:column;gap:8px}
 .zoom-pill{--r:22px;--tint:var(--tint-clear);display:flex;flex-direction:column;width:42px}
 .zoom-pill button{height:42px;border:0;background:transparent;color:var(--label);cursor:pointer;display:grid;place-items:center}
@@ -629,7 +642,7 @@ a.pill{text-decoration:none}
     </div>
     <div class="hdr-meta">
       <span class="capsule glass clear"><span class="live-dot" aria-hidden="true"></span><b id="ckToday">4,212</b> check-ins today</span>
-      <span class="capsule glass clear"><b>58</b> of 64 sites reporting</span>
+      <span class="capsule glass clear"><b id="repN">71</b> of <span id="totN">77</span> schools reporting</span>
       <button class="capsule glass demo" data-info="data" aria-label="Simulated pilot data, not operational. See what is simulated and what is published.">Simulated pilot data · not operational<span data-i="info" data-s="15"></span></button>
       <button class="capsule glass clear scope" id="scopeChip" hidden><span id="scopeText"></span><span data-i="x" data-s="15"></span></button>
     </div>
@@ -665,17 +678,11 @@ a.pill{text-decoration:none}
     <section data-widget="sec-map" class="card glass" id="sec-map" data-sec="map" aria-labelledby="mapTitle">
       <button class="grip" data-i="grip" data-s="15" aria-label="Drag to move this card"></button>
       <div class="card-head">
-        <h2 id="mapTitle">Zone map <span class="dtag sim">Simulated</span> <button class="info" data-info="status" aria-label="What the zone colors mean"><span data-i="info" data-s="16"></span></button></h2>
-        <div class="seg" id="filterSeg" role="group" aria-label="Filter zones"><span class="seg-thumb" aria-hidden="true"></span><button data-v="all">All</button><button data-v="watch">Watch</button><button data-v="crit">Critical</button></div>
+        <h2 id="mapTitle">School map <span class="dtag pub">Published</span> <button class="info" data-info="map" aria-label="About this map"><span data-i="info" data-s="16"></span></button></h2>
+        <div class="seg" id="filterSeg" role="group" aria-label="Show schools by type"><span class="seg-thumb" aria-hidden="true"></span><button data-v="all">All</button><button data-v="Elementary">Elem</button><button data-v="Middle">Middle</button><button data-v="High">High</button><button data-v="charter">Charter</button><button data-v="other">Other</button></div>
       </div>
       <div class="map-wrap" id="mapWrap">
-        <svg id="map" viewBox="-6 -14 472 354" role="group" aria-label="Five San Juan Unified high school zones, colored by status">
-          <g>
-            <path class="river" d="M10,272 C80,250 140,285 205,262 S320,228 392,206"/>
-            <text class="rlabel" x="236" y="262">American River</text>
-            <g id="zones"></g>
-          </g>
-        </svg>
+        <div id="map" role="region" aria-label="Street map of San Juan Unified schools. The All schools list below has the same schools."></div>
         <div class="map-ctrl">
           <div class="zoom-pill glass lg-r"><button id="zin" aria-label="Zoom in"><span data-i="plus" data-s="18"></span></button><hr><button id="zout" aria-label="Zoom out"><span data-i="minus" data-s="18"></span></button></div>
           <button class="circle glass clear lg-r" id="zreset" aria-label="Reset map view"><span data-i="scope" data-s="19"></span></button>
@@ -683,11 +690,14 @@ a.pill{text-decoration:none}
         <div class="tip glass" id="tip" role="status"></div>
       </div>
       <div class="legend">
-        <span><i style="background:var(--green)"></i>On track</span>
-        <span><i style="background:var(--yellow)"></i>Watch, Tier 2 spike</span>
-        <span><i style="background:var(--red)"></i>Critical, bottleneck</span>
+        <span><i style="background:var(--blue)"></i>Elementary</span>
+        <span><i style="background:var(--indigo)"></i>Middle</span>
+        <span><i style="background:var(--orange)"></i>High</span>
+        <span><i style="background:var(--green)"></i>Charter</span>
+        <span><i style="background:var(--cyan)"></i>Other</span>
+        <span><i class="lring"></i>400 ft around each school</span>
       </div>
-      <p class="map-note">Stylized zones, not to scale. Tap a zone to isolate it; drag or pinch to move.</p>
+      <p class="map-note" id="mapNote"></p>
     </section>
   </div>
 
@@ -815,6 +825,8 @@ a.pill{text-decoration:none}
   </div>
 </div>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 (function(){
@@ -934,14 +946,19 @@ const INFO={
   ['What is counted','Open Tier 3 escalations: check-ins routed for intensive-support review that a site team has not closed yet. A count of cases, not a percentage.'],
   ['Median review time','School days from the flag to the site team’s review. Target is 3 days or fewer.'],
   ['Data','Simulated pilot data. Not district records.']]},
+ map:{t:'School map',s:[
+  ['What you see','Every San Juan Unified school at its address, on a real street map (OpenStreetMap data, OpenFreeMap tiles). Zoom in to see streets and the 400 ft circles. Each circle is 400 feet around the school’s address. Colors are school type, the same as the All schools list.'],
+  ['One district','All of these schools belong to San Juan Unified. None of them is a separate district.'],
+  ['What the zones are','Elsewhere on the page, schools are grouped into five “zones” named after nearby high schools, so the demo can compare neighborhoods. Each school is grouped with its nearest of those five high schools. The zones are not official boundaries and their numbers are simulated. Picking a zone in the sidebar dims the schools outside it.'],
+  ['Source','School addresses: CDE school directory, downloaded Sept 27, 2026. Valley Oaks is listed as closed there, so it has no location on the map.']]},
  status:{t:'Zone colors',s:[
   ['On track','Green. No urgent pattern in this week’s check-ins.'],
   ['Watch','Yellow. Tier 2 review share is rising or above the 12% target.'],
   ['Critical','Red. A bottleneck that needs attention now, such as English learner progress far below target with a Tier 3 backlog.'],
-  ['Data','Zones and colors are simulated pilot data. The map is stylized and not to scale.']]},
+  ['Data','School dots are real locations from the CDE school directory. Zones group each school with its nearest of five high schools, an approximation, not official attendance areas. Zone colors and metrics are simulated pilot data.']]},
  data:{t:'What is real and what is simulated',s:[
-  ['Simulated pilot data','Check-ins, sites reporting, zones and the map, Tier 2/3 review share, Tier 3 cases, attendance rate, English learner progress, briefings, and school-level attendance, review share and EL progress. These show how the tool would work. They are not district records and not live.'],
-  ['Published data','District facts, Money and staff, Fiscal health, All schools enrollment, the English learner language mix, and every stat tagged Published. Sources: Ed-Data (pulled Sept 27, 2026) and FCMAT’s Fiscal Status of LEAs (Sept 22, 2026). Published figures are yearly public data, not live telemetry.'],
+  ['Simulated pilot data','Check-ins, schools reporting, zone colors and zone metrics, Tier 2/3 review share, Tier 3 cases, attendance rate, English learner progress, briefings, and school-level attendance, review share and EL progress. These show how the tool would work. They are not district records and not live.'],
+  ['Published data','District facts, Money and staff, Fiscal health, All schools enrollment, the English learner language mix, and every stat tagged Published. Sources: Ed-Data (pulled Sept 27, 2026) and FCMAT’s Fiscal Status of LEAs (Sept 22, 2026). School locations on the map come from the CDE school directory. Published figures are yearly public data, not live telemetry.'],
   ['Suggested actions','Suggestions for discussion, labeled with the signal behind them. They are not district decisions.']]}
 };
 function openInfo(k){const x=INFO[k];if(!x)return;openSheet(x.t,body=>{body.innerHTML=x.s.map(([h,p])=>`<div class="info-sec"><b>${h}</b><p>${p}</p></div>`).join('')})}
@@ -1047,6 +1064,33 @@ const SCHOOLS=[["Albert Schweitzer Elementary", "Elementary", "K-5", 0, "S", 319
 ["Will Rogers Middle", "Middle", "6-8", 0, "S", 581, 564, 570, "(916) 971-7889"],
 ["Winston Churchill Middle", "Middle", "6-8", 0, "N", 995, 987, 1012, "(916) 971-7324"],
 ["Woodside K-8", "Elementary", "K-8", 0, "S", 420, 506, 508, "(916) 971-5216"]];
+/* Real school locations: CDE Public Schools directory (pubschls.txt), downloaded Sept 27, 2026. [lat,lng]
+   Valley Oaks has no entry here (the CDE directory lists it as closed), so it is not on the map. */
+const SCHOOL_GEO={"Albert Schweitzer Elementary":[38.64359,-121.30054],"Andrew Carnegie Middle":[38.67198,-121.23492],"Arcade Middle":[38.63412,-121.38217],"Arden Middle":[38.59452,-121.38282],"Arlington Heights Elementary":[38.68569,-121.31476],"Aspire Alexander Twilight College Preparatory Academy":[38.61071,-121.40807],"Aspire Alexander Twilight Secondary Academy":[38.61071,-121.40807],"Bella Vista High":[38.66432,-121.25064],"California Montessori Project-San Juan Campuses":[38.63542,-121.34037],"Cambridge Heights Elementary":[38.66684,-121.29442],"Cameron Ranch Elementary":[38.64324,-121.33215],"Carmichael Elementary":[38.63326,-121.32219],"Casa Roble Fundamental High":[38.70023,-121.21321],"Charles Peck Elementary":[38.66083,-121.31923],"Cottage Elementary":[38.60557,-121.39224],"Coyle Avenue Elementary":[38.66802,-121.31669],"Del Campo High":[38.65514,-121.30835],"Del Dayo Elementary":[38.58855,-121.33719],"Del Paso Manor Elementary":[38.61304,-121.3699],"Dyer-Kelly Elementary":[38.62292,-121.4107],"Earl LeGette Elementary":[38.64997,-121.24419],"El Camino Fundamental High":[38.61014,-121.36431],"El Sereno Alternative Education":[38.64572,-121.26421],"Encina High":[38.59156,-121.41066],"Gateway International":[38.58184,-121.39171],"General Davie, Jr. Primary Center":[38.59198,-121.38746],"Gold River Discovery Center K-8":[38.6275,-121.24762],"Golden Valley Orchard":[38.68505,-121.21448],"Golden Valley River":[38.67366,-121.19522],"Grand Oaks Elementary":[38.71063,-121.30044],"Green Oaks Fundamental Elementary":[38.69586,-121.21582],"Greer Elementary":[38.58887,-121.41071],"Harry Dewey Fundamental Elementary":[38.65396,-121.30032],"Howe Avenue Elementary":[38.60814,-121.41534],"James R. Cowan Fundamental Elementary":[38.62632,-121.37372],"John Barrett Middle":[38.64146,-121.31276],"Katherine Johnson Middle":[38.61268,-121.3943],"Kingswood K-8":[38.66974,-121.27782],"La Entrada Continuation High":[38.66352,-121.3405],"La Vista Center":[38.64785,-121.28771],"Laurel Ruff Transition":[38.66379,-121.33679],"Lichen K-8":[38.71695,-121.30563],"Louis Pasteur Fundamental Middle":[38.69305,-121.22325],"Mariemont Elementary":[38.59108,-121.36703],"Mariposa Avenue Elementary":[38.71039,-121.28111],"Marvin Marshall Preschool and Children's Center":[38.61371,-121.34039],"Mary Deterding Elementary":[38.62232,-121.32485],"Meraki High":[38.64525,-121.26401],"Mesa Verde High":[38.7018,-121.29497],"Mira Loma High":[38.63424,-121.37089],"Mission Avenue Open Elementary":[38.61874,-121.35522],"New Pacific Charter - Arden Arcade":[38.60594,-121.37512],"Northridge Elementary":[38.66039,-121.25858],"Oakview Community Elementary":[38.69737,-121.23011],"Options for Youth-San Juan":[38.64826,-121.32883],"Orangevale Open K-8":[38.66853,-121.23498],"Ottomon Way Elementary":[38.69744,-121.19969],"Pasadena Avenue Elementary":[38.63831,-121.36321],"Pershing Elementary":[38.67066,-121.22129],"Ralph Richardson Center":[38.60288,-121.35242],"Rio Americano High":[38.57934,-121.35639],"San Juan Choices Charter":[38.60456,-121.35898],"San Juan High":[38.67831,-121.28697],"Sierra Oaks K-8":[38.57055,-121.39348],"Skycrest Elementary":[38.66885,-121.28466],"Starr King K-8":[38.60288,-121.35242],"Sylvan Middle":[38.69391,-121.29264],"Thomas Edison Language Institute K-8":[38.58865,-121.39439],"Thomas Kelly Elementary":[38.65116,-121.31838],"Trajan Elementary":[38.68634,-121.24968],"Twin Lakes Elementary":[38.66707,-121.20257],"Visions In Education":[38.62584,-121.2295],"Whitney Avenue Elementary":[38.62842,-121.36555],"Will Rogers Middle":[38.65331,-121.30829],"Winston Churchill Middle":[38.62829,-121.34976],"Woodside K-8":[38.70576,-121.25431]};
+/* Map geometry from real locations. Each school joins the zone of its nearest zone high school.
+   That grouping is an approximation for this demo, not the district's official attendance areas.
+   It sets each zone's school count (z.sites) and redraws the zone shapes and label positions. */
+const ZONE_HS={sanjuan:'San Juan High',mesaverde:'Mesa Verde High',bellavista:'Bella Vista High',encina:'Encina High',delcampo:'Del Campo High'};
+const MAPPED=(()=>{
+  const ll=Object.values(SCHOOL_GEO),la=ll.map(p=>p[0]),ln=ll.map(p=>p[1]);
+  const la0=Math.min(...la),la1=Math.max(...la),ln0=Math.min(...ln),ln1=Math.max(...ln),kx=Math.cos((la0+la1)/2*Math.PI/180);
+  const s=Math.min(420/((ln1-ln0)*kx),296/(la1-la0)),ox=10+(440-(ln1-ln0)*kx*s)/2,oy=4+(312-(la1-la0)*s)/2;
+  const proj=([a,b])=>[+(ox+(b-ln0)*kx*s).toFixed(1),+(oy+(la1-a)*s).toFixed(1)];
+  const hs={};for(const k in ZONE_HS)hs[k]=proj(SCHOOL_GEO[ZONE_HS[k]]);
+  const out=SCHOOLS.filter(x=>SCHOOL_GEO[x[0]]).map(x=>{const p=proj(SCHOOL_GEO[x[0]]);let zone=null,bd=1e9;for(const k in hs){const d=Math.hypot(p[0]-hs[k][0],p[1]-hs[k][1]);if(d<bd){bd=d;zone=k}}return {x,p,zone}});
+  const hull=P=>{P=P.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);const lo=[],up=[];
+    for(const p of P){while(lo.length>1&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop();lo.push(p)}
+    for(const p of P.slice().reverse()){while(up.length>1&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop();up.push(p)}
+    return lo.slice(0,-1).concat(up.slice(0,-1))};
+  ZONES.forEach(z=>{
+    const mine=out.filter(m=>m.zone===z.id),pad=[];
+    mine.forEach(m=>{for(let i=0;i<12;i++){const a=i/12*Math.PI*2;pad.push([m.p[0]+9*Math.cos(a),m.p[1]+9*Math.sin(a)])}});
+    z.sites=mine.length;z.schools=mine.map(m=>m.x[0]);
+    z.pts=hull(pad).map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+    z.lx=+(mine.reduce((a,m)=>a+m.p[0],0)/mine.length).toFixed(1);z.ly=+(mine.reduce((a,m)=>a+m.p[1],0)/mine.length).toFixed(1);
+  });
+  return out;
+})();
 const Z=id=>ZONES.find(z=>z.id===id);
 const SITES=ZONES.reduce((a,z)=>a+z.sites,0);
 const T3=ZONES.reduce((a,z)=>a+z.t3,0);
@@ -1073,9 +1117,9 @@ const CONTENT={
   {s:'watch',t:'Tier 2/3 review share is rising in two zones',m:'San Juan High and Bella Vista, mostly reading stamina and chronic absence in grades 9 and 10.'},
   {s:'ok',t:'Del Campo and Mesa Verde are steady',m:'Their attendance gains line up with the mentoring pilot funded in the LCAP.'}],
   recs:[
-  {t:'Send an ELD coaching cycle to Encina feeder sites',b:'Two sites account for most new vocabulary flags. A six-week cycle targets academic language in math.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
-  {t:'Staff Tier 2 reading groups at San Juan High',b:'Flags cluster in grade 9 English. One intervention teacher block covers the projected need.',s:'watch',scope:'12 sites',imp:'Medium impact',zone:'sanjuan'},
-  {t:'Share Del Campo’s attendance playbook',b:'Their family text outreach routine is the cheapest win to repeat district-wide.',s:'ok',scope:'64 sites',imp:'Low cost',zone:'delcampo'}]},
+  {t:'Send an ELD coaching cycle to Encina feeder sites',b:'Two sites account for most new vocabulary flags. A six-week cycle targets academic language in math.',s:'crit',scope:`${Z('encina').sites} schools`,imp:'High impact',zone:'encina'},
+  {t:'Staff Tier 2 reading groups at San Juan High',b:'Flags cluster in grade 9 English. One intervention teacher block covers the projected need.',s:'watch',scope:`${Z('sanjuan').sites} schools`,imp:'Medium impact',zone:'sanjuan'},
+  {t:'Share Del Campo’s attendance playbook',b:'Their family text outreach routine is the cheapest win to repeat district-wide.',s:'ok',scope:'All schools',imp:'Low cost',zone:'delcampo'}]},
  lang:{notes:[
   {s:'crit',t:'Encina ELs are about 10 points behind',m:'First-year newcomers make up most of the gap.'},
   {s:'watch',t:'Math vocabulary is the top EL flag',m:'It now leads reading comprehension in grades 6 through 10.'},
@@ -1083,14 +1127,14 @@ const CONTENT={
   recs:[
   {t:'Add Dari and Pashto liaison hours at Encina feeders',b:'Persian (Farsi) and Pashto speakers are 45% of the district’s 10,281 English learners (Ed-Data 2025-26), and liaison coverage there is thinnest.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
   {t:'Build math language routines into ELD PLCs',b:'Pair designated ELD with math teams on sentence frames for the most-flagged terms.',s:'watch',scope:'Secondary',imp:'Medium impact'},
-  {t:'Start a spring reclassification readiness list',b:'Surface students close to criteria so sites can plan before the Summative ELPAC window.',s:'ok',scope:'64 sites',imp:'Planning'}]},
+  {t:'Start a spring reclassification readiness list',b:'Surface students close to criteria so sites can plan before the Summative ELPAC window.',s:'ok',scope:'All schools',imp:'Planning'}]},
  tier3:{notes:[
   {s:'crit',t:`${T3} Tier 3 escalations are open`,m:'Encina and San Juan High hold 61% of them.'},
   {s:'watch',t:'Reviews take 6 school days',m:'The target from flag to site team review is 3.'},
   {s:'ok',t:'Mesa Verde closes reviews fastest',m:'Counselors there meet on a fixed weekly cadence.'}],
   recs:[
-  {t:'Surge a district MTSS coordinator to Encina for 30 days',b:'Clears the review backlog and models the weekly cadence Mesa Verde already uses.',s:'crit',scope:'9 sites',imp:'High impact',zone:'encina'},
-  {t:'Set a 3-day review standard in the MTSS handbook',b:'Makes response time a shared expectation that shows up on this dashboard.',s:'watch',scope:'64 sites',imp:'Policy'},
+  {t:'Surge a district MTSS coordinator to Encina for 30 days',b:'Clears the review backlog and models the weekly cadence Mesa Verde already uses.',s:'crit',scope:`${Z('encina').sites} schools`,imp:'High impact',zone:'encina'},
+  {t:'Set a 3-day review standard in the MTSS handbook',b:'Makes response time a shared expectation that shows up on this dashboard.',s:'watch',scope:'All schools',imp:'Policy'},
   {t:'Route Tier 3 behavior flags to Student Support Services',b:'Connects intensive needs to counseling and mental health partners without a second referral form.',s:'ok',scope:'District',imp:'Workflow'}]},
  lcap:{notes:[
   {s:'ok',t:'Intervention students gained more attendance',m:'Students in a Tier 2 attendance intervention gained 3.1 points in six weeks, versus 0.4 on the waitlist. Encouraging, not yet proof.'},
@@ -1246,7 +1290,7 @@ function zoneStat(m,z){
 function renderZonePanel(P){
   const z=cur(),i=ZONES.indexOf(z),st=ST[z.status],rec=content().recs[0];
   P.style.setProperty('--accent',`var(${st.v})`);
-  P.innerHTML=`<div class="dp-head"><span class="dp-ico">${ico('pin',20,2)}</span><div><h2>${z.name} zone <span class="dtag sim">Simulated</span></h2><p>${z.area} · ${z.sites} sites · ${st.w}</p></div>
+  P.innerHTML=`<div class="dp-head"><span class="dp-ico">${ico('pin',20,2)}</span><div><h2>${z.name} zone <span class="dtag sim">Simulated</span></h2><p>${z.area} · ${z.sites} schools · ${st.w}</p></div>
    <div class="zp-nav"><button class="circle glass clear" data-zstep="-1" aria-label="Previous zone">${ico('chevL',18)}</button><em>${i+1} of ${ZONES.length}</em><button class="circle glass clear" data-zstep="1" aria-label="Next zone">${ico('chevR',18)}</button></div>
    <button class="pill" id="zoneClear">${ico('x',14,2.4)}Clear</button></div>
    <div class="dp-body one"><div class="zstats">${['att','tiers','elpac','t3'].map(m=>zoneStat(m,z)).join('')}</div>
@@ -1296,7 +1340,7 @@ function schoolMatch(x){
   return !q||x[0].toLowerCase().includes(q);
 }
 function renderSchools(){
-  setPressed('#schoolSeg',state.schoolType);
+  setPressed('#schoolSeg',state.schoolType);setPressed('#filterSeg',state.schoolType);
   const rows=SCHOOLS.filter(schoolMatch).sort((a,b)=>state.schoolSort==='size'?(b[7]||0)-(a[7]||0):a[0].localeCompare(b[0]));
   const kids=rows.reduce((a,x)=>a+(x[7]||0),0);
   const t1={S:'Title I schoolwide',T:'Title I targeted',N:''};
@@ -1350,6 +1394,7 @@ function drawSchoolTrend(){
   $('#scDesc').textContent=SC_METRICS[m].desc;
   $('#scRangeSeg').hidden=enr;$('#scYoy').hidden=enr;
   if(!enr)setPressed('#scRangeSeg',state.scRange);
+  paintDots();
   if(!x){$('#scStats').innerHTML='';$('#scName').textContent='No school matches';$('#scMeta').textContent='Clear the search or pick another type.';$('#scPos').textContent='';$('#scChip').innerHTML='';$('#scMsg').hidden=false;$('#scMsg').textContent='No school matches that filter.';if(schoolChart){schoolChart.destroy();schoolChart=null}return}
   $('#scName').textContent=x[0];
   $('#scMeta').textContent=[x[3]?'Charter':x[1],x[2]&&`grades ${x[2]}`,t1[x[4]],x[8]].filter(Boolean).join(' · ');
@@ -1524,59 +1569,72 @@ function drawChart(){
   if(chart){chart.data=data;chart.options=options;chart.update()}
   else chart=new Chart($('#chart'),{type:'line',data,options});
 }
-function redrawChart(){if(chart){chart.destroy();chart=null}drawChart();if(schoolChart){schoolChart.destroy();schoolChart=null}drawSchoolTrend()}
+function redrawChart(){if(lmap){mapReady=false;lmap.setStyle(styleURL(),{diff:false})}if(chart){chart.destroy();chart=null}drawChart();if(schoolChart){schoolChart.destroy();schoolChart=null}drawSchoolTrend()}
 
 /* ---------- map ---------- */
-let moved=false;
+/* ---------- map: real streets (OpenFreeMap vector tiles, OpenStreetMap data) + the schools on top ----------
+   Each school is a dot plus a 400 ft (122 m) circle around its address from the CDE school directory.
+   Colors are school type, as in the All schools list. Zones are not drawn: picking one only dims other schools. */
+const MAP_M=400*0.3048;
+let lmap=null,mapZone,mapReady=false;
+const typeVar=x=>x[3]?'--green':x[1]==='Elementary'?'--blue':x[1]==='Middle'?'--indigo':x[1]==='High'?'--orange':'--cyan';
+const typeOK=x=>{const t=state.schoolType;if(t==='all')return true;if(t==='charter')return !!x[3];if(t==='other')return !x[3]&&SCH_OTHER.includes(x[1]);return !x[3]&&x[1]===t};
+const styleURL=()=>`https://tiles.openfreemap.org/styles/${isDark()?'dark':'positron'}`;
+/* A fixed ground distance in pixels: metres ÷ (156,543 · cos(latitude) ÷ 2^zoom) metres per pixel. */
+const MPP0=156543.03*Math.cos(38.64*Math.PI/180);
+const ringR=['interpolate',['exponential',2],['zoom'],0,MAP_M/MPP0,22,MAP_M/MPP0*2**22];
+const isOn=['==',['get','on'],1],isDim=['==',['get','dim'],1];
+function dotTip(m){const x=m.x;return `<b>${esc(x[0])}</b><span>${x[3]?'Charter':x[1]}${x[2]?' · grades '+x[2]:''}</span><span>${x[7]!=null?x[7].toLocaleString()+' students, 2025-26':'No enrollment count'}</span><em>Tap to open below</em>`}
+function schoolGeoJSON(){
+  return {type:'FeatureCollection',features:MAPPED.map(m=>{const x=m.x,g=SCHOOL_GEO[x[0]];
+    return {type:'Feature',geometry:{type:'Point',coordinates:[g[1],g[0]]},properties:{name:x[0],color:css(typeVar(x)),dim:(!typeOK(x)||(!!state.zone&&m.zone!==state.zone))?1:0,on:x[0]===state.school?1:0}}})};
+}
+function addSchoolLayers(){
+  if(lmap.getSource('schools'))return;
+  const halo=isDark()?'#fff':'#1c1c1e';
+  lmap.addSource('schools',{type:'geojson',data:schoolGeoJSON()});
+  lmap.addLayer({id:'school-area',type:'circle',source:'schools',paint:{'circle-radius':ringR,'circle-color':['get','color'],'circle-opacity':['case',isDim,.05,.2],'circle-stroke-color':['get','color'],'circle-stroke-width':1.2,'circle-stroke-opacity':['case',isDim,.15,.75]}});
+  lmap.addLayer({id:'school-sel',type:'circle',source:'schools',filter:isOn,paint:{'circle-radius':12,'circle-color':halo,'circle-opacity':.18,'circle-stroke-color':halo,'circle-stroke-width':2}});
+  lmap.addLayer({id:'school-dot',type:'circle',source:'schools',paint:{'circle-radius':['case',isOn,7,4.5],'circle-color':['get','color'],'circle-opacity':['case',isDim,.25,1],'circle-stroke-color':'#fff','circle-stroke-width':['case',isOn,2.5,1.3],'circle-stroke-opacity':['case',isDim,.3,1]}});
+  mapReady=true;paintMap();
+}
+function fitView(){
+  if(!lmap)return;
+  const pts=MAPPED.filter(m=>!state.zone||m.zone===state.zone).map(m=>SCHOOL_GEO[m.x[0]]),la=pts.map(p=>p[0]),lo=pts.map(p=>p[1]);
+  lmap.fitBounds([[Math.min(...lo),Math.min(...la)],[Math.max(...lo),Math.max(...la)]],{padding:30,maxZoom:14,duration:reduceMotion?0:700});
+}
 function buildMap(){
-  const g=$('#zones');
-  ZONES.forEach(z=>{
-    const p=document.createElementNS(NS,'polygon');
-    p.setAttribute('points',z.pts);p.setAttribute('class','zone');p.dataset.id=z.id;
-    p.setAttribute('tabindex','0');p.setAttribute('role','button');p.setAttribute('aria-label',`${z.name} zone, ${ST[z.status].w.toLowerCase()}`);
-    p.style.fill=`var(${ST[z.status].v})`;
-    p.addEventListener('pointermove',e=>{if(e.pointerType==='mouse')showTip(e,z)});
-    p.addEventListener('pointerleave',hideTip);
-    p.addEventListener('click',()=>{if(!moved)isolate(state.zone===z.id?null:z.id)});
-    p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();isolate(state.zone===z.id?null:z.id)}});
-    g.appendChild(p);
-    const t=document.createElementNS(NS,'text');t.setAttribute('x',z.lx);t.setAttribute('y',z.ly);t.setAttribute('text-anchor','middle');t.setAttribute('class','zlabel');t.textContent=z.name;g.appendChild(t);
-    const s=document.createElementNS(NS,'text');s.setAttribute('x',z.lx);s.setAttribute('y',z.ly+13);s.setAttribute('text-anchor','middle');s.setAttribute('class','zsub');s.textContent=z.area.replace(' and ',' & ');g.appendChild(s);
+  $('#mapNote').textContent=`${MAPPED.length} of ${SCHOOLS.length} schools. Each has a dot and a 400 ft circle around its address; zoom in to see the circles. Valley Oaks is listed as closed in the state directory, so it has no location. Tap a school to open it below.`;
+  const fail=()=>$('#mapWrap').insertAdjacentHTML('beforeend','<p class="chart-msg">The street map couldn’t load here. Check the connection, then reload the page. The All schools list below has every school.</p>');
+  if(!window.maplibregl){fail();return}
+  const la=Object.values(SCHOOL_GEO).map(p=>p[0]),lo=Object.values(SCHOOL_GEO).map(p=>p[1]);
+  try{
+    lmap=new maplibregl.Map({container:'map',style:styleURL(),bounds:[[Math.min(...lo),Math.min(...la)],[Math.max(...lo),Math.max(...la)]],fitBoundsOptions:{padding:24},
+      attributionControl:false,cooperativeGestures:true,dragRotate:false,pitchWithRotate:false,touchPitch:false});
+  }catch(e){fail();return}
+  lmap.addControl(new maplibregl.AttributionControl({compact:true}),'bottom-left');
+  lmap.touchZoomRotate.disableRotation();
+  lmap.on('style.load',()=>{mapReady=false;addSchoolLayers()});
+  const pop=new maplibregl.Popup({closeButton:false,closeOnClick:false,className:'stip',offset:12});
+  ['school-dot','school-area'].forEach(id=>{
+    lmap.on('mousemove',id,e=>{lmap.getCanvas().style.cursor='pointer';const f=e.features[0],m=MAPPED.find(q=>q.x[0]===f.properties.name);pop.setLngLat(f.geometry.coordinates).setHTML(dotTip(m)).addTo(lmap)});
+    lmap.on('mouseleave',id,()=>{lmap.getCanvas().style.cursor='';pop.remove()});
+    lmap.on('click',id,e=>{pop.remove();pickSchoolFromMap(e.features[0].properties.name)});
   });
-  const map=$('#map'),B={x:-6,y:-14,w:472,h:354},vb=Object.assign({},B);
-  const setVB=()=>map.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
-  const clamp=()=>{vb.x=Math.max(-60,Math.min(480-vb.w,vb.x));vb.y=Math.max(-50,Math.min(360-vb.h,vb.y))};
-  const zoom=(f,cx=vb.x+vb.w/2,cy=vb.y+vb.h/2)=>{const nw=Math.min(B.w,Math.max(110,vb.w*f)),k=nw/vb.w;vb.x=cx-(cx-vb.x)*k;vb.y=cy-(cy-vb.y)*k;vb.w=nw;vb.h=nw*.75;clamp();setVB()};
-  $('#zin').onclick=()=>zoom(.75);$('#zout').onclick=()=>zoom(1.33);
-  $('#zreset').onclick=()=>{Object.assign(vb,B);setVB()};
-  map.addEventListener('wheel',e=>{e.preventDefault();const r=map.getBoundingClientRect();zoom(e.deltaY<0?.85:1.18,vb.x+(e.clientX-r.left)/r.width*vb.w,vb.y+(e.clientY-r.top)/r.height*vb.h)},{passive:false});
-  const pts=new Map();let drag=null,pinch=null;
-  map.addEventListener('pointerdown',e=>{pts.set(e.pointerId,e);moved=false;if(pts.size===1)drag={x:e.clientX,y:e.clientY,vx:vb.x,vy:vb.y};else if(pts.size===2){const [a,b]=[...pts.values()];pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),w:vb.w};drag=null}});
-  map.addEventListener('pointermove',e=>{
-    if(!pts.has(e.pointerId))return;pts.set(e.pointerId,e);const r=map.getBoundingClientRect();
-    if(pts.size===2&&pinch){const [a,b]=[...pts.values()];const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1;zoom((pinch.w*pinch.d/d)/vb.w);moved=true;return}
-    if(drag){const dx=(e.clientX-drag.x)/r.width*vb.w,dy=(e.clientY-drag.y)/r.height*vb.h;if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>6){moved=true;map.classList.add('dragging');hideTip()}if(moved){vb.x=drag.vx-dx;vb.y=drag.vy-dy;clamp();setVB()}}
-  });
-  ['pointerup','pointercancel','pointerleave'].forEach(t=>map.addEventListener(t,e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(!pts.size){drag=null;map.classList.remove('dragging')}}));
+  $('#zin').onclick=()=>lmap.zoomIn();$('#zout').onclick=()=>lmap.zoomOut();$('#zreset').onclick=fitView;
+  if('ResizeObserver' in window)new ResizeObserver(()=>lmap.resize()).observe($('#map'));
 }
 function paintMap(){
-  $$('.zone').forEach(p=>{
-    const z=Z(p.dataset.id);
-    const hidden=(state.filter==='crit'&&z.status!=='crit')||(state.filter==='watch'&&z.status==='ok');
-    p.classList.toggle('dim',hidden||(!!state.zone&&state.zone!==z.id));
-    p.classList.toggle('sel',state.zone===z.id);
-    p.setAttribute('aria-pressed',String(state.zone===z.id));
-  });
+  if(!lmap||!mapReady)return;
+  lmap.getSource('schools').setData(schoolGeoJSON());
+  if(mapZone!==state.zone){const first=mapZone===undefined;mapZone=state.zone;if(!first)fitView()}
 }
-function showTip(e,z){
-  const tip=$('#tip'),box=$('#mapWrap').getBoundingClientRect();
-  const row=(m,l)=>`<div class="tr"><span>${l} <small>${OP[m]} ${BENCH[m].target}%</small></span><span class="${gapOf(m,z[m]).cls}">${z[m]}%</span></div>`;
-  tip.innerHTML=`<b>${z.name}</b><div class="tr"><span>Status</span><span>${ST[z.status].w}</span></div>${row('att','Attendance rate')}${row('tiers','Tier 2/3 review share')}${row('elpac','EL progress')}<div class="tr"><span>Tier 3 cases open</span><span>${z.t3}</span></div><div class="tr"><span>Simulated. Targets in small type.</span></div>`;
-  let x=e.clientX-box.left+14,y=e.clientY-box.top+14;
-  if(x>box.width-246)x-=256;if(y>box.height-190)y-=200;
-  tip.style.left=Math.max(6,x)+'px';tip.style.top=Math.max(6,y)+'px';tip.classList.add('show');
+function paintDots(){paintMap()}
+function pickSchoolFromMap(name){
+  state.schoolType='all';state.schoolQ='';$('#schoolQ').value='';state.school=name;renderSchools();
+  $('#schChart').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+  island(name,'Opened in All schools','--blue','pin');
 }
-function hideTip(){$('#tip').classList.remove('show')}
 
 /* ---------- briefings + actions ---------- */
 function content(){
@@ -1587,7 +1645,7 @@ function content(){
       {s:z.status,t:`${z.name} ${ST[z.status].phrase}`,m:`${z.tiers}% of check-ins went to Tier 2/3 review this week (target ≤ 12%), against ${avg('tiers')}% district-wide.`},
       {s:gap>0?'watch':'ok',t:gap>0?`EL progress trails the district by ${gap} points`:`EL progress leads the district by ${Math.abs(gap)} points`,m:`${z.elpac}% of English learners are on track here, and attendance is ${z.att}%.`},
       {s:'watch',t:'Top themes in this week’s check-ins',m:z.tags.slice(0,3).map(cap).join(', ')+'.'}],
-      recs:[{t:z.act,b:z.why,s:z.status,scope:`${z.sites} sites`,imp:`${z.lcap} LCAP priority`,zone:z.id,sig:{zone:z.id,m:ZONE_SIG[z.id]}},...CONTENT.default.recs.filter(r=>!r.t.includes(z.name)).slice(0,2)]};
+      recs:[{t:z.act,b:z.why,s:z.status,scope:`${z.sites} schools`,imp:`${z.lcap} LCAP priority`,zone:z.id,sig:{zone:z.id,m:ZONE_SIG[z.id]}},...CONTENT.default.recs.filter(r=>!r.t.includes(z.name)).slice(0,2)]};
   }
   return Object.assign({key:'default'},CONTENT.default);
 }
@@ -1631,12 +1689,13 @@ function buildSites(){
   $('#sites').innerHTML=ZONES.map(z=>{
     /* Data note: the Tier 2 / Tier 3 split is a fixed 72/28 estimate of the zone's review share, not a measured split. */
     const t1=+(100-z.tiers).toFixed(1),t2=+(z.tiers*.72).toFixed(1),t3=+(z.tiers-t2).toFixed(1);
-    return `<div class="site" data-site="${z.id}"><button class="s-row" aria-expanded="false" aria-controls="sb-${z.id}"><span class="s-ico" style="--c:var(${ST[z.status].v});--g:${ST[z.status].g}">${ico(ST[z.status].i,18,2.1)}</span><span><span class="s-name">${z.name}</span><span class="s-sub">${z.area}, ${z.sites} sites</span></span><span class="s-det">${ST[z.status].w}</span><span class="chev">${ico('chev',14,2.4)}</span></button>
+    return `<div class="site" data-site="${z.id}"><button class="s-row" aria-expanded="false" aria-controls="sb-${z.id}"><span class="s-ico" style="--c:var(${ST[z.status].v});--g:${ST[z.status].g}">${ico(ST[z.status].i,18,2.1)}</span><span><span class="s-name">${z.name}</span><span class="s-sub">${z.area}, ${z.sites} schools</span></span><span class="s-det">${ST[z.status].w}</span><span class="chev">${ico('chev',14,2.4)}</span></button>
 <div class="s-body" id="sb-${z.id}"><div class="s-inner"><div class="s-pad">
 <h3 class="sub-h">Check-ins by review level, share of check-ins (not students)</h3>
 <div class="stack" role="img" aria-label="Check-ins: not routed ${t1}%, Tier 2 review about ${t2}%, Tier 3 review about ${t3}%"><span style="flex:${t1};background:var(--blue)"></span><span style="flex:${t2};background:var(--indigo)"></span><span style="flex:${t3};background:var(--orange)"></span></div>
 <div class="stack-key"><span><i style="background:var(--blue)"></i>Not routed ${t1}%</span><span><i style="background:var(--indigo)"></i>Tier 2 review ~${t2}%</span><span><i style="background:var(--orange)"></i>Tier 3 review ~${t3}%</span></div>
 <p class="split-note">Review share ${z.tiers}% (target ≤ 12%). The Tier 2 and Tier 3 split is estimated.</p>
+<p class="split-note"><b>Schools in this zone (${z.sites}, approximate):</b> ${z.schools.map(esc).join(', ')}.</p>
 <div class="mgrid"><div class="m"><b>${z.checkins.toLocaleString()}</b><span>Check-ins today</span></div><div class="m"><b>${z.t3}</b><span>Tier 3 cases open</span></div><div class="m"><b class="${gapOf('elpac',z.elpac).cls}">${z.elpac}%</b><span>EL progress, target ≥ 55%</span></div><div class="m"><b class="${gapOf('att',z.att).cls}">${z.att}%</b><span>Attendance, target ≥ 95%</span></div></div>
 <p class="s-act"><b>Suggested:</b> ${z.act}. <span class="muted">LCAP priority: ${z.lcap}.</span></p>
 <div class="rec-actions flush"><button class="pill" data-show="${z.id}">${ico('map',16,2)}Show on map</button></div>
@@ -1653,7 +1712,7 @@ function updateSites(){$$('.site').forEach(s=>{const id=s.dataset.site,open=stat
 
 /* ---------- actions ---------- */
 function render(){
-  setPressed('#metricSeg',state.metric);setPressed('#rangeSeg',state.range);setPressed('#filterSeg',state.filter);
+  setPressed('#metricSeg',state.metric);setPressed('#rangeSeg',state.range);setPressed('#filterSeg',state.schoolType);
   $$('.tile[data-dial]').forEach(t=>t.setAttribute('aria-pressed',String(t.dataset.dial===state.dial)));
   renderSideSel();renderScope();renderWidgets();renderDialPanel();drawChart();paintMap();renderNotes();renderRecs();updateSites();
 }
@@ -1661,8 +1720,8 @@ function isolate(id,quiet){
   state.zone=id||null;state.dial=null;if(id)state.open=id;
   render();
   if(quiet)return;
-  if(id){const z=Z(id);island(`${z.name} zone`,`${z.sites} sites isolated, ${ST[z.status].w.toLowerCase()}`,ST[z.status].v,'pin')}
-  else island('Whole district','64 sites in view','--blue','grid');
+  if(id){const z=Z(id);island(`${z.name} zone`,`${z.sites} schools isolated, ${ST[z.status].w.toLowerCase()}`,ST[z.status].v,'pin')}
+  else island('Whole district',`${SCHOOLS.length} schools in view`,'--blue','grid');
 }
 function runDial(k,force){
   if(state.dial===k&&!force){Object.assign(state,{dial:null,zone:null,filter:'all'});render();island('Speed dial cleared','Back to the whole district','--blue','grid');return}
@@ -1672,7 +1731,7 @@ function runDial(k,force){
 
 /* ---------- search ---------- */
 const INDEX=[
-  {label:'Whole district',hint:'64 sites',icon:'grid',c:'--blue',terms:'whole district all overview everything reset',go:()=>isolate(null)},
+  {label:'Whole district',hint:`${SCHOOLS.length} schools`,icon:'grid',c:'--blue',terms:'whole district all overview everything reset',go:()=>isolate(null)},
   ...ZONES.map(z=>({label:z.name,hint:`${z.area}, ${ST[z.status].w.toLowerCase()}`,icon:'pin',c:ST[z.status].v,terms:`${z.name} ${z.area} ${z.tags.join(' ')} zone high school`,go:()=>isolate(z.id)})),
   {label:'All schools',hint:`${SCHOOLS.length} open schools`,icon:'list',c:'--blue',terms:'schools directory list all schools charter elementary middle high title i enrollment phone',go:()=>showSchool('')},
   ...SCHOOLS.map(x=>({label:x[0],hint:`${x[3]?'Charter':x[1]}${x[7]!=null?' · '+x[7].toLocaleString()+' students':''}`,icon:'pin',c:'--blue',terms:`${x[0]} school ${x[1]} ${x[3]?'charter':''}`,go:()=>showSchool(x[0])})),
@@ -1815,7 +1874,7 @@ function setupRefraction(){
 function wire(){
   $('#metricSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.metric){state.metric=b.dataset.v;render()}});
   $('#rangeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v==='ytd'?'ytd':+b.dataset.v;if(v!==state.range){state.range=v;render()}});
-  $('#filterSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.filter){state.filter=b.dataset.v;render()}});
+  $('#filterSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.v!==state.schoolType){state.schoolType=b.dataset.v;renderSchools()}});
   document.addEventListener('click',e=>{
     const i=e.target.closest('[data-info]');if(i){e.preventDefault();openInfo(i.dataset.info);return}
     const zs=e.target.closest('[data-zstep]');if(zs&&state.zone){const k=ZONES.findIndex(z=>z.id===state.zone),n=ZONES.length;isolate(ZONES[(k+ +zs.dataset.zstep+n)%n].id,true);$(`[data-zstep="${zs.dataset.zstep}"]`).focus({preventScroll:true});return}
@@ -1864,7 +1923,10 @@ $$('[data-i]').forEach(el=>{el.innerHTML=ico(el.dataset.i,+(el.dataset.s||20));e
 buildSidebar();buildDrawer();buildMap();buildSites();themeIcon();renderBadge();wireSideSearch();wireTabs();wire();
 renderFacts();renderSchools();render();setupSortables();setTab('pulse');
 setupRefraction();
-setTimeout(()=>island('District Pulse is live','58 of 64 sites reporting today','--green','pulse'),700);
+/* Reporting count is simulated: all schools minus the 6 the demo always shows as not reporting. */
+$('#repN').textContent=SCHOOLS.length-6;$('#totN').textContent=SCHOOLS.length;
+$$('.side-row[data-zone=""] .det,.side-row[data-dzone=""] .det').forEach(d=>d.textContent=SCHOOLS.length);
+setTimeout(()=>island('District Pulse is live',`${SCHOOLS.length-6} of ${SCHOOLS.length} schools reporting today`,'--green','pulse'),700);
 })();
 </script>
 </body>
