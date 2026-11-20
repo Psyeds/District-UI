@@ -566,6 +566,75 @@ a.pill{text-decoration:none}
 .i-txt b{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .i-txt span{font-size:13px;color:rgba(255,255,255,.68);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+/* lens bar: who is looking, which level, which slice */
+.lens{--r:28px;padding:12px 14px;margin-bottom:14px;display:grid;gap:10px}
+.lens-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;min-width:0}
+.lens-lbl{flex:none;width:74px;font-size:12.5px;font-weight:600;color:var(--label2)}
+.lens .seg{flex:0 1 auto;min-width:0}
+.lens .seg.big button{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;font-size:14px}
+.lens .seg.big button svg{flex:none}
+.crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--label2);line-height:1.35;padding:2px 2px 0}
+.crumb .c-ico{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff}
+.crumb b{color:var(--label);font-weight:600}
+.lens-note{font-size:12.5px;color:var(--label2);line-height:1.35;padding:0 2px}
+.lens-note:empty{display:none}
+.lens details{border-top:.5px solid var(--sep);padding-top:8px}
+.lens summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--label2);list-style:none;display:flex;align-items:center;gap:6px;min-height:30px}
+.lens summary::-webkit-details-marker{display:none}
+.lens summary .sum-v{font-weight:500;color:var(--label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.lens details[open] summary{margin-bottom:6px}
+.lens .filters{display:grid;gap:8px}
+@media (max-width:560px){.lens-lbl{width:100%}.lens .seg.big{width:100%}.lens .seg.big button{flex:1;justify-content:center;padding:0 8px}}
+@media (max-width:700px){.main>.lens{order:-3}}
+
+/* LCAP money stack */
+.ms{padding:14px;border-radius:22px;background:var(--plate);box-shadow:inset 0 .5px 0 var(--plate-rim);display:grid;gap:10px}
+.ms-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.ms-head h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-right:auto}
+.ms-sub{font-size:13.5px;color:var(--label2);line-height:1.4}
+.ms-ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ms-stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:12px;align-items:center}
+.ms-svg{width:100%;max-width:300px;height:auto;margin:0 auto;display:block;overflow:visible}
+.ms-layer{cursor:pointer;transition:transform .75s cubic-bezier(.3,1.25,.4,1),opacity .3s}
+.ms-layer.dim{opacity:.28}
+.ms-layer.sel .ms-glow{opacity:1}
+.ms-glow{opacity:0;transition:opacity .3s}
+.ms-layer:focus{outline:none}
+.ms-layer:focus-visible .ms-rim{stroke:var(--blue);stroke-width:2.5;stroke-opacity:1}
+.ms-list{display:grid;gap:6px}
+.ms-row{display:flex;align-items:center;gap:10px;min-height:48px;padding:8px 12px;border:1px solid transparent;border-radius:16px;background:var(--fill);color:var(--label);text-align:left;cursor:pointer;font:inherit;transition:background .2s,opacity .25s}
+.ms-row .dot{flex:none;width:12px;height:12px;border-radius:50%}
+.ms-row .nm{flex:1;min-width:0;font-size:14.5px;font-weight:600;line-height:1.25}
+.ms-row .nm small{display:block;font-size:12.5px;font-weight:500;color:var(--label2);margin-top:1px}
+.ms-row .pc{flex:none;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.ms-row[aria-pressed="true"]{background:var(--sel);border-color:var(--blue)}
+.ms-row.gap{border:1.5px dashed color-mix(in srgb,var(--orange) 70%,transparent);background:transparent}
+.ms-row.gap[aria-pressed="true"]{border-color:var(--orange);background:color-mix(in srgb,var(--orange) 14%,transparent)}
+.ms-row.dim{opacity:.45}
+.ms-row.hit{box-shadow:inset 0 0 0 2px var(--indigo)}
+.ms-detail{padding:14px;border-radius:18px;background:var(--fill);display:grid;gap:8px}
+.ms-detail h4{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.ms-detail p{font-size:14px;line-height:1.4;color:var(--label2)}
+.ms-detail p b{color:var(--label);font-weight:600}
+.ms-chain-h{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--label2);margin-top:2px}
+.ms-chain{display:flex;align-items:stretch;gap:4px}
+.ms-chain .arr{align-self:center;color:var(--label3);font-size:15px}
+.ms-link{flex:1;min-width:0;text-align:center;padding:8px 2px;border-radius:14px;border:1px solid var(--sep);font-size:12px;color:var(--label3);line-height:1.25;transition:transform .3s,background .3s}
+.ms-link b{display:block;font-size:13px;color:var(--label2);margin-bottom:1px}
+.ms-link.has{color:var(--label2);background:var(--plate)}
+.ms-link.has b{color:var(--label)}
+.ms-link.me{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 16%,transparent);color:var(--label);transform:translateY(-2px)}
+.ms-note{font-size:12.5px;color:var(--label2);line-height:1.4}
+@media (max-width:640px){.ms-stage{grid-template-columns:minmax(0,1fr)}.ms-svg{max-width:240px}.ms-link{font-size:11px}.ms-link b{font-size:12px}}
+
+/* ring with goal mark, and "X of Y" fact cards */
+.ring-goal{stroke:var(--label);stroke-width:2.4;stroke-linecap:round}
+.ring-unit{font-size:12px;color:var(--label2);text-align:center;margin-top:2px;line-height:1.3}
+.ring-val{display:flex;align-items:center;justify-content:center}
+.ring-val small{font-size:14px;font-weight:600;margin-top:4px}
+.fact .w-big .of{font-size:16px;font-weight:600;color:var(--label2);letter-spacing:0;margin-left:4px}
+.fact.nodata{opacity:.55}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media (prefers-reduced-transparency:reduce){
   .glass::before{background:var(--solid);backdrop-filter:none;-webkit-backdrop-filter:none}
@@ -647,6 +716,31 @@ a.pill{text-decoration:none}
       <button class="capsule glass clear scope" id="scopeChip" hidden><span id="scopeText"></span><span data-i="x" data-s="15"></span></button>
     </div>
   </header>
+
+  <section class="lens glass lg-r" id="lens" data-sec="pulse" aria-label="View, level and filters">
+    <div class="lens-row"><span class="lens-lbl" id="roleLbl">View as</span>
+      <div class="seg" id="roleSeg" role="group" aria-labelledby="roleLbl"><span class="seg-thumb" aria-hidden="true"></span><button data-v="sup">Superintendent</button><button data-v="county">County office</button><button data-v="funder">Funder</button></div>
+    </div>
+    <div class="lens-row"><span class="lens-lbl" id="levelLbl">Level</span>
+      <div class="seg big" id="levelSeg" role="group" aria-labelledby="levelLbl"><span class="seg-thumb" aria-hidden="true"></span><button data-v="State"><span data-i="bank" data-s="17"></span>State</button><button data-v="County"><span data-i="map" data-s="17"></span>County</button><button data-v="District"><span data-i="school" data-s="17"></span>District</button></div>
+    </div>
+    <p class="crumb" id="crumb" aria-live="polite"></p>
+    <details id="filterBox">
+      <summary><span data-i="list" data-s="15"></span>Filters <span class="sum-v" id="filterSum"></span></summary>
+      <div class="filters">
+        <div class="lens-row"><span class="lens-lbl" id="yearLbl">Year</span>
+          <div class="seg" id="yearSeg" role="group" aria-labelledby="yearLbl"><span class="seg-thumb" aria-hidden="true"></span><button data-v="latest">Latest</button><button data-v="24-25">2024-25</button><button data-v="23-24">2023-24</button></div>
+        </div>
+        <div class="lens-row"><span class="lens-lbl" id="gradeLbl">Grades</span>
+          <div class="seg" id="gradeSeg" role="group" aria-labelledby="gradeLbl"><span class="seg-thumb" aria-hidden="true"></span><button data-v="all">All</button><button data-v="tk6">TK-6</button><button data-v="712">7-12</button></div>
+        </div>
+        <div class="lens-row"><span class="lens-lbl" id="groupLbl">Students</span>
+          <div class="seg" id="groupSeg" role="group" aria-labelledby="groupLbl"><span class="seg-thumb" aria-hidden="true"></span><button data-v="all">All</button><button data-v="el">English learners</button><button data-v="low">Low-income</button><button data-v="foster">Foster</button><button data-v="homeless">Homeless</button></div>
+        </div>
+      </div>
+    </details>
+    <p class="lens-note" id="lensNote"></p>
+  </section>
 
   <h2 class="group-title" data-sec="pulse">Speed dial</h2>
   <section class="tiles" aria-label="Speed dial" data-sec="pulse">
@@ -782,7 +876,7 @@ a.pill{text-decoration:none}
     <span class="capsule glass clear"><span data-i="eye" data-s="16"></span>Groups under 11 students hidden</span>
     <span class="capsule glass clear"><span data-i="person" data-s="16"></span>AI flags, site teams decide</span>
   </section>
-  <footer class="foot glass">District Pulse concept demo by the Technical and Youth Systems Strategy Team. Zone, site, school-level tier/attendance/EL, and check-in figures are simulated pilot data, not district records. District facts, Money and staff, Fiscal health, All schools, the published tiles in each speed dial and the English learner language mix are real published data from Ed-Data (pulled Sept 27, 2026) and FCMAT’s Fiscal Status of LEAs (Sept 22, 2026).</footer>
+  <footer class="foot glass">District Pulse concept demo by the Technical and Youth Systems Strategy Team. Zone, site, school-level tier/attendance/EL, and check-in figures are simulated pilot data, not district records. District facts, Money and staff, Fiscal health, All schools, the published tiles in each speed dial and the English learner language mix are real published data from Ed-Data (pulled Sept 27, 2026) and FCMAT’s Fiscal Status of LEAs (Sept 22, 2026). The LCAP money stack uses sample shares and a simplified who-handles-it chain, so treat it as simulated.</footer>
 </main>
 
 <nav class="tabbar-wrap" aria-label="Sections">
@@ -870,6 +964,9 @@ const P={
   mail:'<rect x="3.5" y="5.5" width="17" height="13" rx="2.2"/><path d="m4.5 7 7.5 6 7.5-6"/>',
   grip:'<circle cx="9" cy="7" r="1.3"/><circle cx="15" cy="7" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="17" r="1.3"/><circle cx="15" cy="17" r="1.3"/>',
   menu:'<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
+  bank:'<path d="M3.5 9 12 4l8.5 5z"/><path d="M5.5 9.5v8M9.8 9.5v8M14.2 9.5v8M18.5 9.5v8M3.5 20h17"/>',
+  school:'<path d="M3.5 20h17M5.5 20v-9L12 7l6.5 4v9"/><path d="M12 7V3.5h3.5M10 20v-4.5h4V20"/>',
+  layers:'<path d="M12 4 3.5 8.5 12 13l8.5-4.5z"/><path d="m3.5 12.5 8.5 4.5 8.5-4.5M3.5 16.5 12 21l8.5-4.5"/>',
   flow:'<rect x="3" y="4" width="6" height="5" rx="1.5"/><rect x="15" y="4" width="6" height="5" rx="1.5"/><rect x="9" y="15" width="6" height="5" rx="1.5"/><path d="M9 6.5h6M18 9v2.5a2 2 0 0 1-2 2h-2.5M12 13.5V15"/>',
   play:'<path d="M7.5 5v14l11-7z" fill="currentColor"/>',
   clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
@@ -956,8 +1053,14 @@ const INFO={
   ['Watch','Yellow. Tier 2 review share is rising or above the 12% target.'],
   ['Critical','Red. A bottleneck that needs attention now, such as English learner progress far below target with a Tier 3 backlog.'],
   ['Data','School dots are real locations from the CDE school directory. Zones group each school with its nearest of five high schools, an approximation, not official attendance areas. Zone colors and metrics are simulated pilot data.']]},
+ lcapstack:{t:'LCAP money stack',s:[
+  ['What it shows','The kinds of money behind a district’s LCAP, stacked from the base grant up. Thicker layers mean a bigger share. The striped top layer is after-school money for grades 7 to 12, which has no steady source yet.'],
+  ['The shares are a sample','62, 14, 9, 8 and 7 percent come from the team’s demo picture. They have not been checked against San Juan Unified’s LCAP, so do not quote them. The real figures to anchor on are $489.9M in LCFF revenue for 2024-25 and 63.0% high-need students (both Published, Ed-Data).'],
+  ['Who handles it is simplified','State pays. The County Office of Education reviews and approves each district’s LCAP. The District decides how to spend. Schools run the programs. Real rules have more steps, and some grants skip the County.'],
+  ['Who it serves','Supplemental and Concentration money follows high-need students: low-income, English learners, foster or homeless. Concentration money only comes when they are more than 55% of enrollment.'],
+  ['Data','Simulated. Not district records.']]},
  data:{t:'What is real and what is simulated',s:[
-  ['Simulated pilot data','Check-ins, schools reporting, zone colors and zone metrics, Tier 2/3 review share, Tier 3 cases, attendance rate, English learner progress, briefings, and school-level attendance, review share and EL progress. These show how the tool would work. They are not district records and not live.'],
+  ['Simulated pilot data','Check-ins, schools reporting, zone colors and zone metrics, Tier 2/3 review share, Tier 3 cases, attendance rate, English learner progress, briefings, the LCAP money stack shares, and school-level attendance, review share and EL progress. These show how the tool would work. They are not district records and not live.'],
   ['Published data','District facts, Money and staff, Fiscal health, All schools enrollment, the English learner language mix, and every stat tagged Published. Sources: Ed-Data (pulled Sept 27, 2026) and FCMAT’s Fiscal Status of LEAs (Sept 22, 2026). School locations on the map come from the CDE school directory. Published figures are yearly public data, not live telemetry.'],
   ['Suggested actions','Suggestions for discussion, labeled with the signal behind them. They are not district decisions.']]}
 };
@@ -970,10 +1073,10 @@ const LANGS=[['Persian (Farsi)',28.7],['Spanish',22.9],['Pashto',16.1],['Russian
    ed-data.org/district/Sacramento/San-Juan-Unified. FCMAT "Fiscal Status of LEAs", 2026-09-22. */
 const FACTS=[
  {k:'Enrollment',v:'52,069',sub:'students, Census Day 2025-26',yrs:['20-21','21-22','22-23','23-24','24-25','25-26'],s:[50762,49220,49036,49857,51289,52069],f:n=>n.toLocaleString(),d:'<b>+3,033</b> since the 2022-23 low',tone:''},
- {k:'High-need students',v:'63.0%',sub:'32,789 low-income, EL, foster or homeless',yrs:['20-21','21-22','22-23','23-24','24-25','25-26'],s:[51.22,53.57,59.21,60.95,62.5,62.97],f:n=>n.toFixed(1)+'%',d:'<b>+11.8 pts</b> since 2020-21',tone:''},
+ {k:'High-need students',v:'63.0%',sub:'32,789 low-income, EL, foster or homeless',xy:['32,789','of 52,069'],xsub:'63.0% are low-income, EL, foster or homeless',yrs:['20-21','21-22','22-23','23-24','24-25','25-26'],s:[51.22,53.57,59.21,60.95,62.5,62.97],f:n=>n.toFixed(1)+'%',d:'<b>+11.8 pts</b> since 2020-21',tone:''},
  {k:'English learners',v:'10,281',sub:'19.7% of students, 2025-26',yrs:['20-21','21-22','22-23','23-24','24-25','25-26'],s:[13.3,15.4,16.6,17.6,19.1,19.7],f:n=>n.toFixed(1)+'%',d:'<b>+3,520</b> students since 2020-21',tone:''},
  {k:'Chronic absenteeism',v:'21.7%',sub:'11,865 students, 2024-25',yrs:['21-22','22-23','23-24','24-25'],s:[34.3,27.3,23.2,21.7],f:n=>n.toFixed(1)+'%',d:'▼ <b>12.6 pts</b> from the 2021-22 peak',tone:'good'},
- {k:'Graduation rate',v:'81.7%',sub:'4,016 of 4,918, class of 2025',yrs:['20-21','21-22','22-23','23-24','24-25'],s:[78.7,81.6,77.2,78.0,81.7],f:n=>n.toFixed(1)+'%',d:'▲ <b>3.7 pts</b> vs 2023-24 · dropout 9.8%',tone:'good'},
+ {k:'Graduation rate',v:'81.7%',sub:'4,016 of 4,918, class of 2025',xy:['4,016','of 4,918'],xsub:'81.7% graduated, class of 2025',yrs:['20-21','21-22','22-23','23-24','24-25'],s:[78.7,81.6,77.2,78.0,81.7],f:n=>n.toFixed(1)+'%',d:'▲ <b>3.7 pts</b> vs 2023-24 · dropout 9.8%',tone:'good'},
  {k:'Met ELA standard',v:'39.9%',sub:'CAASPP met or exceeded, 2024-25',yrs:['21-22','22-23','23-24','24-25'],s:[42.62,41.75,38.98,39.93],f:n=>n.toFixed(1)+'%',d:'▲ <b>0.9 pts</b> vs 2023-24',tone:'good'},
  {k:'Met math standard',v:'28.1%',sub:'CAASPP met or exceeded, 2024-25',yrs:['21-22','22-23','23-24','24-25'],s:[29.55,29.6,29.08,28.13],f:n=>n.toFixed(1)+'%',d:'▼ <b>1.0 pt</b> vs 2023-24, lowest in four years',tone:'bad'},
  {k:'Suspension rate',v:'3.8%',sub:'2,161 students, 2024-25',yrs:['21-22','22-23','23-24','24-25'],s:[4.5,4.5,4.9,3.8],f:n=>n.toFixed(1)+'%',d:'▼ <b>1.1 pts</b> vs 2023-24',tone:'good'}
@@ -1157,8 +1260,115 @@ const DIALS={
  lcap:{zone:null,metric:'att',filter:'all',t:'LCAP and attendance',s:'Intervention results against the waitlist',c:'--green',i:'bars'}
 };
 
+/* ---------- LCAP money stack ----------
+   SIMULATED. The 62/14/9/8/7 split is a sample from the team's demo picture, not San Juan Unified's
+   LCAP. Only $489.9M LCFF (2024-25) and 63.0% high-need are published figures. The "who handles it"
+   chain is simplified: State pays, County Office reviews the LCAP, District decides, School runs it. */
+const MS=[ /* bottom to top */
+ {id:'base',name:'Base grant',pct:62,c:'--green',serves:'All students',
+  what:'The core money every student brings in. The district can spend it on almost anything.',
+  roles:{State:'pays',County:'checks',District:'decides',School:'runs'}},
+ {id:'sup',name:'Supplemental',pct:14,c:'--indigo',hn:1,serves:'High-need students: low-income, English learners, foster or homeless',
+  what:'Extra money for the students who need more. The LCAP has to show how it helps those students.',
+  roles:{State:'pays',County:'checks',District:'decides',School:'runs'}},
+ {id:'con',name:'Concentration',pct:9,c:'--blue',hn:1,serves:'The same high-need students, when they are more than 55% of enrollment',
+  what:'More money on top for districts where most students are high-need. District facts shows 63.0% high-need here (Published).',
+  roles:{State:'pays',County:'checks',District:'decides',School:'runs'}},
+ {id:'elo',name:'After school (ELO-P)',pct:8,c:'--orange',band:'tk6',serves:'TK to 6th grade',
+  what:'Separate state money for after-school and summer programs. It covers TK to 6th grade, not 7th to 12th.',
+  roles:{State:'pays',County:'',District:'decides',School:'runs'}},
+ {id:'oth',name:'Other grants',pct:7,c:'--cyan',serves:'Depends on the grant',
+  what:'Smaller state and federal grants, each with its own rules.',
+  roles:{State:'pays',County:'',District:'decides',School:'runs'}},
+ {id:'gap',name:'7-12 after school',gap:1,band:'712',c:'--orange',serves:'Grades 7 to 12, after school',
+  what:'No steady funding yet. This is the layer being built: after-school team lead training plus District Pulse data.',
+  roles:{State:'',County:'',District:'',School:''}}
+];
+const LEVELS={
+ State:{i:'bank',say:'The State pays.'},
+ County:{i:'map',say:'The County Office checks each district’s plan.'},
+ District:{i:'school',say:'The District decides how to spend.'}
+};
+const ROLE_SAY={pays:'pays',checks:'checks the plan',decides:'decides how to spend',runs:'runs it'};
+const GROUP_NAME={el:'English learners',low:'low-income students',foster:'foster youth',homeless:'students who are homeless'};
+const msH=l=>l.gap?22:Math.max(16,l.pct*1.6);
+function msTops(){const gp=state.msApart?22:3,t={};let y=336;MS.forEach((l,i)=>{y-=msH(l)+(i?gp:0);t[l.id]=+y.toFixed(1)});return t}
+function msPlace(){
+  const svg=$('#msSvg');if(!svg)return;const t=msTops();
+  MS.forEach(l=>{const g=svg.querySelector(`[data-ms="${l.id}"]`);if(g)g.style.transform=`translateY(${t[l.id]}px)`});
+}
+function msGuide(x,letter,col){
+  return `<g transform="translate(${x} -42)" aria-hidden="true"><rect x="6" y="28" width="5" height="14" rx="2" fill="#3a3f4a"/><rect x="13" y="28" width="5" height="14" rx="2" fill="#3a3f4a"/><rect x="3" y="13" width="18" height="18" rx="6" style="fill:var(${col})"/><text x="12" y="26" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">${letter}</text><circle cx="12" cy="8" r="6" fill="#e8b58c"/><path d="M5.5 7a6.5 6 0 0 1 13 0z" fill="#f5c518"/><rect x="4" y="6" width="16" height="2.2" rx="1" fill="#e0ab00"/></g>`;
+}
+function msHTML(){
+  const RX=112,RY=22,cx=150,tops=msTops();
+  const layers=MS.map(l=>{
+    const h=msH(l),fill=l.gap?'url(#msHatch)':`var(${l.c})`;
+    const dash=l.gap?` stroke="var(--orange)" stroke-width="1.6" stroke-dasharray="6 5"`:'';
+    const shade=l.gap?'':`<ellipse cx="${cx}" cy="${h}" rx="${RX}" ry="${RY}" fill="#000" fill-opacity=".34"/><rect x="${cx-RX}" y="0" width="${RX*2}" height="${h}" fill="#000" fill-opacity=".22"/>`;
+    const label=l.gap?'7-12 gap, being built':l.name;
+    return `<g class="ms-layer" data-ms="${l.id}" style="--glow:var(${l.c});transform:translateY(${tops[l.id]}px)" tabindex="0" role="button" aria-label="${esc(label)}${l.gap?'':', '+l.pct+' percent, sample'}">
+      <ellipse cx="${cx}" cy="${h}" rx="${RX}" ry="${RY}" style="fill:${fill}"${dash}/>
+      <rect x="${cx-RX}" y="0" width="${RX*2}" height="${h}" style="fill:${fill}"/>${shade}
+      <ellipse class="ms-rim" cx="${cx}" cy="0" rx="${RX}" ry="${RY}" style="fill:${fill}"${dash||' stroke="#fff" stroke-opacity=".0"'}/>
+      ${l.gap?'':`<ellipse cx="${cx}" cy="0" rx="${RX*.7}" ry="${RY*.6}" fill="none" stroke="#fff" stroke-opacity=".35"/>`}
+      ${l.gap?`<text x="${cx-28}" y="5" text-anchor="middle" font-size="11.5" font-weight="700" style="fill:var(--label)">${label}</text>${msGuide(cx+38,'S','--green')}${msGuide(cx+64,'O','--blue')}`:(h>=20?`<text x="${cx}" y="${h/2+RY+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">${l.name} ${l.pct}%</text>`:'')}
+    </g>`}).join('');
+  const rows=[...MS].reverse().map(l=>`<button class="ms-row${l.gap?' gap':''}" data-msrow="${l.id}" aria-pressed="false"><span class="dot" style="${l.gap?'background:repeating-linear-gradient(45deg,var(--orange) 0 3px,transparent 3px 6px);border:1px solid var(--orange)':`background:var(${l.c})`}"></span><span class="nm">${l.name}<small></small></span><span class="pc"></span></button>`).join('');
+  return `<div class="ms" id="ms">
+    <div class="ms-head"><h3>${ico('layers',18,2)} Where the LCAP money comes from <span class="dtag sim">Simulated</span></h3>${infoBtn('lcapstack','the LCAP money stack')}</div>
+    <p class="ms-sub">Each layer is one kind of money. Thicker means more money. Tap a layer to see what it pays for and who handles it.</p>
+    <div class="ms-ctrl">
+      <button class="pill" data-msmode="money" aria-pressed="false">Money</button>
+      <button class="pill" data-msmode="serves" aria-pressed="false">Who it serves</button>
+      <button class="pill" id="msApart" aria-pressed="false">${ico('layers',15,2)}<span>Pull apart</span></button>
+    </div>
+    <div class="ms-stage">
+      <svg class="ms-svg" id="msSvg" viewBox="0 -10 300 370" role="group" aria-label="Layered LCAP money stack, sample shares"><defs><pattern id="msHatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" style="fill:color-mix(in srgb,var(--orange) 22%,var(--solid))"/><rect width="4" height="10" style="fill:var(--orange)" fill-opacity=".75"/></pattern></defs>${layers}</svg>
+      <div class="ms-list">${rows}</div>
+    </div>
+    <div class="ms-detail" id="msDetail" aria-live="polite"></div>
+    <p class="ms-note"><span class="dtag sim">Simulated</span> Sample split from our demo picture. It has not been checked against San Juan Unified’s LCAP yet, so do not quote these shares. The published anchor is <b>$489.9M</b> in LCFF revenue for 2024-25. Who handles the money is simplified.</p>
+  </div>`;
+}
+function msPaint(){
+  const box=$('#ms');if(!box)return;
+  const sel=state.msSel,grp=state.group!=='all',band=state.grade;
+  const hit=l=>(grp&&l.hn)||(band!=='all'&&l.band===band);
+  box.querySelectorAll('[data-msmode]').forEach(b=>{const on=b.dataset.msmode===state.msMode;b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on))});
+  const ap=$('#msApart');ap.classList.toggle('on',state.msApart);ap.setAttribute('aria-pressed',String(state.msApart));ap.querySelector('span').textContent=state.msApart?'Push together':'Pull apart';
+  MS.forEach(l=>{
+    const g=box.querySelector(`[data-ms="${l.id}"]`),r=box.querySelector(`[data-msrow="${l.id}"]`);
+    g.classList.toggle('sel',sel===l.id);g.classList.toggle('dim',!!sel&&sel!==l.id);
+    g.style.filter=sel===l.id?`drop-shadow(0 0 10px var(${l.c}))`:'';
+    r.setAttribute('aria-pressed',String(sel===l.id));r.classList.toggle('dim',!!sel&&sel!==l.id);r.classList.toggle('hit',hit(l)&&sel!==l.id);
+    r.querySelector('.pc').textContent=state.msMode==='money'?(l.gap?'being built':l.pct+'%'):'';
+    r.querySelector('small').textContent=state.msMode==='money'?'':l.serves;
+  });
+  const d=$('#msDetail'),l=MS.find(x=>x.id===sel);
+  if(!l){d.innerHTML=`<h4>Tap a layer</h4><p>You will see what it pays for, who it is for, and who handles it at each level.${grp?` Layers outlined in purple are the money that follows <b>${GROUP_NAME[state.group]}</b>.`:''}${band==='712'?' The 7-12 gap is outlined: no steady after-school money for grades 7 to 12.':band==='tk6'?' The after-school layer is outlined: it covers TK to 6th grade.':''}</p>`;return}
+  let groupLine='';
+  if(grp&&l.hn)groupLine=state.group==='el'?`<p><b>English learners count here.</b> District facts shows 10,281 English learners in 2025-26 <span class="dtag pub">Published</span></p>`:`<p><b>${cap(GROUP_NAME[state.group])} count here.</b> They are part of the 32,789 high-need students in District facts <span class="dtag pub">Published</span>. District Pulse has no separate count for this group yet.</p>`;
+  const chain=['State','County','District','School'].map(n=>{const r=l.roles[n],me=n===state.level;
+    return `<div class="ms-link${r?' has':''}${me?' me':''}"${me?' aria-current="true"':''}><b>${n}</b>${r?ROLE_SAY[r]:l.gap?'not set yet':'no role here'}</div>`}).join('<span class="arr" aria-hidden="true">›</span>');
+  d.innerHTML=`<h4>${l.name}${l.gap?'':` · ${l.pct}%`} <span class="dtag sim">Simulated</span></h4><p>${l.what}</p><p><b>Who it serves:</b> ${l.serves}</p>${groupLine}<div class="ms-chain-h">Who handles it, simplified</div><div class="ms-chain">${chain}</div>`;
+}
+function msWire(){
+  const box=$('#ms');if(!box)return;
+  const pick=id=>{state.msSel=state.msSel===id?null:id;msPaint()};
+  box.addEventListener('click',e=>{
+    const g=e.target.closest('[data-ms]');if(g){pick(g.dataset.ms);return}
+    const r=e.target.closest('[data-msrow]');if(r){pick(r.dataset.msrow);return}
+    const m=e.target.closest('[data-msmode]');if(m){state.msMode=m.dataset.msmode;msPaint();return}
+    if(e.target.closest('#msApart')){state.msApart=!state.msApart;msPlace();msPaint()}
+  });
+  box.addEventListener('keydown',e=>{const g=e.target.closest('[data-ms]');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();pick(g.dataset.ms)}});
+  msPaint();
+}
+
 /* ---------- state ---------- */
-const state={school:null,scMetric:'enr',scRange:30,scYoy:false,schoolType:'all',schoolQ:'',schoolSort:'size',metric:'tiers',range:30,zone:null,filter:'all',dial:null,open:null,brief:[],assigned:new Set(),yoy:false,widgetOrder:loadWidgetOrder()};
+const state={school:null,scMetric:'enr',scRange:30,scYoy:false,schoolType:'all',schoolQ:'',schoolSort:'size',metric:'tiers',range:30,zone:null,filter:'all',dial:null,open:null,brief:[],assigned:new Set(),yoy:false,widgetOrder:loadWidgetOrder(),
+  role:'sup',level:'District',year:'latest',grade:'all',group:'all',msSel:null,msMode:'money',msApart:false};
 const cur=()=>state.zone?Z(state.zone):null;
 const scopeLabel=()=>state.zone?`${cur().name} zone`:'Whole district';
 
@@ -1235,10 +1445,12 @@ function themeIcon(){const b=$('#themeBtn');b.innerHTML=ico(isDark()?'sun':'moon
 
 /* ---------- widgets ---------- */
 function delta(d,lower){const good=lower?d<=0:d>=0;return `<span class="${good?'good':'bad'}">${d>0?'▲':d<0?'▼':''} ${Math.abs(d)}</span>`}
-function ring(label,val,min,max,color){
-  const C=2*Math.PI*32,arc=C*.75,f=Math.max(0,Math.min(1,(val-min)/(max-min))),th=(135+270*f)*Math.PI/180;
+/* A ring stays only when it has a goal. The goal is drawn as a mark across the track. */
+function ring(label,val,min,max,color,goal,unit){
+  const C=2*Math.PI*32,arc=C*.75,clamp=v=>Math.max(0,Math.min(1,(v-min)/(max-min))),f=clamp(val),th=(135+270*f)*Math.PI/180;
   const kx=(40+32*Math.cos(th)).toFixed(2),ky=(40+32*Math.sin(th)).toFixed(2);
-  return `<div class="w-label">${label}</div><div class="ring"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="ring-track" cx="40" cy="40" r="32" stroke-dasharray="${arc.toFixed(2)} ${C.toFixed(2)}" transform="rotate(135 40 40)"/><circle class="ring-arc" cx="40" cy="40" r="32" style="stroke:var(${color})" stroke-dasharray="${(arc*f).toFixed(2)} ${C.toFixed(2)}" transform="rotate(135 40 40)"/><circle class="ring-knob" cx="${kx}" cy="${ky}" r="4.6"/></svg><span class="ring-val">${val}</span><span class="ring-min">${min}</span><span class="ring-max">${max}</span></div>`;
+  const gt=(135+270*clamp(goal))*Math.PI/180,gx=r=>(40+r*Math.cos(gt)).toFixed(2),gy=r=>(40+r*Math.sin(gt)).toFixed(2);
+  return `<div class="w-label">${label}</div><div class="ring"><svg viewBox="0 0 80 80" role="img" aria-label="${val}%, goal ${goal}%"><circle class="ring-track" cx="40" cy="40" r="32" stroke-dasharray="${arc.toFixed(2)} ${C.toFixed(2)}" transform="rotate(135 40 40)"/><circle class="ring-arc" cx="40" cy="40" r="32" style="stroke:var(${color})" stroke-dasharray="${(arc*f).toFixed(2)} ${C.toFixed(2)}" transform="rotate(135 40 40)"/><line class="ring-goal" x1="${gx(25)}" y1="${gy(25)}" x2="${gx(39)}" y2="${gy(39)}"/><circle class="ring-knob" cx="${kx}" cy="${ky}" r="4.6"/></svg><span class="ring-val">${val}<small>%</small></span><span class="ring-min">${min}</span><span class="ring-max">${max}</span></div><div class="ring-unit">${unit}</div>`;
 }
 function spark(s){
   const w=140,h=44,mn=Math.min(...s),mx=Math.max(...s),k=(mx-mn)||1;
@@ -1255,7 +1467,15 @@ function factSpark(x){
   return `<svg class="fspark" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(x.k)} by year: ${s.map((v,i)=>x.yrs[i]+' '+x.f(v)).join(', ')}"><path d="${line}" vector-effect="non-scaling-stroke"/>${dots}</svg>`;
 }
 function renderFacts(){
-  $('#facts').innerHTML=FACTS.map((x,i)=>`<article class="fact glass" data-widget="f${i}"><button class="grip" aria-label="Drag to move this card">${ico('grip',15)}</button><span class="w-label">${x.k}</span><span class="w-big">${x.v}</span><span class="f-sub">${x.sub}</span><span class="f-delta${x.tone?' '+x.tone:''}">${x.d}</span>${factSpark(x)}<span class="w-foot"><span>${x.yrs[0]}</span><span>Ed-Data</span><span>${x.yrs[x.yrs.length-1]}</span></span></article>`).join('');
+  const latest=state.year==='latest',keep={};
+  $$('#facts .fact').forEach(c=>keep[c.dataset.widget]=c.style.order);
+  $('#facts').innerHTML=FACTS.map((x,i)=>{
+    const yi=latest?x.s.length-1:x.yrs.indexOf(state.year),none=yi<0;
+    const big=none?'—':latest?(x.xy?`${x.xy[0]}<span class="of">${x.xy[1]}</span>`:x.v):x.f(x.s[yi]);
+    const sub=none?`No 20${state.year} figure in Ed-Data`:latest?(x.xy?x.xsub:x.sub):`School year 20${x.yrs[yi]}, Ed-Data`;
+    const dl=latest?`<span class="f-delta${x.tone?' '+x.tone:''}">${x.d}</span>`:'';
+    return `<article class="fact glass${none?' nodata':''}" data-widget="f${i}"><button class="grip" aria-label="Drag to move this card">${ico('grip',15)}</button><span class="w-label">${x.k}</span><span class="w-big">${big}</span><span class="f-sub">${sub}</span>${dl}${factSpark(x)}<span class="w-foot"><span>${x.yrs[0]}</span><span>Ed-Data</span><span>${x.yrs[x.yrs.length-1]}</span></span></article>`}).join('');
+  $$('#facts .fact').forEach(c=>{if(keep[c.dataset.widget])c.style.order=keep[c.dataset.widget]});
   $('#money').innerHTML=`<div class="kv-list">${MONEY.map(m=>`<div class="kv-row"><b>${m.t}</b><span class="v">${m.v}</span><p>${m.p}</p></div>`).join('')}</div>`;
   const mx=Math.max(...DISAPPROVED.map(d=>d[1]));
   $('#fiscal').innerHTML=`<div class="fs-badge"><span class="ic">${ico('check',18,2.6)}</span><div><b>San Juan Unified is on none of FCMAT’s warning lists</b><p>Not disapproved or conditionally approved for 2026-27, no lack of going concern designation, and not qualified or negative at 2025-26 second interim.</p></div></div>
@@ -1324,9 +1544,10 @@ function renderDialPanel(){
     find=findHTML('Are interventions improving attendance?','Early signs are positive, but not yet proof.',`Intervention students gained <b>3.1 attendance points</b> in six weeks, against 0.4 on the waitlist. Gains are smaller for English learners (1.8), and coverage is thinnest in San Juan High and Encina. <span class="dtag sim">Simulated pilot</span>`,rec,rid);
   }
   P.style.setProperty('--accent',`var(${d.c})`);
-  P.innerHTML=`<div class="dp-head"><span class="dp-ico">${ico(d.i,20,2)}</span><div><h2>${d.t}</h2><p>${d.s}</p></div><button class="pill" id="dialClear">${ico('x',14,2.4)}Clear</button></div><div class="dp-body one">${find}</div><div class="dp-body">${left}<div class="dstats">${stats}</div></div>`;
+  P.innerHTML=`<div class="dp-head"><span class="dp-ico">${ico(d.i,20,2)}</span><div><h2>${d.t}</h2><p>${d.s}</p></div><button class="pill" id="dialClear">${ico('x',14,2.4)}Clear</button></div>${k==='lcap'?`<div class="dp-body one">${msHTML()}</div>`:''}<div class="dp-body one">${find}</div><div class="dp-body">${left}<div class="dstats">${stats}</div></div>`;
   P.hidden=false;
   $('#dialClear').addEventListener('click',()=>runDial(k));
+  if(k==='lcap')msWire();
 }
 
 /* ---------- all schools (Ed-Data) ---------- */
@@ -1336,22 +1557,31 @@ function schoolMatch(x){
   if(t==='charter'&&!x[3])return false;
   if(t==='other'&&(x[3]||!SCH_OTHER.includes(x[1])))return false;
   if(['Elementary','Middle','High'].includes(t)&&(x[3]||x[1]!==t))return false;
+  if(!bandOK(x))return false;
   const q=state.schoolQ.trim().toLowerCase();
   return !q||x[0].toLowerCase().includes(q);
 }
+/* Grade band filter: a school is in a band if it serves any grade in it. "K-8" is in both. */
+function gradeSpan(g){if(!g)return null;const p=g.split('-').map(v=>/^T?K$/i.test(v)?0:parseInt(v,10));if(p.some(isNaN))return null;return [p[0],p[p.length-1]]}
+function bandOK(x){if(state.grade==='all')return true;const s=gradeSpan(x[2]);if(!s)return false;return state.grade==='tk6'?s[0]<=6:s[1]>=7}
+const ENR_I={latest:7,'24-25':6,'23-24':5};
+const enrOf=x=>x[ENR_I[state.year]];
+const SORT_NEXT={size:'small',small:'name',name:'size'},SORT_SAY={size:'Largest first',small:'Smallest first',name:'A to Z'};
 function renderSchools(){
   setPressed('#schoolSeg',state.schoolType);setPressed('#filterSeg',state.schoolType);
-  const rows=SCHOOLS.filter(schoolMatch).sort((a,b)=>state.schoolSort==='size'?(b[7]||0)-(a[7]||0):a[0].localeCompare(b[0]));
-  const kids=rows.reduce((a,x)=>a+(x[7]||0),0);
+  const big=x=>enrOf(x)==null?-1:enrOf(x),small=x=>enrOf(x)==null?1e9:enrOf(x);
+  const rows=SCHOOLS.filter(schoolMatch).sort((a,b)=>state.schoolSort==='size'?big(b)-big(a):state.schoolSort==='small'?small(a)-small(b):a[0].localeCompare(b[0]));
+  const kids=rows.reduce((a,x)=>a+(enrOf(x)||0),0);
+  const yLbl=state.year==='latest'?'2025-26':'20'+state.year;
   const t1={S:'Title I schoolwide',T:'Title I targeted',N:''};
   $('#schoolsNote').textContent=`${SCHOOLS.length} open schools · ${SCHOOLS.filter(x=>!x[3]).length} district-run · ${SCHOOLS.filter(x=>x[3]).length} charter`;
-  $('#schoolList').innerHTML=`<div class="sch-bar"><span>${rows.length} shown · ${kids.toLocaleString()} students</span><button class="pill" id="schoolSort">${ico('bars',14,2)}${state.schoolSort==='size'?'Largest first':'A to Z'}</button></div>`+
+  $('#schoolList').innerHTML=`<div class="sch-bar"><span>${rows.length} shown · ${kids.toLocaleString()} students, ${yLbl}${state.grade!=='all'?` · grades ${state.grade==='tk6'?'TK-6':'7-12'}`:''}</span><button class="pill" id="schoolSort" aria-label="Sort: ${SORT_SAY[state.schoolSort]}. Tap to change.">${ico('bars',14,2)}${SORT_SAY[state.schoolSort]}</button></div>`+
    (rows.length?rows.map(x=>{
-     const ch=x[7]!=null&&x[5]!=null?x[7]-x[5]:null;
+     const n=enrOf(x),ch=state.year!=='23-24'&&n!=null&&x[5]!=null?n-x[5]:null;
      const meta=[x[1],x[2]&&`grades ${x[2]}`,x[3]&&'Charter',t1[x[4]]].filter(Boolean).join(' · ');
      const tel=x[8]?`<a class="sch-tel" href="tel:${x[8].replace(/\D/g,'')}" aria-label="Call ${esc(x[0])}">${ico('phone',15,2)}</a>`:'';
-     return `<div class="sch-row${x[0]===state.school?' on':''}" data-name="${esc(x[0])}" role="button" tabindex="0" aria-pressed="${x[0]===state.school}"><div class="sch-main"><b>${esc(x[0])}</b><span>${meta}</span></div><div class="sch-n"><b>${x[7]!=null?x[7].toLocaleString():'—'}</b>${ch!=null?`<span class="${ch>0?'up':ch<0?'dn':''}">${ch>0?'▲ +'+ch.toLocaleString():ch<0?'▼ '+(-ch).toLocaleString():'No change'} since 23-24</span>`:'<span>no count</span>'}</div>${tel}</div>`}).join(''):'<p class="empty">No school matches that search.</p>');
-  $('#schoolSort').addEventListener('click',()=>{state.schoolSort=state.schoolSort==='size'?'name':'size';renderSchools()});
+     return `<div class="sch-row${x[0]===state.school?' on':''}" data-name="${esc(x[0])}" role="button" tabindex="0" aria-pressed="${x[0]===state.school}"><div class="sch-main"><b>${esc(x[0])}</b><span>${meta}</span></div><div class="sch-n"><b>${n!=null?n.toLocaleString():'—'}</b>${ch!=null?`<span class="${ch>0?'up':ch<0?'dn':''}">${ch>0?'▲ +'+ch.toLocaleString():ch<0?'▼ '+(-ch).toLocaleString():'No change'} since 23-24</span>`:n!=null?`<span>${yLbl} count</span>`:'<span>no count</span>'}</div>${tel}</div>`}).join(''):'<p class="empty">No school matches that search and filter.</p>');
+  $('#schoolSort').addEventListener('click',()=>{state.schoolSort=SORT_NEXT[state.schoolSort]||'size';renderSchools()});
   schoolView=rows;
   if(rows.length&&!rows.some(x=>x[0]===state.school))state.school=rows[0][0];
   drawSchoolTrend();
@@ -1445,8 +1675,8 @@ function renderWidgets(){
   const dl=m=>{const s=series(z&&z.id,m,42);return +(s[41]-s[36]).toFixed(1)};
   const tgt=m=>{const g=gapOf(m,g0(m));return `<div class="w-foot w-tgt"><span class="tgt">${g.target}</span><span class="gap ${g.cls}">${g.gap}</span></div>`},g0=g;
   const wk=(m,lower)=>`<div class="w-wk">${delta(dl(m),lower)} vs last week</div>`;
-  $('#wAttBody').innerHTML=ring(`Attendance rate${infoBtn('att','attendance rate')}`,g('att'),85,100,'--green')+tgt('att')+wk('att',false);
-  $('#wElBody').innerHTML=ring(`EL progress${infoBtn('elpac','English learner progress')}`,g('elpac'),25,65,'--cyan')+tgt('elpac')+wk('elpac',false);
+  $('#wAttBody').innerHTML=ring(`Attendance rate${infoBtn('att','attendance rate')}`,g('att'),85,100,'--green',BENCH.att.target,'of students present, mark = goal')+tgt('att')+wk('att',false);
+  $('#wElBody').innerHTML=ring(`EL progress${infoBtn('elpac','English learner progress')}`,g('elpac'),25,65,'--cyan',BENCH.elpac.target,'of ELs on track, mark = goal')+tgt('elpac')+wk('elpac',false);
   $('#wFlagsBody').innerHTML=`<div class="w-label">Tier 2/3 review share${infoBtn('tiers','Tier 2/3 review share')}</div><div class="w-big">${g('tiers')}<small>%</small></div>${spark(series(z&&z.id,'tiers',42).slice(-20))}${tgt('tiers')}${wk('tiers',true)}`;
   const t3=z?z.t3:T3,rev=z?z.rev:6,mx=Math.max(...ZONES.map(x=>x.t3));
   const bars=ZONES.map(x=>`<span style="height:${Math.max(14,x.t3/mx*100)}%;background:var(${ST[x.status].v});opacity:${!z||z.id===x.id?1:.28}"></span>`).join('');
@@ -1710,11 +1940,53 @@ function buildSites(){
 }
 function updateSites(){$$('.site').forEach(s=>{const id=s.dataset.site,open=state.open===id;s.querySelector('.s-row').setAttribute('aria-expanded',String(open));s.querySelector('.s-body').classList.toggle('open',open);s.classList.toggle('selected',state.zone===id)})}
 
+/* ---------- lens: role view, level, filters ---------- */
+const YEAR_SAY={latest:'Latest year','24-25':'2024-25','23-24':'2023-24'};
+const GRADE_SAY={all:'All grades',tk6:'TK-6',712:'7-12'};
+const GROUP_SAY={all:'All students',el:'English learners',low:'Low-income',foster:'Foster',homeless:'Homeless'};
+const ROLE_SAY_V={sup:'',county:'County office view. ',funder:'Funder view. '};
+function renderLens(){
+  setPressed('#roleSeg',state.role);setPressed('#levelSeg',state.level);
+  setPressed('#yearSeg',state.year);setPressed('#gradeSeg',state.grade);setPressed('#groupSeg',state.group);
+  const L=LEVELS[state.level];
+  $('#crumb').innerHTML=`<span class="c-ico">${ico(L.i,16,2)}</span><span>${ROLE_SAY_V[state.role]}<b>You are here: ${state.level} level.</b> ${L.say}</span>`;
+  $('#filterSum').textContent=`· ${YEAR_SAY[state.year]} · ${GRADE_SAY[state.grade]} · ${GROUP_SAY[state.group]}`;
+  const n=[];
+  if(state.year!=='latest')n.push(`${YEAR_SAY[state.year]}: District facts and All schools enrollment show that year (Published). The simulated pilot cards do not change by year.`);
+  if(state.grade!=='all')n.push(`Grades ${GRADE_SAY[state.grade]}: All schools lists schools that serve any of those grades. In the LCAP money stack, ${state.grade==='712'?'the 7-12 gap':'the after-school layer'} is outlined.`);
+  if(state.group==='el')n.push('English learners: the LCAP money stack outlines the money that follows them, and the Trend card shows English learner progress (Simulated).');
+  else if(state.group!=='all')n.push(`${GROUP_SAY[state.group]}: the LCAP money stack outlines the money that follows these students. District Pulse has no separate count for this group yet, so nothing else changes.`);
+  $('#lensNote').textContent=n.join(' ');
+  msPaint();
+}
+const ROLES={
+ sup:{role:'sup',level:'District',dial:null,zone:null,metric:'tiers',filter:'all',year:'latest',grade:'all',group:'all',msSel:null,msApart:false},
+ county:{role:'county',level:'County',dial:'lcap',zone:null,metric:'att',filter:'all',grade:'all',group:'all',msSel:'sup'},
+ funder:{role:'funder',level:'County',dial:'lcap',zone:null,metric:'att',filter:'all',grade:'712',group:'all',msSel:'gap'}
+};
+function applyRole(r){
+  Object.assign(state,ROLES[r]);
+  renderFacts();renderSchools();render();
+  if(r==='sup')island('Superintendent view','District level, whole district','--blue','school');
+  else{island(r==='county'?'County office view':'Funder view',r==='county'?'County level, LCAP money stack open':'County level, the 7-12 gap selected','--green','layers');
+    $('#dialPanel').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'})}
+}
+function wireLens(){
+  const on=(sel,fn)=>$(sel).addEventListener('click',e=>{const b=e.target.closest('button');if(b)fn(b.dataset.v)});
+  on('#roleSeg',v=>applyRole(v));
+  on('#levelSeg',v=>{if(v!==state.level){state.level=v;renderLens()}});
+  on('#yearSeg',v=>{if(v!==state.year){state.year=v;renderFacts();renderSchools();renderLens()}});
+  on('#gradeSeg',v=>{if(v!==state.grade){state.grade=v;renderSchools();renderLens()}});
+  on('#groupSeg',v=>{if(v===state.group)return;state.group=v;if(v==='el')state.metric='elpac';render()});
+  const fb=$('#filterBox');if(innerWidth>=700)fb.open=true;
+  fb.addEventListener('toggle',()=>fb.querySelectorAll('.seg').forEach(g=>placeThumb(g,false)));
+}
+
 /* ---------- actions ---------- */
 function render(){
   setPressed('#metricSeg',state.metric);setPressed('#rangeSeg',state.range);setPressed('#filterSeg',state.schoolType);
   $$('.tile[data-dial]').forEach(t=>t.setAttribute('aria-pressed',String(t.dataset.dial===state.dial)));
-  renderSideSel();renderScope();renderWidgets();renderDialPanel();drawChart();paintMap();renderNotes();renderRecs();updateSites();
+  renderSideSel();renderScope();renderWidgets();renderDialPanel();drawChart();paintMap();renderNotes();renderRecs();updateSites();renderLens();
 }
 function isolate(id,quiet){
   state.zone=id||null;state.dial=null;if(id)state.open=id;
@@ -1739,6 +2011,7 @@ const INDEX=[
   {label:'Fiscal health',hint:'FCMAT status',icon:'check',c:'--green',terms:'fiscal health budget fcmat going concern qualified negative certification reserves money spending salary teachers sacramento city',go:()=>$('#sec-fiscal').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'})},
   {label:'Language access bottlenecks',hint:'Speed dial',icon:'lang',c:'--blue',terms:'language access el ell elpac english learner newcomer reclassification vocabulary dari pashto spanish',go:()=>runDial('lang',true)},
   {label:'Tier 3 critical escalations',hint:'Speed dial',icon:'tri',c:'--red',terms:'tier 3 intensive critical escalation behavior mtss review',go:()=>runDial('tier3',true)},
+  {label:'LCAP money stack',hint:'Speed dial, simulated shares',icon:'layers',c:'--green',terms:'lcap money stack funding base supplemental concentration elo-p after school 7-12 gap who pays county office funder',go:()=>runDial('lcap',true)},
   {label:'LCAP equity and attendance',hint:'Speed dial',icon:'bars',c:'--green',terms:'lcap equity attendance chronic absence roi foster intervention',go:()=>runDial('lcap',true)},
   {label:'Tier 2 spikes',hint:'Watch zones, review share',icon:'eye',c:'--orange',terms:'tier 2 targeted spike watch review share',go:()=>{Object.assign(state,{dial:null,zone:null,filter:'watch',metric:'tiers'});render();island('Tier 2 spikes','Watch and critical zones in view','--orange','eye')}},
   {label:'Math vocabulary flags',hint:'Theme in 3 zones',icon:'lang',c:'--indigo',terms:'math vocabulary academic language',go:()=>runDial('lang',true)},
@@ -1920,7 +2193,7 @@ function wire(){
 
 /* ---------- init ---------- */
 $$('[data-i]').forEach(el=>{el.innerHTML=ico(el.dataset.i,+(el.dataset.s||20));el.style.display='grid'});
-buildSidebar();buildDrawer();buildMap();buildSites();themeIcon();renderBadge();wireSideSearch();wireTabs();wire();
+buildSidebar();buildDrawer();buildMap();buildSites();themeIcon();renderBadge();wireSideSearch();wireTabs();wire();wireLens();
 renderFacts();renderSchools();render();setupSortables();setTab('pulse');
 setupRefraction();
 /* Reporting count is simulated: all schools minus the 6 the demo always shows as not reporting. */
